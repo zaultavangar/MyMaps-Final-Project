@@ -1,0 +1,56 @@
+.default-radio {
+  visibility: hidden;
+  display: none;
+}
+
+.modal-content {
+  width: 600px;
+}
+
+.modal-header {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-date-wrapper {
+  display: flex;
+
+}
+
+.search-list{
+  width: fit-content;
+}
+
+
+
+.input-stack {
+  margin-right: 40px;
+}
+
+.date {
+  margin-bottom: 10px;
+}
+
+.filter-cat {
+  margin-bottom: 5px;
+}
+
+.date-created{
+  font-size: 0.6em;
+  margin-left: 1em;
+  font-weight: 200;
+}
+
+.modal-body {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.filter-cat {
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.checkbox {
+  font-size: 0.8em;
+}

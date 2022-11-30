@@ -1,0 +1,25 @@
+.node-info-container {
+  border: 2px solid black;
+  width: "100px";
+  padding: 10px 10px;
+  background-color: #d7ecff;
+
+}
+
+.current-node {
+  background-color: #d4edda;
+}
+
+.node-info-type {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.node-info-string {
+  font-size: 0.7em;
+}
+
+.node-info-string p::first-letter{
+  text-transform: capitalize;
+}
