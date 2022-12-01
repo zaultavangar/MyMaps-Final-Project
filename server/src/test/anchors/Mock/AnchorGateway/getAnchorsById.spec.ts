@@ -37,10 +37,10 @@ describe('Unit Test: getAnchorsById', () => {
 
   test('gets anchors when given valid id', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse1 = await backendAnchorGateway.createAnchor(validAnchor1)
     expect(createResponse1.success).toBeTruthy()
-    const validAnchor2 = makeIAnchor('anchor2', 'node1', textExtent)
+    const validAnchor2 = makeIAnchor('anchor2', 'node1', textExtent, undefined, [])
     const createResponse2 = await backendAnchorGateway.createAnchor(validAnchor2)
     expect(createResponse2.success).toBeTruthy()
     const getAnchorsResp = await backendAnchorGateway.getAnchorsById([
@@ -57,10 +57,10 @@ describe('Unit Test: getAnchorsById', () => {
 
   test('gets anchors when given some valid id', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse1 = await backendAnchorGateway.createAnchor(validAnchor1)
     expect(createResponse1.success).toBeTruthy()
-    const validAnchor2 = makeIAnchor('anchor2', 'node1', textExtent)
+    const validAnchor2 = makeIAnchor('anchor2', 'node1', textExtent, undefined, [])
     const createResponse2 = await backendAnchorGateway.createAnchor(validAnchor2)
     expect(createResponse2.success).toBeTruthy()
     const getAnchorsResp = await backendAnchorGateway.getAnchorsById([
@@ -75,7 +75,7 @@ describe('Unit Test: getAnchorsById', () => {
 
   test('fails to get anchor when given invalid id', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse1 = await backendAnchorGateway.createAnchor(validAnchor1)
     expect(createResponse1.success).toBeTruthy()
     const getAnchorsResp = await backendAnchorGateway.getAnchorsById(['invalidId'])

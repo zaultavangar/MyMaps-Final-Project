@@ -27,7 +27,7 @@ describe('Unit Test: deleteAnchor', () => {
 
   test('successfully deletes anchor', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const deleteResponse = await anchorCollectionConnection.deleteAnchor(
@@ -38,7 +38,7 @@ describe('Unit Test: deleteAnchor', () => {
 
   test('gives success if we try to delete anchor that does not exist', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const deleteResponse = await anchorCollectionConnection.deleteAnchor(

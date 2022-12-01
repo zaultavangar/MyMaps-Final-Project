@@ -38,16 +38,16 @@ describe('Unit Test: getAnchorsByNodeId', () => {
 
   test('gets anchors when given valid nodeId', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse1 = await backendAnchorGateway.createAnchor(validAnchor1)
     expect(createResponse1.success).toBeTruthy()
-    const validAnchor2 = makeIAnchor('anchor2', 'node1', textExtent)
+    const validAnchor2 = makeIAnchor('anchor2', 'node1', textExtent, undefined, [])
     const createResponse2 = await backendAnchorGateway.createAnchor(validAnchor2)
     expect(createResponse2.success).toBeTruthy()
-    const validAnchor3 = makeIAnchor('anchor3', 'node1', textExtent)
+    const validAnchor3 = makeIAnchor('anchor3', 'node1', textExtent, undefined, [])
     const createResponse3 = await backendAnchorGateway.createAnchor(validAnchor3)
     expect(createResponse3.success).toBeTruthy()
-    const validAnchor4 = makeIAnchor('anchor4', 'node2', textExtent)
+    const validAnchor4 = makeIAnchor('anchor4', 'node2', textExtent, undefined, [])
     const createResponse4 = await backendAnchorGateway.createAnchor(validAnchor4)
     expect(createResponse4.success).toBeTruthy()
     const getAnchorByAnchorIdResp = await backendAnchorGateway.getAnchorsByNodeId('node1')
@@ -69,7 +69,7 @@ describe('Unit Test: getAnchorsByNodeId', () => {
 
   test('success with empty payload array when given invalid nodeId', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchor2', 'node1', textExtent)
+    const validAnchor = makeIAnchor('anchor2', 'node1', textExtent, undefined, [])
     const createResponse = await backendAnchorGateway.createAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const getAnchorByIdResp = await backendAnchorGateway.getAnchorsByNodeId(

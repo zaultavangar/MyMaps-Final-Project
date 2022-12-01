@@ -32,7 +32,7 @@ describe('Unit Test: getAnchorById', () => {
 
   test('gets anchor when given valid id', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse = await backendAnchorGateway.createAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const getAnchorByIdResp = await backendAnchorGateway.getAnchorById(
@@ -43,7 +43,7 @@ describe('Unit Test: getAnchorById', () => {
 
   test('fails to get anchor when given invalid id', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse = await backendAnchorGateway.createAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const getAnchorByIdResp = await backendAnchorGateway.getAnchorById('anchor2')

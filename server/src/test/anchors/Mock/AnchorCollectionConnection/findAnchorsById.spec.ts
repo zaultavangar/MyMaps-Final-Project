@@ -32,11 +32,11 @@ describe('Unit Test: findAnchorsById', () => {
 
   test('gets anchors when given valid ids', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const textExtent1: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor1 = makeIAnchor('anchorId1', 'nodeId', textExtent1)
+    const validAnchor1 = makeIAnchor('anchorId1', 'nodeId', textExtent1, undefined, [])
     const createResponse1 = await anchorCollectionConnection.insertAnchor(validAnchor1)
     expect(createResponse1.success).toBeTruthy()
     const findAnchorByIdResp = await anchorCollectionConnection.findAnchorsById([
@@ -49,7 +49,7 @@ describe('Unit Test: findAnchorsById', () => {
 
   test('success when some anchors are not found', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const findAnchorByIdResp = await anchorCollectionConnection.findAnchorsById([

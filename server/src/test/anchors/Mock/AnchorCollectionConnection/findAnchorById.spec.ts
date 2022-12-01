@@ -32,7 +32,7 @@ describe('Unit Test: findAnchorById', () => {
 
   test('gets anchor when given valid id', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const findAnchorByIdResp = await anchorCollectionConnection.findAnchorById(
@@ -43,7 +43,7 @@ describe('Unit Test: findAnchorById', () => {
 
   test('fails to get anchor when given invalid id', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const findAnchorByIdResp = await anchorCollectionConnection.findAnchorById(

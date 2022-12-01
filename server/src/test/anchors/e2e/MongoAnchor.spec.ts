@@ -27,7 +27,9 @@ describe('E2E Test: Anchor CRUD', () => {
   const testAnchor: IAnchor = makeIAnchor(
     generateAnchorId(),
     generateNodeId('text'),
-    makeITextExtent('hi', 9, 11)
+    makeITextExtent('hi', 9, 11),
+    undefined, 
+    []
   )
 
   beforeAll(async () => {

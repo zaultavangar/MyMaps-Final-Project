@@ -33,9 +33,9 @@ describe('Unit Test: deleteAll', () => {
 
   test('successfully deletes all anchors', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const anchor1 = makeIAnchor('anchor1', 'node1', textExtent)
+    const anchor1 = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const imageExtent: IImageExtent = makeIImageExtent(1, 2, 3, 4)
-    const anchor2 = makeIAnchor('anchor2', 'node1', imageExtent)
+    const anchor2 = makeIAnchor('anchor2', 'node1', imageExtent, undefined, [])
     const response1 = await backendAnchorGateway.createAnchor(anchor1)
     const response2 = await backendAnchorGateway.createAnchor(anchor2)
     expect(response1.success).toBeTruthy()

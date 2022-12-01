@@ -32,10 +32,10 @@ describe('Unit Test: deleteAnchors', () => {
 
   test('deletes valid anchors', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor1 = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse1 = await backendAnchorGateway.createAnchor(validAnchor1)
     expect(createResponse1.success).toBeTruthy()
-    const validAnchor2 = makeIAnchor('anchor2', 'node1', textExtent)
+    const validAnchor2 = makeIAnchor('anchor2', 'node1', textExtent, undefined, [])
     const createResponse2 = await backendAnchorGateway.createAnchor(validAnchor2)
     expect(createResponse2.success).toBeTruthy()
     const deleteResp = await backendAnchorGateway.deleteAnchors(['anchor1', 'anchor2'])
@@ -48,7 +48,7 @@ describe('Unit Test: deleteAnchors', () => {
 
   test('success when some anchorids do not exist', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse = await backendAnchorGateway.createAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const deleteResp = await backendAnchorGateway.deleteAnchors(['invalidId', 'anchor1'])
@@ -57,7 +57,7 @@ describe('Unit Test: deleteAnchors', () => {
 
   test('success when all anchorids do not exist', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse = await backendAnchorGateway.createAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const deleteResp = await backendAnchorGateway.deleteAnchors(['invalidId'])

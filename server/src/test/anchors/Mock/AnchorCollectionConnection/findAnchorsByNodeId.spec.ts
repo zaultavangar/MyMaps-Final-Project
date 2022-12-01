@@ -37,10 +37,10 @@ describe('Unit Test: findAnchorByNodeId', () => {
 
   test('gets anchors when given valid nodeId', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor1 = makeIAnchor('anchorId1', 'nodeId', textExtent)
+    const validAnchor1 = makeIAnchor('anchorId1', 'nodeId', textExtent, undefined, [])
     const createResponse1 = await anchorCollectionConnection.insertAnchor(validAnchor1)
     expect(createResponse1.success).toBeTruthy()
-    const validAnchor2 = makeIAnchor('anchorId2', 'nodeId', textExtent)
+    const validAnchor2 = makeIAnchor('anchorId2', 'nodeId', textExtent, undefined, [])
     const createResponse2 = await anchorCollectionConnection.insertAnchor(validAnchor2)
     expect(createResponse2.success).toBeTruthy()
     const findAnchorsByNodeIdResp = await anchorCollectionConnection.findAnchorsByNodeId(

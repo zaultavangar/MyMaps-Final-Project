@@ -33,9 +33,9 @@ describe('Unit Test: ClearAnchorCollection', () => {
 
   test('successfully deletes all anchors', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const anchor1 = makeIAnchor('anchor.1', 'node.1', textExtent)
+    const anchor1 = makeIAnchor('anchor.1', 'node.1', textExtent, undefined, [])
     const imageExtent: IImageExtent = makeIImageExtent(1, 2, 3, 4)
-    const anchor2 = makeIAnchor('anchor.2', 'node.1', imageExtent)
+    const anchor2 = makeIAnchor('anchor.2', 'node.1', imageExtent, undefined, [])
     const response1 = await anchorCollectionConnection.insertAnchor(anchor1)
     const response2 = await anchorCollectionConnection.insertAnchor(anchor2)
     expect(response1.success).toBeTruthy()

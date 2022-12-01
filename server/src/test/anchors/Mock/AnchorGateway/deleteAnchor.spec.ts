@@ -32,7 +32,7 @@ describe('Unit Test: deleteAnchorById', () => {
 
   test('deletes valid anchor', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent, [], [])
     const createResponse = await backendAnchorGateway.createAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const deleteResp = await backendAnchorGateway.deleteAnchor('anchor1')
@@ -43,7 +43,7 @@ describe('Unit Test: deleteAnchorById', () => {
 
   test('gives success when attempt to delete anchor id that does not exist', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent)
+    const validAnchor = makeIAnchor('anchor1', 'node1', textExtent, undefined, [])
     const createResponse = await backendAnchorGateway.createAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const deleteResp = await backendAnchorGateway.deleteAnchor('invalidId')

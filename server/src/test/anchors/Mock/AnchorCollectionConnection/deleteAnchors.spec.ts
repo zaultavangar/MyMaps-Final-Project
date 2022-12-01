@@ -27,7 +27,7 @@ describe('Unit Test: deleteNodes', () => {
 
   test('successfully deletes single anchor', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const retrieveResponse = await anchorCollectionConnection.findAnchorById(
@@ -46,9 +46,9 @@ describe('Unit Test: deleteNodes', () => {
 
   test('successfully deletes multiple anchors', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
-    const validAnchor2 = makeIAnchor('anchorId2', 'nodeId2', textExtent)
-    const validAnchor3 = makeIAnchor('anchorId3', 'nodeId3', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
+    const validAnchor2 = makeIAnchor('anchorId2', 'nodeId2', textExtent, undefined, [])
+    const validAnchor3 = makeIAnchor('anchorId3', 'nodeId3', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const createResponse2 = await anchorCollectionConnection.insertAnchor(validAnchor2)
@@ -89,7 +89,7 @@ describe('Unit Test: deleteNodes', () => {
 
   test('gives success if we try to delete anchors that don\'t exist', async () => {
     const textExtent: ITextExtent = makeITextExtent('text', 1, 3)
-    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent)
+    const validAnchor = makeIAnchor('anchorId', 'nodeId', textExtent, undefined, [])
     const createResponse = await anchorCollectionConnection.insertAnchor(validAnchor)
     expect(createResponse.success).toBeTruthy()
     const deleteResponse = await anchorCollectionConnection.deleteAnchors([
