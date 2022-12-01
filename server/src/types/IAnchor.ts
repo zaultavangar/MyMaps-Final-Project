@@ -1,3 +1,4 @@
+import { NullableTypeAnnotation } from '@babel/types'
 import { Extent, isExtent, isSameExtent } from './Extent'
 
 /**
@@ -11,6 +12,9 @@ export interface IAnchor {
   // If extent is null, the anchor points to the node as a whole.
   extent: Extent | null
   nodeId: string
+  // New properties (new tests needed)
+  trailIds?: string[] 
+  childNodeIds: string[] 
 }
 
 export function isIAnchor(object: any): object is IAnchor {

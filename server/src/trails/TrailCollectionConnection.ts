@@ -153,9 +153,9 @@ export class TrailCollectionConnection {
    * @return successfulServiceResponse<ITrail> on success
    *         failureServiceResponse on failure
    */
-  async findTrailsByNodeId(trailId: string): Promise<IServiceResponse<ITrail[]>> {
+  async findTrailsByNodeId(nodeId: string): Promise<IServiceResponse<ITrail[]>> {
     const foundTrails = []
-    const myQuery = { trailId: trailId }
+    const myQuery = { nodeId: nodeId }
     await this.client
       .db()
       .collection(this.collectionName)

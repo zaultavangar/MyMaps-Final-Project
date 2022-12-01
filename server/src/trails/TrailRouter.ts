@@ -28,7 +28,7 @@ export class TrailRouter {
      */
     TrailExpressRouter.post('/create', async (req: Request, res: Response) => {
       try {
-        const trail = req.body.anchor
+        const trail = req.body.trail
         if (!isITrail(trail)) {
           res.status(400).send('not ITrail!')
         } else {
@@ -63,7 +63,7 @@ export class TrailRouter {
      */
     TrailExpressRouter.post('/getTrailsById', async (req: Request, res: Response) => {
       try {
-        const trailIds = req.body.anchorIds
+        const trailIds = req.body.trailIds
         const response: IServiceResponse<ITrail[]> =
           await this.BackendTrailGateway.getTrailsById(trailIds)
         res.status(200).send(response)
@@ -101,6 +101,20 @@ export class TrailRouter {
         res.status(500).send(e.message)
       }
     })
+
+    TrailExpressRouter.get(
+      '/getByNodeId/:nodeId',
+      async (req: Request, res: Response) => {
+        try {
+          const nodeId = req.params.nodeId
+          const response: IServiceResponse<ITrail[]> =
+            await this.BackendTrailGateway.getTrailsByNodeId(nodeId)
+          res.status(200).send(response)
+        } catch (e) {
+          res.status(500).send(e.message)
+        }
+      }
+    )
   }
 
   /**

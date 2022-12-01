@@ -6,6 +6,7 @@ import cors from 'cors'
 import { MongoClient } from 'mongodb'
 import { AnchorRouter } from './anchors'
 import { LinkRouter } from './links'
+import { TrailRouter } from './trails'
 
 /* dotenv is a zero-dependency module that laods environment variables from a 
 .env file into process .env */
@@ -44,6 +45,9 @@ app.use('/anchor', myAnchorRouter.getExpressRouter())
 // link router
 const myLinkRouter = new LinkRouter(mongoClient)
 app.use('/link', myLinkRouter.getExpressRouter())
+// trail router
+const myTrailRouter = new TrailRouter(mongoClient)
+app.use('/trail', myTrailRouter.getExpressRouter())
 
 app.get('*', (req: Request, res: Response) => {
   res.send('MyHypermedia Backend Service')
