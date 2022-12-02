@@ -34,7 +34,7 @@ describe('Unit Test: InsertTrail', () => {
   test('fails to insert invalid document with the wrong shape', async () => {
     const invalidTrail: any = {id: 'id'}
     const response = await trailCollectionConnection.insertTrail(invalidTrail)
-    expect(response.success).toBeTruthy()
+    expect(response.success).toBeFalsy()
   })
 
   test('fails to insert invalid document with correct shape', async () => {

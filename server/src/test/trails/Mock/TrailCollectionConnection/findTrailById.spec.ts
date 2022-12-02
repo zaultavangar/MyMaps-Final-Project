@@ -22,7 +22,7 @@ describe('Unit Test: findTrailById', () => {
 
   beforeEach(async () => {
     const response = await trailCollectionConnection.clearTrailCollection()
-    expect(response.success.toBeTruthy())
+    expect(response.success).toBeTruthy()
   })
   
   afterAll(async () => {
@@ -41,10 +41,10 @@ describe('Unit Test: findTrailById', () => {
 
   test('fails to get trail when given invalid id', async () => {
     const validTrail: ITrail = makeITrail('trail1', ['anchor1', 'anchor2', 'anchor3'], 'node1')
-    const createResponse = await trailCollectionConnection.inserTrail(validTrail)
+    const createResponse = await trailCollectionConnection.insertTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const findTrailByIdResp = await trailCollectionConnection.findTrailById('trail2')
-    expect(findTrailByIdResp).toBeFalsy()
+    expect(findTrailByIdResp.success).toBeFalsy()
   })
 
 })

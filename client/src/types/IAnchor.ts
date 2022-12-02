@@ -12,16 +12,15 @@ export interface IAnchor {
   extent: Extent | null
   nodeId: string
   // New properties (new tests needed)
-  trailIds?: string[] 
-  childNodeIds: string[] 
+  trailIds?: string[]
+  childNodeIds?: string[] 
 }
 
 export function isIAnchor(object: any): object is IAnchor {
   const propsDefined: boolean =
     typeof (object as IAnchor).anchorId !== 'undefined' &&
     typeof (object as IAnchor).nodeId !== 'undefined' &&
-    typeof (object as IAnchor).extent !== 'undefined' && 
-    typeof (object as IAnchor).childNodeIds !== 'undefined'
+    typeof (object as IAnchor).extent !== 'undefined' 
   if (!propsDefined) {
     return false
   }
@@ -30,7 +29,8 @@ export function isIAnchor(object: any): object is IAnchor {
   return (
     typeof (object as IAnchor).anchorId === 'string' &&
     typeof (object as IAnchor).nodeId === 'string' &&
-    Array.isArray((object as IAnchor).childNodeIds) && // may cause problems check with tests
+    // Array.isArray((object as IAnchor).childNodeIds) && // may cause problems check with tests
+    // Array.isArray((object as IAnchor).trailIds) && // may cause problems check with tests
     isExtent(object)
   )
 }
@@ -70,8 +70,6 @@ export function isSameAnchor(a1: IAnchor, a2: IAnchor): boolean {
   return (
     a1.anchorId === a2.anchorId &&
     a1.nodeId === a2.nodeId &&
-    a1.trailIds === a2.trailIds && 
-    a1.childNodeIds === a2.childNodeIds &&
     isSameExtent(a1.extent, a2.extent)
   )
 }

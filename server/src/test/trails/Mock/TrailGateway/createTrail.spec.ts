@@ -49,12 +49,6 @@ describe('Unit Test: Create Trail', () => {
     expect(invalidResp2.success).toBeFalsy()
   })
 
-  test('fails to insert trail with duplicate anchors in its anchor list', async () => {
-    const validTrail: ITrail = makeITrail('trail1', ['anchor1', 'anchor1'], 'node1')
-    const invalidResp = await backendTrailGateway.createTrail(validTrail)
-    expect(invalidResp.success).toBeFalsy()
-  })
-
   test('fails to insert trail when trailId is of invalid type or undefined', async () => {
     const invalidTrail = {
       trailId: 1,
@@ -73,22 +67,14 @@ describe('Unit Test: Create Trail', () => {
     expect(response2.success).toBeFalsy()
   })
 
-  test('fails to insert trail when anchorList is of invalid type or undefined', async () => {
+  test('fails to insert trail when anchorList is undefined', async () => {
     const invalidTrail = {
-      trailId: 'trail1',
-      anchorList: {},
-      nodeId: 'node1',
-    }
-    const response = await backendTrailGateway.createTrail(invalidTrail)
-    expect(response.success).toBeFalsy()
-
-    const invalidTrail2 = {
       trailId: 'trail1',
       anchorList: undefined,
       nodeId: 'node1',
     }
-    const response2 = await backendTrailGateway.createTrail(invalidTrail2)
-    expect(response2.success).toBeFalsy()
+    const response = await backendTrailGateway.createTrail(invalidTrail)
+    expect(response.success).toBeFalsy()
   })
 
   test('fails to insert trail when nodeId is of invalid type or undefined', async () => {

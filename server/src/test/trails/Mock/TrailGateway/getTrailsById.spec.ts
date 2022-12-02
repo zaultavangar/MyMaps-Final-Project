@@ -56,6 +56,8 @@ describe('Unit Test: Delete Trails', () => {
     expect(getTrailByIdResp.success).toBeTruthy()
     expect(getTrailByIdResp.payload.length).toBe(5)
     const trail1 = getTrailByIdResp.payload.find((trail) => trail.trailId === 'trail1')
+    console.log("trail1: ", trail1)
+    console.log("validtrail1: ", validTrail1)
     expect(isSameTrail(trail1, validTrail1)).toBeTruthy()
     const trail2 = getTrailByIdResp.payload.find((trail) => trail.trailId === 'trail2')
     expect(isSameTrail(trail2, validTrail2)).toBeTruthy()

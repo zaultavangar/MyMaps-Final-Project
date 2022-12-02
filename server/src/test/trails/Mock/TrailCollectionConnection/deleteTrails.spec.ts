@@ -22,7 +22,7 @@ describe('Unit Test: deleteTrails', () => {
 
   beforeEach(async () => {
     const response = await trailCollectionConnection.clearTrailCollection()
-    expect(response.success.toBeTruthy())
+    expect(response.success).toBeTruthy()
   })
   
   afterAll(async () => {
@@ -33,17 +33,17 @@ describe('Unit Test: deleteTrails', () => {
   
   test('successfully deletes single trail', async () => {
     const validTrail = makeITrail('trail1', ['anchor1', 'anchor2'], 'node1')
-    const createResponse = await trailCollectionConnection.insertAnchor(validTrail)
+    const createResponse = await trailCollectionConnection.insertTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const retrieveResponse = await trailCollectionConnection.findTrailById(
       validTrail.trailId
     )
     expect(retrieveResponse.success).toBeTruthy()
-    const deleteResponse = await trailCollectionConnection.deleteAnchors([
+    const deleteResponse = await trailCollectionConnection.deleteTrails([
       validTrail.trailId,
     ])
     expect(deleteResponse.success).toBeTruthy()
-    const retrieveResponse1 = await trailCollectionConnection.findAnchorById(
+    const retrieveResponse1 = await trailCollectionConnection.findTrailById(
       validTrail.trailId
     )
     expect(retrieveResponse1.success).toBeFalsy()

@@ -50,15 +50,20 @@ describe('Unit Test: Delete Trails', () => {
     const trail1 = getTrailByNodeIdResp.payload.find(
       (trail) => trail.trailId === 'trail1'
     )
+    //
+    console.log(trail1)
+    console.log(validTrail1)
+    console.log(getTrailByNodeIdResp.payload)
+    //
     expect(isSameTrail(trail1, validTrail1)).toBeTruthy()
-    const trail2 = getTrailByNodeIdResp.payload.find(
+    const trail3 = getTrailByNodeIdResp.payload.find(
       (trail) => trail.trailId === 'trail3'
     )
-    expect(isSameTrail(trail2, validTrail2)).toBeTruthy()
-    const trail3 = getTrailByNodeIdResp.payload.find(
+    expect(isSameTrail(trail3, validTrail3)).toBeTruthy()
+    const trail4 = getTrailByNodeIdResp.payload.find(
       (trail) => trail.trailId === 'trail4'
     )
-    expect(isSameTrail(trail3, validTrail3)).toBeTruthy()
+    expect(isSameTrail(trail4, validTrail4)).toBeTruthy()
   })
 
   test('success with empty payload array when given invalid nodeId', async () => {

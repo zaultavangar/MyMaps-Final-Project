@@ -13,9 +13,10 @@ export function isITrail(object: any): object is ITrail {
   if (!propsDefined) {
     return false
   }
+
   return (
     typeof (object as ITrail).trailId === 'string' &&
-    typeof (object as ITrail).nodeId === 'string'
+    typeof (object as ITrail).nodeId === 'string'  
     // typeof (object as ITrail).anchorList === [] 
     //    <-- TODO: Not sure how to do this / if it is needed
   )

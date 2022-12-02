@@ -22,7 +22,7 @@ describe('Unit Test: deleteTrail', () => {
   })
 
   beforeEach(async () => {
-    const response = await trailCollectionConnection.clearLinkCollection()
+    const response = await trailCollectionConnection.clearTrailCollection()
     expect(response.success).toBeTruthy()
   })
 

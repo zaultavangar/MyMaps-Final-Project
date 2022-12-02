@@ -22,7 +22,7 @@ describe('Unit Test: findTrailsById', () => {
 
   beforeEach(async () => {
     const response = await trailCollectionConnection.clearTrailCollection()
-    expect(response.success.toBeTruthy())
+    expect(response.success).toBeTruthy()
   })
   
   afterAll(async () => {
