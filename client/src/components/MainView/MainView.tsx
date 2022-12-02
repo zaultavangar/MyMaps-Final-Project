@@ -17,7 +17,7 @@ import { Alert } from '../Alert'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 import { Header } from '../Header'
 import { LoadingScreen } from '../LoadingScreen'
-import { CompleteLinkModal, CreateNodeModal, MoveNodeModal } from '../Modals'
+import { CompleteLinkModal, CreateNodeModal, MoveNodeModal, CreateMapModal } from '../Modals'
 import { NodeView } from '../NodeView'
 import { TreeView } from '../TreeView'
 import { SearchModal } from '../Modals/SearchModal'
@@ -30,6 +30,7 @@ export const MainView = React.memo(function MainView() {
 
   // modal states
   const [createNodeModalOpen, setCreateNodeModalOpen] = useState(false)
+  const [createMapModalOpen, setCreateMapModalOpen] = useState(false)
   const [completeLinkModalOpen, setCompleteLinkModalOpen] = useState(false)
   const [moveNodeModalOpen, setMoveNodeModalOpen] = useState(false)
   const [searchModalOpen, setSearchModalOpen] = useState(false)
@@ -103,6 +104,10 @@ export const MainView = React.memo(function MainView() {
   const handleCreateNodeButtonClick = useCallback(() => {
     setCreateNodeModalOpen(true)
   }, [setCreateNodeModalOpen])
+
+  const handleCreateMapButtonClick = useCallback(() => {
+    setCreateMapModalOpen(true)
+  }, [])
 
   const handleMoveNodeButtonClick = useCallback(() => {
     setMoveNodeModalOpen(true)
@@ -199,6 +204,7 @@ export const MainView = React.memo(function MainView() {
           <Header
             onHomeClick={handleHomeClick}
             onCreateNodeButtonClick={handleCreateNodeButtonClick}
+            onCreateMapButtonClick={handleCreateMapButtonClick}
             nodeIdsToNodesMap={nodeIdsToNodesMap}
             setSearchModalOpen={setSearchModalOpen}
           />
@@ -209,6 +215,13 @@ export const MainView = React.memo(function MainView() {
             nodeIdsToNodesMap={nodeIdsToNodesMap}
             onSubmit={loadRootsFromDB}
           />
+          <CreateMapModal
+            isOpen={createMapModalOpen}
+            onClose={() => setCreateMapModalOpen(false)}
+            roots={rootNodes}
+            nodeIdsToNodesMap={nodeIdsToNodesMap}
+            onSubmit={loadRootsFromDB}
+            />
           <CompleteLinkModal
             isOpen={completeLinkModalOpen}
             onClose={() => setCompleteLinkModalOpen(false)}

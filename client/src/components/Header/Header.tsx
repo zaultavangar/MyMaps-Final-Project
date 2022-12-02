@@ -12,14 +12,15 @@ import './Header.scss'
 interface IHeaderProps {
   nodeIdsToNodesMap: NodeIdsToNodesMap
   onCreateNodeButtonClick: () => void
+  onCreateMapButtonClick: () => void
   onHomeClick: () => void
   setSearchModalOpen: (value: boolean) => void
 }
 
 export const Header = (props: IHeaderProps) => {
-  const { onCreateNodeButtonClick, onHomeClick, nodeIdsToNodesMap, setSearchModalOpen } =
+  const { onCreateNodeButtonClick, onCreateMapButtonClick, onHomeClick, nodeIdsToNodesMap, setSearchModalOpen } =
     props
-  const customButtonStyle = { height: 30, marginLeft: 10, width: 30 }
+  const customButtonStyle = { height: 30, marginLeft: 10,  width: 30  }
   const [isLinking, setIsLinking] = useRecoilState(isLinkingState)
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState)
   const setSelectedExtent = useSetRecoilState(selectedExtentState)
@@ -56,6 +57,17 @@ export const Header = (props: IHeaderProps) => {
           icon={<ai.AiOutlinePlus />}
           onClick={onCreateNodeButtonClick}
         />
+        <Button
+          isWhite={isLinking}
+          icon={<ai.AiOutlinePlus/>}
+          text="New Map"
+          onClick={onCreateMapButtonClick}
+          style={{
+            width: 'max-content',
+            height: 30,
+            marginLeft: 10,
+          }}
+          />
       </div>
       {isLinking && startAnchor ? (
         <div className="right-bar">
