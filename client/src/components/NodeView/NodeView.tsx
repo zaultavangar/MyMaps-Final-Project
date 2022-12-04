@@ -112,7 +112,7 @@ export const NodeView = (props: INodeViewProps) => {
         extent: selectedExtent,
         nodeId: currentNode.nodeId,
         trailIds: [],
-        childNodeIds: []
+        childNodeIds: [],
       }
       setStartAnchor(anchor)
       setIsLinking(true)

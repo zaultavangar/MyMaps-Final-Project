@@ -98,6 +98,24 @@ export async function createNodeFromModal({
         viewType: 'grid',
       }
       break
+    case 'map':
+      const mapMetaData = await getMeta(content)
+      newNode = {
+        content: content,
+        dateCreated: new Date(),
+        filePath: filePath,
+        nodeId: nodeId,
+        title: title,
+        type: type,
+        // Initialize map node with correct, updated metadata
+        originalWidth: mapMetaData.normalizedWidth,
+        originalHeight: mapMetaData.normalizedHeight,
+        updatedWidth: mapMetaData.normalizedWidth,
+        updatedHeight: mapMetaData.normalizedHeight,
+        // Initialize map with empty comment content
+        commentContent: '',
+      }
+      break
     case 'image':
       const imageMetaData = await getMeta(content)
       newNode = {

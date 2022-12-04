@@ -4,7 +4,7 @@ import { INodePath, makeINodePath } from './INodePath'
 export const nodeTypes: string[] = ['map', 'text', 'image', 'folder']
 
 // Supported nodeTypes for file browser
-export type NodeType = 'map' |'text' | 'image' | 'folder' | 'pdf' | 'audio' | 'video'
+export type NodeType = 'map' | 'text' | 'image' | 'folder' | 'pdf' | 'audio' | 'video'
 
 // INode with node metadata
 export interface INode {
@@ -19,6 +19,8 @@ export interface INode {
   originalHeight?: number
   updatedWidth?: number
   updatedHeight?: number
+  // support for keeping track of comment content on a map
+  commentContent?: any
 }
 
 /**

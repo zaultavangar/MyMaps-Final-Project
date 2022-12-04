@@ -6,6 +6,7 @@ import {
   RiVideoLine,
   RiFilePdfLine,
   RiQuestionLine,
+  RiMap2Line,
 } from 'react-icons/ri'
 import uniqid from 'uniqid'
 import { NodeType } from '../types'
@@ -23,6 +24,8 @@ export const nodeTypeIcon = (type: NodeType): JSX.Element => {
       return <RiImageLine />
     case 'pdf':
       return <RiFilePdfLine />
+    case 'map':
+      return <RiMap2Line />
     default:
       return <RiQuestionLine />
   }

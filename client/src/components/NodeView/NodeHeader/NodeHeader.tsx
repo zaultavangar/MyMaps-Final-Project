@@ -115,7 +115,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   const nodeKeyHandlers = (e: KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-      if (editingTitle == true) {
+        if (editingTitle == true) {
           e.preventDefault()
           setEditingTitle(false)
         }
@@ -144,6 +144,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   }, [editingTitle])
 
   const folder: boolean = currentNode.type === 'folder'
+  const map: boolean = currentNode.type === 'map'
   const notRoot: boolean = currentNode.nodeId !== 'root'
   return (
     <div className="nodeHeader">
@@ -188,6 +189,15 @@ export const NodeHeader = (props: INodeHeaderProps) => {
                 icon={<bi.BiLinkAlt />}
                 onClick={onHandleCompleteLinkClick}
               />
+            )}
+            {map && (
+              <div className="nodeHeader-mapView">
+                <Button
+                  text="Edit Trails"
+                  icon={<ri.RiMapPinLine />}
+                  // add onClick handler
+                />
+              </div>
             )}
             {folder && (
               <div className="select">

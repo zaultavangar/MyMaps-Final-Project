@@ -4,8 +4,10 @@ import { currentNodeState } from '../../../global/Atoms'
 import { IFolderNode, INode } from '../../../types'
 import { FolderContent } from './FolderContent'
 import { ImageContent } from './ImageContent'
+import { MapContent } from './MapContent'
 import './NodeContent.scss'
 import { TextContent } from './TextContent'
+import { CommentContent } from './CommentContent'
 
 /** Props needed to render any node content */
 
@@ -28,7 +30,13 @@ export const NodeContent = (props: INodeContentProps) => {
       return <ImageContent />
     case 'text':
       return <TextContent />
-      break
+    case 'map':
+      return (
+        <div>
+          <MapContent />
+          <CommentContent />
+        </div>
+      )
     case 'folder':
       if (childNodes) {
         return (

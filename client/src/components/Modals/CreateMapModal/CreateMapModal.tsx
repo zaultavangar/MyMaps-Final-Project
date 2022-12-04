@@ -47,12 +47,13 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
   const [selectedParentNode, setSelectedParentNode] = useState<INode | null>(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [selectedType, setSelectedType] = useState<NodeType>('' as NodeType)
+  const [selectedType, setSelectedType] = useState<NodeType>('map' as NodeType)
   const [error, setError] = useState<string>('')
 
   // event handlers for the modal inputs and dropdown selects
   const handleSelectedTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedType(event.target.value.toLowerCase() as NodeType)
+    // setSelectedType('map' as NodeType)
     setContent('')
   }
 
@@ -70,6 +71,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
 
   // called when the "Create" button is clicked
   const handleSubmit = async () => {
+    console.log(selectedType)
     if (!nodeTypes.includes(selectedType)) {
       setError('Error: No type selected')
       return
@@ -83,7 +85,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
       nodeIdsToNodesMap,
       parentNodeId: selectedParentNode ? selectedParentNode.nodeId : null,
       title,
-      type: selectedType as NodeType,
+      type: 'map' as NodeType,
     }
     const node = await createNodeFromModal(attributes)
     node && setSelectedNode(node)
@@ -128,7 +130,11 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
           <ModalHeader>Create a new map</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input value={title} onChange={handleTitleChange} placeholder="Map Title..." />
+            <Input
+              value={title}
+              onChange={handleTitleChange}
+              placeholder="Map Title..."
+            />
             <div className="modal-input">
               <Select
                 value={selectedType}
@@ -161,11 +167,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
                 />
               </div>
             )}
-            {selectedType && isMap && (
-              <div>
-                Option to Type In Location
-              </div>
-            )}
+            {selectedType && isMap && <div>Option to Type In Location</div>}
             <div className="modal-section">
               <span className="modal-title">
                 <div className="modal-title-header">Choose a parent map (optional):</div>
