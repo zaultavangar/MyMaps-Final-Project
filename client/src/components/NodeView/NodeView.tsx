@@ -6,6 +6,7 @@ import { NodeBreadcrumb } from './NodeBreadcrumb'
 import { NodeContent } from './NodeContent'
 import { NodeHeader } from './NodeHeader'
 import { NodeLinkMenu } from './NodeLinkMenu'
+import { PinMenu } from './PinMenu'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   isLinkingState,
@@ -27,6 +28,7 @@ import { FrontendLinkGateway } from '../../links'
 import { FrontendNodeGateway } from '../../nodes'
 import { FrontendPinGateway } from '../../pins'
 import { GraphViewModal } from '../Modals'
+import { selectParentNode } from '@tiptap/core/dist/packages/core/src/commands'
 
 export interface INodeViewProps {
   currentNode: INode
@@ -43,6 +45,7 @@ export interface INodeViewProps {
   // children used when rendering folder node
   // onGraphViewClick: (node: INode) => void
   childNodes?: INode[]
+  setParentNode: (node: INode) => void
 }
 
 // type used for custom node in react flow graph
@@ -69,6 +72,7 @@ export const NodeView = (props: INodeViewProps) => {
     onDeleteButtonClick,
     onMoveButtonClick,
     childNodes,
+    setParentNode,
   } = props
   const setIsLinking = useSetRecoilState(isLinkingState)
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState)
@@ -314,6 +318,8 @@ export const NodeView = (props: INodeViewProps) => {
     document.removeEventListener('pointerup', onPointerUp)
   }
 
+  const [selectedPin, setSelectedPin] = useState<IPin|null>(null)
+
   return (
     <div className="node">
       <div className="nodeView" style={{ width: nodeViewWidth }}>
@@ -361,6 +367,13 @@ export const NodeView = (props: INodeViewProps) => {
       )}
       {hasPins && (
         <div>
+          <PinMenu
+            selectedPin = {selectedPin}
+            setSelectedPin={setSelectedPin}
+            pins={pins}
+            setPins={setPins}
+            setParentNode={setParentNode}
+            />
         </div>
       )}
       {/**

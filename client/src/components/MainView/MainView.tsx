@@ -269,6 +269,7 @@ export const MainView = React.memo(function MainView() {
                 onCreateNodeButtonClick={handleCreateNodeButtonClick}
                 // onGraphViewClick={handleGraphViewClick}
                 nodeIdsToNodesMap={nodeIdsToNodesMap}
+                setParentNode={setSelectedNode}
               />
             </div>
           </div>
