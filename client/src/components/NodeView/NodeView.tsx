@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FrontendAnchorGateway } from '../../anchors'
 import { generateObjectId } from '../../global'
-import { IAnchor, INode, IPin, isSameExtent, NodeIdsToNodesMap, NodeType } from '../../types'
+import { IAnchor, INode, IPin, isSameExtent, NodeIdsToNodesMap, NodeType, RecursiveNodeTree } from '../../types'
 import { NodeBreadcrumb } from './NodeBreadcrumb'
 import { NodeContent } from './NodeContent'
 import { NodeHeader } from './NodeHeader'
@@ -47,6 +47,9 @@ export interface INodeViewProps {
   // onGraphViewClick: (node: INode) => void
   childNodes?: INode[]
   setParentNode: (node: INode) => void
+
+
+
 }
 
 // type used for custom node in react flow graph
@@ -74,6 +77,7 @@ export const NodeView = (props: INodeViewProps) => {
     onMoveButtonClick,
     childNodes,
     setParentNode,
+
   } = props
   const setIsLinking = useSetRecoilState(isLinkingState)
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState)
@@ -97,6 +101,8 @@ export const NodeView = (props: INodeViewProps) => {
     setCurrentNode(currentNode)
   })
 
+  var hasPins: boolean = pins.length > 0
+
   // New Method
   const loadPinsFromNodeId = useCallback(async () => {
     console.log("loadPinsFromNodeId")
@@ -104,9 +110,9 @@ export const NodeView = (props: INodeViewProps) => {
       currentNode.nodeId
     )
     if (pinsFromNode.success && pinsFromNode.payload) {
-      console.log('pinsfromnode ', pinsFromNode.payload)
       setPins(pinsFromNode.payload)
     }
+    hasPins = pins.length > 0
   }, [currentNode])
 
   const loadAnchorsFromNodeId = useCallback(async () => {
@@ -177,9 +183,8 @@ export const NodeView = (props: INodeViewProps) => {
   useEffect(() => {
     setSelectedAnchors([])
     loadAnchorsFromNodeId()
-    if (currentNode.type === 'map') {
       loadPinsFromNodeId()
-    }
+    
   }, [loadAnchorsFromNodeId, currentNode, refreshLinkList, setSelectedAnchors, loadPinsFromNodeId])
 
   const [graphViewModalOpen, setGraphViewModalOpen] = useState(false)
@@ -279,7 +284,7 @@ export const NodeView = (props: INodeViewProps) => {
 
   const hasBreadcrumb: boolean = path.length > 1
   const hasAnchors: boolean = anchors.length > 0
-  const hasPins: boolean = pins.length > 0
+
 
  
   let nodePropertiesWidth: number = hasAnchors ? 200 : 0
@@ -377,7 +382,7 @@ export const NodeView = (props: INodeViewProps) => {
           <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
         </div>
       )}
-      {hasPins && (
+      {currentNode.type === 'map' && hasPins && (
         <div style={{width: "90%"}}>
           <PinMenu
             selectedPin = {selectedPin}
@@ -385,6 +390,9 @@ export const NodeView = (props: INodeViewProps) => {
             pins={pins}
             setPins={setPins}
             setParentNode={setParentNode}
+            onCreateNodeButtonClick = {onCreateNodeButtonClick}
+
+
             />
         </div>
       )}

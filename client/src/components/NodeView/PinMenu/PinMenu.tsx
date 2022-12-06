@@ -1,6 +1,6 @@
 import './PinMenu.scss'
 import { FrontendPinGateway } from '../../../pins'
-import { IPin, INode } from '../../../types'
+import { IPin, INode, NodeIdsToNodesMap, RecursiveNodeTree } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
 import {
   List,
@@ -10,8 +10,11 @@ import {
   UnorderedList,
 
 } from '@chakra-ui/react'
+import { Button } from '../../Button'
 import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
+import { CreateNodeModal } from '../../Modals'
+import * as ai from 'react-icons/ai'
 
 interface IPinMenuProps {
   selectedPin: IPin | null
@@ -19,12 +22,14 @@ interface IPinMenuProps {
   pins: IPin[]
   setPins: (pins: IPin[]) => void
   setParentNode: (node: INode) => void
+  onCreateNodeButtonClick: () => void
 
 }
 
 
 export const PinMenu = (props: IPinMenuProps) => { 
-  const {selectedPin, setSelectedPin, pins, setPins, setParentNode} = props
+  const {selectedPin, setSelectedPin, pins, setPins, setParentNode, 
+   onCreateNodeButtonClick} = props
 
   const icon = nodeTypeIcon('map') // icon based on type
 
@@ -38,6 +43,7 @@ export const PinMenu = (props: IPinMenuProps) => {
       setParentNode(node)
   }
 
+  const customButtonStyle = { height: 30, marginLeft: 10, width: 150}
 
   return (
     <div className='pin-menu-container'>
@@ -60,7 +66,7 @@ export const PinMenu = (props: IPinMenuProps) => {
         <div className='pin-menu-container'>
           <h2 className="pin-title pin-selected">{selectedPin.title}</h2>
           <p className="pin-explainer pin-selected">{selectedPin.explainer}</p>
-          <h4>Pin Documents</h4>
+          <h4 className="pin-documents">Pin Documents</h4>
             {selectedPin.childNodes.map(node => {
               <div className={'item-wrapper'} onClick={() => handleLinkClick(node)}>
                 <Link to={pathToString(node.filePath)}>
@@ -74,7 +80,15 @@ export const PinMenu = (props: IPinMenuProps) => {
                   </Link>
               </div>
             })}
-          
+            <div className="create-node-button-wrapper">
+              <Button
+                text="Create Node"
+                style={customButtonStyle}
+                icon={<ai.AiOutlinePlus />}
+                onClick={onCreateNodeButtonClick}
+              />
+            </div>
+
 
         </div>
       }

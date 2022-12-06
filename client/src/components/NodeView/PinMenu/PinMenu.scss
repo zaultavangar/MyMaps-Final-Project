@@ -1,4 +1,5 @@
 .pin-menu-container {
+  margin: 0px 5px;
 }
 
 .pin-menu-item-wrapper {
@@ -16,8 +17,28 @@
   font-weight: 200;
 }
 
+.pin-explainer.pin-selected {
+  margin-left: 20px;
+}
+
+.pin-title {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
 .your-pins {
   margin-bottom: 10px;
   font-weight: bold;
   font-size: 1.2em;
+}
+
+.pin-documents {
+  font-size: 1.1em;
+  text-align: center;
+}
+
+.create-node-button-wrapper {
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 20px;
 }

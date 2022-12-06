@@ -58,12 +58,6 @@ export const Header = (props: IHeaderProps) => {
         </Link>
         <Button
           isWhite={isLinking}
-          style={customButtonStyle}
-          icon={<ai.AiOutlinePlus />}
-          onClick={onCreateNodeButtonClick}
-        />
-        <Button
-          isWhite={isLinking}
           icon={<ai.AiOutlinePlus />}
           text="New Map"
           onClick={onCreateMapButtonClick}
