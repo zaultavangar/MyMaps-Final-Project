@@ -22,7 +22,6 @@ interface IPinMenuProps {
 
 }
 
- 
 
 export const PinMenu = (props: IPinMenuProps) => { 
   const {selectedPin, setSelectedPin, pins, setPins, setParentNode} = props
@@ -39,22 +38,26 @@ export const PinMenu = (props: IPinMenuProps) => {
       setParentNode(node)
   }
 
+
   return (
-    <div>
+    <div className='pin-menu-container'>
       {selectedPin === null ? 
         <div>
-          <UnorderedList>
-            {pins.map(pin => {
+          <h2 className="your-pins">Your Pins</h2>
+          <List>
+            {pins.map(pin => 
               <ListItem>
-                <ListIcon as={PlaceIcon} color='green.500' />
-                  <p className="pin-title">{pin.title}</p>
+                <div className="pin-menu-item-wrapper" onClick={() => setSelectedPin(pin)}>
+                <ListIcon as={PlaceIcon} color={selectedPin == pin ? 'blue' : "primary"} />
+                  {pin.title}
                   <p className="pin-explainer">{pin.explainer}</p>
+                </div>
               </ListItem>
-            })}
-          </UnorderedList>
+            )}
+          </List>
         </div>
         :
-        <div>
+        <div className='pin-menu-container'>
           <h2 className="pin-title pin-selected">{selectedPin.title}</h2>
           <p className="pin-explainer pin-selected">{selectedPin.explainer}</p>
           <h4>Pin Documents</h4>

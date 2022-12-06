@@ -1,0 +1,23 @@
+.pin-menu-container {
+}
+
+.pin-menu-item-wrapper {
+  padding: 5px 5px;
+  border-radius: 5px;
+}
+
+.pin-menu-item-wrapper:hover {
+  background-color: lightblue;
+  cursor: pointer;
+}
+
+.pin-explainer {
+  margin-left: 40px;
+  font-weight: 200;
+}
+
+.your-pins {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 1.2em;
+}

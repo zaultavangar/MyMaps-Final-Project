@@ -52,10 +52,15 @@ import FocusLock from 'react-focus-lock';
 import { RiNurseFill } from 'react-icons/ri'
 
 
-interface IMapContentProps {}
+interface IMapContentProps {
+  selectedPin: IPin | null
+  setSelectedPin: (pin: IPin) => void
+}
 
 /** The content of a map node, including any pins */
-export const MapContent = () => {
+export const MapContent = (props: IMapContentProps) => {
+
+  const {selectedPin, setSelectedPin} = props
 
   const [ createPinPopoverOpen, setCreatePinPopoverOpen ] = useState(false)
 
@@ -100,7 +105,7 @@ export const MapContent = () => {
 
   const [title, setTitle] = useState('')
   const [explainer, setExplainer] = useState('')
-  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
+
   const [selectedPinId, setSelectedPinId] = useState<string | null>('')
 
   /**
@@ -149,24 +154,16 @@ export const MapContent = () => {
   const handlePinSelect = async (e: React.MouseEvent, pin: IPin) => {
     e.stopPropagation()
     e.preventDefault()
-    switch (e.detail) {
-      // Left click to set selected pin
-      case 1:
-        if (selectedPin === null) {
-          setSelectedPin && setSelectedPin(pin)
-        }
-        else {
-          setSelectedPin && setSelectedPin(null)
-        }
-        break
+    setSelectedPin && setSelectedPin(pin)
     }
-  }
+  
 
   const displaySelectedPin = useCallback(() => {
     if (selectedPinId) {
       const prevSelectedPin = document.getElementById(selectedPinId)
       if (prevSelectedPin) {
         prevSelectedPin.style.color = "black" // reset to base color
+        prevSelectedPin.style.transform = "unset"
       }
     }
     if (imageContainer.current) {
@@ -177,7 +174,7 @@ export const MapContent = () => {
       const pinElement = document.getElementById(selectedPin.pinId)
       if (pinElement) {
         pinElement.style.color = "blue"
-        pinElement.style.transform="scale(1.2)"
+        pinElement.style.transform = "scale(1.2)"
         newSelectedPinId = pinElement.id
       }
     }
@@ -303,8 +300,6 @@ export const MapContent = () => {
       mapPins = pinsFromNode.payload
       // IAnchor array from FrontendAnchorGateway call
       mapPins.forEach((pin) => {
-        console.log('ljust: ', `${pin.leftJustify}px`)
-        console.log('tjust: ', `${pin.topJustify}px`)
         
         // selection
 

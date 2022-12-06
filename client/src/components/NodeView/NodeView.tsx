@@ -20,6 +20,7 @@ import {
   alertMessageState,
   currentNodeState,
   refreshLinkListState,
+  selectedPinState,
 } from '../../global/Atoms'
 import './NodeView.scss'
 import NodeInfo from '../Modals/GraphViewModal/Flow/NodeInfo'
@@ -98,15 +99,18 @@ export const NodeView = (props: INodeViewProps) => {
 
   // New Method
   const loadPinsFromNodeId = useCallback(async () => {
+    console.log("loadPinsFromNodeId")
     const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(
       currentNode.nodeId
     )
     if (pinsFromNode.success && pinsFromNode.payload) {
+      console.log('pinsfromnode ', pinsFromNode.payload)
       setPins(pinsFromNode.payload)
     }
   }, [currentNode])
 
   const loadAnchorsFromNodeId = useCallback(async () => {
+    
     const anchorsFromNode = await FrontendAnchorGateway.getAnchorsByNodeId(
       currentNode.nodeId
     )
@@ -173,6 +177,9 @@ export const NodeView = (props: INodeViewProps) => {
   useEffect(() => {
     setSelectedAnchors([])
     loadAnchorsFromNodeId()
+    if (currentNode.type === 'map') {
+      loadPinsFromNodeId()
+    }
   }, [loadAnchorsFromNodeId, currentNode, refreshLinkList, setSelectedAnchors, loadPinsFromNodeId])
 
   const [graphViewModalOpen, setGraphViewModalOpen] = useState(false)
@@ -272,8 +279,11 @@ export const NodeView = (props: INodeViewProps) => {
 
   const hasBreadcrumb: boolean = path.length > 1
   const hasAnchors: boolean = anchors.length > 0
-  const hasPins: boolean = pins.length > 0 // new code
+  const hasPins: boolean = pins.length > 0
+
+ 
   let nodePropertiesWidth: number = hasAnchors ? 200 : 0
+  if (hasPins) nodePropertiesWidth = 250
   const nodeViewWidth: string = `calc(100% - ${nodePropertiesWidth}px)`
 
   const nodeProperties = useRef<HTMLHeadingElement>(null)
@@ -318,7 +328,7 @@ export const NodeView = (props: INodeViewProps) => {
     document.removeEventListener('pointerup', onPointerUp)
   }
 
-  const [selectedPin, setSelectedPin] = useState<IPin|null>(null)
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
   return (
     <div className="node">
@@ -346,6 +356,8 @@ export const NodeView = (props: INodeViewProps) => {
             <NodeContent
               childNodes={childNodes}
               onCreateNodeButtonClick={onCreateNodeButtonClick}
+              selectedPin = {selectedPin}
+              setSelectedPin = {setSelectedPin}
             />
           </div>
         </div>
@@ -366,7 +378,7 @@ export const NodeView = (props: INodeViewProps) => {
         </div>
       )}
       {hasPins && (
-        <div>
+        <div style={{width: "90%"}}>
           <PinMenu
             selectedPin = {selectedPin}
             setSelectedPin={setSelectedPin}

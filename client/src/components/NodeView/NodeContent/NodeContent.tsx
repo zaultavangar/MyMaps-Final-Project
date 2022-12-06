@@ -9,12 +9,15 @@ import { MapSidebar } from './MapSidebar'
 import './NodeContent.scss'
 import { TextContent } from './TextContent'
 import { CommentContent } from './CommentContent'
+import { IPin } from '../../../types'
 
 /** Props needed to render any node content */
 
 export interface INodeContentProps {
   childNodes?: INode[]
   onCreateNodeButtonClick: () => void
+  selectedPin: IPin | null
+  setSelectedPin: (node: IPin) => void
 }
 
 /**
@@ -24,7 +27,12 @@ export interface INodeContentProps {
  * @returns Content that any type of node renders
  */
 export const NodeContent = (props: INodeContentProps) => {
-  const { onCreateNodeButtonClick, childNodes } = props
+  const { 
+    onCreateNodeButtonClick, 
+    childNodes,
+    selectedPin,
+    setSelectedPin
+   } = props
   const currentNode = useRecoilValue(currentNodeState)
   switch (currentNode.type) {
     case 'image':
@@ -35,10 +43,10 @@ export const NodeContent = (props: INodeContentProps) => {
       return (
         <div className="map-content-wrapper">
           <div className="map-content-container">
-            <MapContent />
-          </div>
-          <div className="map-view-sidebar">
-            <MapSidebar/>
+            <MapContent 
+              selectedPin= {selectedPin}
+              setSelectedPin= {setSelectedPin}
+            />
           </div>
           <div className="comment-content-container">
             <CommentContent />
