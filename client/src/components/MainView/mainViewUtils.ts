@@ -20,4 +20,4 @@ export const makeRootWrapper = (rootNodes: any) => {
   return rootRecursiveNodeTree
 }
 
-export const emptyNode: INode = makeINode('', [])
+export const emptyNode: INode = makeINode('', [], '')

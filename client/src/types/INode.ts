@@ -12,6 +12,7 @@ export interface INode {
   content: any // the content of the node
   filePath: INodePath // unique randomly generated ID which contains the type as a prefix
   nodeId: string // unique randomly generated ID which contains the type as a prefix
+  pinId: string
   title: string // user create node title
   dateCreated?: Date // date that the node was created
   // Support original and updated sizes as metadata
@@ -53,15 +54,18 @@ export type NodeIdsToNodesMap = { [nodeId: string]: INode }
  * @param type
  * @param title
  * @param content
+ * @param pinId
  * @returns INode object
  */
 export function makeINode(
   nodeId: string,
   path: string[],
+  pinId: string,
   children: string[] = [],
   type: NodeType = 'text',
   title: string | null = null,
-  content: any = null
+  content: any = null,
+
 ): INode {
   return {
     nodeId: nodeId,
@@ -69,12 +73,14 @@ export function makeINode(
     type: type,
     content: content ?? 'content' + nodeId,
     filePath: makeINodePath(path, children),
+    pinId: pinId
   }
 }
 
 export function makeIFolderNode(
   nodeId: any,
   path: any,
+  pinId: any,
   children?: any,
   type?: any,
   title?: any,
@@ -88,5 +94,6 @@ export function makeIFolderNode(
     title: title ?? 'node' + nodeId,
     type: type ?? 'text',
     viewType: viewType ?? 'grid',
+    pinId: pinId
   }
 }

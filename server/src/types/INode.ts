@@ -13,6 +13,7 @@ export interface INode {
   content: any // the content of the node
   filePath: INodePath // unique randomly generated ID which contains the type as a prefix
   nodeId: string // unique randomly generated ID which contains the type as a prefix
+  pinId: string
   title: string // user create node title
   dateCreated?: Date // date that the node was created
   // Support original and updated sizes as metadata
@@ -20,6 +21,7 @@ export interface INode {
   originalHeight?: number
   updatedWidth?: number
   updatedHeight?: number
+
 }
 
 /**
@@ -53,6 +55,7 @@ export const allNodeFields: string[] = [
   'originalHeight',
   'updatedWidth',
   'updatedHeight',
+  'pinId'
 ]
 
 // Type declaration for map from nodeId --> INode
@@ -66,16 +69,18 @@ export type NodeIdsToNodesMap = { [nodeId: string]: INode }
  * @param type
  * @param title
  * @param content
+ * @param pinId
  * @returns INode object
  */
 
 export function makeINode(
   nodeId: any,
   path: any,
+  pinId: any,
   children?: any,
   type?: any,
   title?: any,
-  content?: any
+  content?: any,
 ): INode {
   return {
     content: content ?? 'content' + nodeId,
@@ -83,12 +88,14 @@ export function makeINode(
     nodeId: nodeId,
     title: title ?? 'node' + nodeId,
     type: type ?? 'text',
+    pinId: pinId
   }
 }
 
 export function makeIFolderNode(
   nodeId: any,
   path: any,
+  pinId: any,
   children?: any,
   type?: any,
   title?: any,
@@ -102,12 +109,14 @@ export function makeIFolderNode(
     title: title ?? 'node' + nodeId,
     type: type ?? 'text',
     viewType: viewType ?? 'grid',
+    pinId: pinId,
   }
 }
 
 export function isINode(object: any): object is INode {
   const propsDefined: boolean =
     typeof (object as INode).nodeId !== 'undefined' &&
+    typeof (object as INode).pinId !== 'undefined' &&
     typeof (object as INode).title !== 'undefined' &&
     typeof (object as INode).type !== 'undefined' &&
     typeof (object as INode).content !== 'undefined' &&
@@ -124,6 +133,7 @@ export function isINode(object: any): object is INode {
     // and verify if filePath.path is properly defined
     return (
       typeof (object as INode).nodeId === 'string' &&
+      typeof (object as INode).pinId === 'string' &&
       typeof (object as INode).title === 'string' &&
       nodeTypes.includes((object as INode).type) &&
       typeof (object as INode).content === 'string' &&
@@ -136,6 +146,7 @@ export function isINode(object: any): object is INode {
 export function isSameNode(n1: INode, n2: INode): boolean {
   return (
     n1.nodeId === n2.nodeId &&
+    n1.pinId === n2.pinId &&
     n1.title === n2.title &&
     n1.type === n2.type &&
     n1.content === n2.content &&

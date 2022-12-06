@@ -1845,7 +1845,7 @@
 
 "@googlemaps/react-wrapper@^1.1.35":
   version "1.1.35"
-  resolved "https://registry.npmjs.org/@googlemaps/react-wrapper/-/react-wrapper-1.1.35.tgz"
+  resolved "https://registry.yarnpkg.com/@googlemaps/react-wrapper/-/react-wrapper-1.1.35.tgz#fde9146b1ae02805dcad9c0fab56c4bc137b32ee"
   integrity sha512-vK+BDQMHN0Oqr66cW3ZPWVK43BUmJJBu6P8T74tc6/fKpUJUlFEaZsupgIIRRRDW9ejB8uGagUmwOnA2gdcvbw==
   dependencies:
     "@googlemaps/js-api-loader" "^1.13.2"

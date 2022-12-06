@@ -9,6 +9,7 @@ import {
   alertOpenState,
   alertTitleState,
   alertMessageState,
+  selectedPinState,
 } from '../../global/Atoms'
 import { useLocation } from 'react-router-dom'
 import { FrontendNodeGateway } from '../../nodes'
@@ -27,6 +28,8 @@ import { createNodeIdsToNodesMap, emptyNode, makeRootWrapper } from './mainViewU
 export const MainView = React.memo(function MainView() {
   // app states
   const [isAppLoaded, setIsAppLoaded] = useState(false)
+
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
   // modal states
   const [createNodeModalOpen, setCreateNodeModalOpen] = useState(false)
@@ -215,6 +218,8 @@ export const MainView = React.memo(function MainView() {
             roots={rootNodes}
             nodeIdsToNodesMap={nodeIdsToNodesMap}
             onSubmit={loadRootsFromDB}
+            selectedPin={selectedPin}
+            setSelectedPin={setSelectedPin}
           />
           <CreateMapModal
             isOpen={createMapModalOpen}
@@ -222,6 +227,8 @@ export const MainView = React.memo(function MainView() {
             roots={rootNodes}
             nodeIdsToNodesMap={nodeIdsToNodesMap}
             onSubmit={loadRootsFromDB}
+            selectedPin={selectedPin}
+            setSelectedPin={setSelectedPin}
             />
           <CompleteLinkModal
             isOpen={completeLinkModalOpen}
@@ -252,6 +259,7 @@ export const MainView = React.memo(function MainView() {
                 roots={rootNodes}
                 parentNode={selectedNode}
                 setParentNode={setSelectedNode}
+                selectedPin = {selectedPin}
               />
             </div>
             <div className="divider" onPointerDown={onPointerDown} />
@@ -270,6 +278,8 @@ export const MainView = React.memo(function MainView() {
                 // onGraphViewClick={handleGraphViewClick}
                 nodeIdsToNodesMap={nodeIdsToNodesMap}
                 setParentNode={setSelectedNode}
+                selectedPin={selectedPin}
+                setSelectedPin={setSelectedPin}
                               
 
               />

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { RiArrowRightSLine, RiFolderOpenLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import { nodeTypeIcon, pathToString } from '../../../global'
-import { INode, NodeType } from '../../../types'
+import { INode, NodeType, IPin } from '../../../types'
 import { RecursiveNodeTree } from '../../../types/RecursiveNodeTree'
 import './TreeViewItem.scss'
 
@@ -14,6 +14,7 @@ interface ITreeViewProps {
   setParentNode: (node: INode) => void
   title: string
   type: NodeType
+  selectedPin: IPin | null
 }
 
 export const TreeViewItem = ({
@@ -24,6 +25,7 @@ export const TreeViewItem = ({
   parentNode,
   setParentNode,
   changeUrlOnClick,
+  selectedPin
 }: ITreeViewProps) => {
   let childrenItems: JSX.Element[] = []
   // glr: why does this not work?
@@ -39,6 +41,7 @@ export const TreeViewItem = ({
             title={child.node.title}
             childNodes={child.children}
             changeUrlOnClick={changeUrlOnClick}
+            selectedPin={selectedPin}
           />
         </Link>
       ) : (
@@ -51,6 +54,7 @@ export const TreeViewItem = ({
           title={child.node.title}
           childNodes={child.children}
           changeUrlOnClick={changeUrlOnClick}
+          selectedPin={selectedPin}
         />
       )
     })

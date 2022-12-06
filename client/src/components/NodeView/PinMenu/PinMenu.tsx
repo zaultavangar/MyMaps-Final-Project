@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
 import { CreateNodeModal } from '../../Modals'
 import * as ai from 'react-icons/ai'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface IPinMenuProps {
   selectedPin: IPin | null
@@ -63,7 +64,13 @@ export const PinMenu = (props: IPinMenuProps) => {
           </List>
         </div>
         :
-        <div className='pin-menu-container'>
+        <div>
+           <Button
+              onClick={()=> setSelectedPin(null)}
+              icon={<ai.AiOutlineArrowLeft/>}
+              text="Show all pins"
+              style={{backgroundColor: "white", marginBottom: "10px"}}
+            />
           <h2 className="pin-title pin-selected">{selectedPin.title}</h2>
           <p className="pin-explainer pin-selected">{selectedPin.explainer}</p>
           <h4 className="pin-documents">Pin Documents</h4>

@@ -24,6 +24,7 @@ import './CreateNodeModal.scss'
 import { createNodeFromModal, uploadImage } from './createNodeUtils'
 import { useSetRecoilState } from 'recoil'
 import { selectedNodeState } from '../../../global/Atoms'
+import { IPin } from '../../../types'
 
 export interface ICreateNodeModalProps {
   isOpen: boolean
@@ -31,6 +32,8 @@ export interface ICreateNodeModalProps {
   onClose: () => void
   onSubmit: () => unknown
   roots: RecursiveNodeTree[]
+  selectedPin: IPin | null
+  setSelectedPin: (pin: IPin | null) => void
 }
 
 /**
@@ -39,7 +42,7 @@ export interface ICreateNodeModalProps {
  */
 export const CreateNodeModal = (props: ICreateNodeModalProps) => {
   // deconstruct props variables
-  const { isOpen, onClose, roots, nodeIdsToNodesMap, onSubmit } = props
+  const { isOpen, onClose, roots, nodeIdsToNodesMap, onSubmit, selectedPin, setSelectedPin } = props
 
   // state variables
   const setSelectedNode = useSetRecoilState(selectedNodeState)
@@ -83,6 +86,7 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
       parentNodeId: selectedParentNode ? selectedParentNode.nodeId : null,
       title,
       type: selectedType as NodeType,
+      selectedPin: selectedPin,
     }
     const node = await createNodeFromModal(attributes)
     node && setSelectedNode(node)
@@ -181,6 +185,7 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
                   parentNode={selectedParentNode}
                   setParentNode={setSelectedParentNode}
                   changeUrlOnClick={false}
+                  selectedPin={selectedPin}
                 />
               </div>
             </div>

@@ -8,6 +8,7 @@ import {
   makeINodePath,
   NodeIdsToNodesMap,
   NodeType,
+  IPin,
 } from '../../../types'
 
 export async function http<T>(request: AxiosRequestConfig): Promise<T> {
@@ -21,6 +22,7 @@ export interface ICreateNodeModalAttributes {
   parentNodeId: string | null
   title: string
   type: NodeType // if null, add node as a root
+  selectedPin: IPin | null
 }
 
 /**
@@ -70,6 +72,7 @@ export async function createNodeFromModal({
   parentNodeId,
   content,
   nodeIdsToNodesMap,
+  selectedPin,
 }: ICreateNodeModalAttributes): Promise<INode | null> {
   const nodeId = generateObjectId(type)
   // Initial filePath value: create node as a new root
@@ -95,6 +98,7 @@ export async function createNodeFromModal({
         title: title,
         type: type,
         viewType: 'grid',
+        pinId: selectedPin !== null ? selectedPin.pinId : ""
       }
       break
     case 'map':
@@ -105,6 +109,7 @@ export async function createNodeFromModal({
         dateCreated: new Date(),
         filePath: filePath,
         nodeId: nodeId,
+        pinId: selectedPin !== null ? selectedPin.pinId : "",
         title: title,
         type: type,
         // Initialize map node with correct, updated metadata
@@ -123,6 +128,7 @@ export async function createNodeFromModal({
         dateCreated: new Date(),
         filePath: filePath,
         nodeId: nodeId,
+        pinId: selectedPin !== null ? selectedPin.pinId : "",
         title: title,
         type: type,
         // Initialize image node with correct, updated metadata
@@ -138,6 +144,7 @@ export async function createNodeFromModal({
         dateCreated: new Date(),
         filePath: filePath,
         nodeId: nodeId,
+        pinId: selectedPin !== null ? selectedPin.pinId : "",
         title: title,
         type: type,
       }

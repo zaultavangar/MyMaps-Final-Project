@@ -24,7 +24,8 @@ import { TreeView } from '../../TreeView'
 import './CreateMapModal.scss'
 import { createNodeFromModal, uploadImage } from '../CreateNodeModal/createNodeUtils'
 import { useSetRecoilState } from 'recoil'
-import { selectedNodeState } from '../../../global/Atoms'
+import { selectedNodeState, selectedPinState } from '../../../global/Atoms'
+import { IPin } from '../../../types'
 
 export interface ICreateMapModalProps {
   isOpen: boolean
@@ -32,6 +33,8 @@ export interface ICreateMapModalProps {
   onClose: () => void
   onSubmit: () => unknown
   roots: RecursiveNodeTree[]
+  selectedPin: IPin | null
+  setSelectedPin: (pin: IPin | null) => void
 }
 
 /**
@@ -40,7 +43,7 @@ export interface ICreateMapModalProps {
  */
 export const CreateMapModal = (props: ICreateMapModalProps) => {
   // deconstruct props variables
-  const { isOpen, onClose, roots, nodeIdsToNodesMap, onSubmit } = props
+  const { isOpen, onClose, roots, nodeIdsToNodesMap, onSubmit, selectedPin, setSelectedPin } = props
 
   // state variables
   const setSelectedNode = useSetRecoilState(selectedNodeState)
@@ -86,6 +89,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
       parentNodeId: selectedParentNode ? selectedParentNode.nodeId : null,
       title,
       type: 'map' as NodeType,
+      selectedPin: selectedPin,
     }
     const node = await createNodeFromModal(attributes)
     node && setSelectedNode(node)
@@ -178,6 +182,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
                   parentNode={selectedParentNode}
                   setParentNode={setSelectedParentNode}
                   changeUrlOnClick={false}
+                  selectedPin={selectedPin}
                 />
               </div>
             </div>

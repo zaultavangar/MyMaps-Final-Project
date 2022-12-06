@@ -20,7 +20,6 @@ import {
   alertMessageState,
   currentNodeState,
   refreshLinkListState,
-  selectedPinState,
 } from '../../global/Atoms'
 import './NodeView.scss'
 import NodeInfo from '../Modals/GraphViewModal/Flow/NodeInfo'
@@ -47,6 +46,8 @@ export interface INodeViewProps {
   // onGraphViewClick: (node: INode) => void
   childNodes?: INode[]
   setParentNode: (node: INode) => void
+  selectedPin: IPin | null
+  setSelectedPin: (pin: IPin | null) => void
 
 
 
@@ -77,6 +78,8 @@ export const NodeView = (props: INodeViewProps) => {
     onMoveButtonClick,
     childNodes,
     setParentNode,
+    selectedPin,
+    setSelectedPin,
 
   } = props
   const setIsLinking = useSetRecoilState(isLinkingState)
@@ -333,7 +336,6 @@ export const NodeView = (props: INodeViewProps) => {
     document.removeEventListener('pointerup', onPointerUp)
   }
 
-  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
   return (
     <div className="node">
@@ -391,8 +393,6 @@ export const NodeView = (props: INodeViewProps) => {
             setPins={setPins}
             setParentNode={setParentNode}
             onCreateNodeButtonClick = {onCreateNodeButtonClick}
-
-
             />
         </div>
       )}
