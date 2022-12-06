@@ -50,6 +50,7 @@ export const MainView = React.memo(function MainView() {
 
   /** update our frontend root nodes from the database */
   const loadRootsFromDB = useCallback(async () => {
+    console.log("test")
     const rootsFromDB = await FrontendNodeGateway.getRoots()
     if (rootsFromDB.success) {
       rootsFromDB.payload && setRootNodes(rootsFromDB.payload)

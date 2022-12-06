@@ -38,7 +38,7 @@ export const CommentTextMenu = (props: IEditorProps) => {
       >
         {<ri.RiItalic />}
       </button>
-      <button
+      {/* <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={!editor.can().chain().focus().toggleStrike().run()}
         title="Strikethrough"
@@ -47,7 +47,7 @@ export const CommentTextMenu = (props: IEditorProps) => {
         }
       >
         {<ri.RiStrikethrough />}
-      </button>
+      </button> */}
       <button
         onClick={() => editor.chain().focus().toggleHighlight().run()}
         disabled={!editor.can().chain().focus().toggleHighlight().run()}
@@ -58,8 +58,7 @@ export const CommentTextMenu = (props: IEditorProps) => {
       >
         {<ri.RiMarkPenFill />}
       </button>
-      <div className="menu-divider"></div>
-      <button
+      {/* <button
         onClick={() => editor.chain().focus().toggleCode().run()}
         disabled={!editor.can().chain().focus().toggleCode().run()}
         title="Code"
@@ -78,7 +77,7 @@ export const CommentTextMenu = (props: IEditorProps) => {
         }
       >
         {<ri.RiCodeBoxFill />}
-      </button>
+      </button> */}
       <div className="menu-divider"></div>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -102,7 +101,7 @@ export const CommentTextMenu = (props: IEditorProps) => {
       >
         {<ri.RiListCheck />}
       </button>
-      <button
+      {/* <button
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
         disabled={!editor.can().chain().focus().setHorizontalRule().run()}
         title="Horizontal Line"
@@ -129,7 +128,7 @@ export const CommentTextMenu = (props: IEditorProps) => {
         }
       >
         {<ri.RiSubscript />}
-      </button>
+      </button> */}
       <div className="menu-divider"></div>
       <button onClick={() => save()} title="Save" className="textEditorButton">
         {<ri.RiSaveFill />}

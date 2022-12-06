@@ -5,6 +5,7 @@ import { IFolderNode, INode } from '../../../types'
 import { FolderContent } from './FolderContent'
 import { ImageContent } from './ImageContent'
 import { MapContent } from './MapContent'
+import { MapSidebar } from './MapSidebar'
 import './NodeContent.scss'
 import { TextContent } from './TextContent'
 import { CommentContent } from './CommentContent'
@@ -32,9 +33,16 @@ export const NodeContent = (props: INodeContentProps) => {
       return <TextContent />
     case 'map':
       return (
-        <div>
-          <MapContent />
-          <CommentContent />
+        <div className="map-content-wrapper">
+          <div className="map-content-container">
+            <MapContent />
+          </div>
+          <div className="map-view-sidebar">
+            <MapSidebar/>
+          </div>
+          <div className="comment-content-container">
+            <CommentContent />
+          </div>
         </div>
       )
     case 'folder':

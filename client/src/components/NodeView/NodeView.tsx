@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FrontendAnchorGateway } from '../../anchors'
 import { generateObjectId } from '../../global'
-import { IAnchor, INode, isSameExtent, NodeIdsToNodesMap, NodeType } from '../../types'
+import { IAnchor, INode, IPin, isSameExtent, NodeIdsToNodesMap, NodeType } from '../../types'
 import { NodeBreadcrumb } from './NodeBreadcrumb'
 import { NodeContent } from './NodeContent'
 import { NodeHeader } from './NodeHeader'
@@ -25,6 +25,7 @@ import NodeInfo from '../Modals/GraphViewModal/Flow/NodeInfo'
 import { Edge, Node } from 'react-flow-renderer'
 import { FrontendLinkGateway } from '../../links'
 import { FrontendNodeGateway } from '../../nodes'
+import { FrontendPinGateway } from '../../pins'
 import { GraphViewModal } from '../Modals'
 
 export interface INodeViewProps {
@@ -85,9 +86,21 @@ export const NodeView = (props: INodeViewProps) => {
     filePath: { path },
   } = currentNode
 
+  const [pins, setPins] = useState<IPin[]>([])
+
   useEffect(() => {
     setCurrentNode(currentNode)
   })
+
+  // New Method
+  const loadPinsFromNodeId = useCallback(async () => {
+    const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(
+      currentNode.nodeId
+    )
+    if (pinsFromNode.success && pinsFromNode.payload) {
+      setPins(pinsFromNode.payload)
+    }
+  }, [currentNode])
 
   const loadAnchorsFromNodeId = useCallback(async () => {
     const anchorsFromNode = await FrontendAnchorGateway.getAnchorsByNodeId(
@@ -156,7 +169,7 @@ export const NodeView = (props: INodeViewProps) => {
   useEffect(() => {
     setSelectedAnchors([])
     loadAnchorsFromNodeId()
-  }, [loadAnchorsFromNodeId, currentNode, refreshLinkList, setSelectedAnchors])
+  }, [loadAnchorsFromNodeId, currentNode, refreshLinkList, setSelectedAnchors, loadPinsFromNodeId])
 
   const [graphViewModalOpen, setGraphViewModalOpen] = useState(false)
 
@@ -255,6 +268,7 @@ export const NodeView = (props: INodeViewProps) => {
 
   const hasBreadcrumb: boolean = path.length > 1
   const hasAnchors: boolean = anchors.length > 0
+  const hasPins: boolean = pins.length > 0 // new code
   let nodePropertiesWidth: number = hasAnchors ? 200 : 0
   const nodeViewWidth: string = `calc(100% - ${nodePropertiesWidth}px)`
 
@@ -322,7 +336,7 @@ export const NodeView = (props: INodeViewProps) => {
               <NodeBreadcrumb path={path} nodeIdsToNodesMap={nodeIdsToNodesMap} />
             </div>
           )}
-          <div className="nodeView-content">
+          <div className={`nodeView-content ${currentNode.type==="map" ? "mapView-content" : ""}`}>
             <NodeContent
               childNodes={childNodes}
               onCreateNodeButtonClick={onCreateNodeButtonClick}
@@ -330,7 +344,10 @@ export const NodeView = (props: INodeViewProps) => {
           </div>
         </div>
       </div>
-      {hasAnchors && (
+      {/**
+       * Change to hasPins, for the mapView
+       */}
+      {(hasAnchors || hasPins) && (
         <div className="divider" ref={divider} onPointerDown={onPointerDown} />
       )}
       {hasAnchors && (
@@ -342,6 +359,13 @@ export const NodeView = (props: INodeViewProps) => {
           <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
         </div>
       )}
+      {hasPins && (
+        <div>
+        </div>
+      )}
+      {/**
+       * Add a Pin Menu, with pins for the map, and documents linked to those pins
+       */}
     </div>
   )
 }

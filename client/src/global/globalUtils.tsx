@@ -50,7 +50,7 @@ export const isNotNullOrUndefined = (data: any) => {
   return data != null
 }
 
-type hypertextObjectType = NodeType | 'link' | 'anchor'
+type hypertextObjectType = NodeType | 'link' | 'anchor' | 'pin'
 
 export function generateObjectId(prefix: hypertextObjectType) {
   return uniqid(prefix + '.')

@@ -84,7 +84,6 @@ export async function createNodeFromModal({
       console.error('Error: parent node is null')
     }
   }
-
   let newNode: INode | IFolderNode
   switch (type) {
     case 'folder':
@@ -100,6 +99,7 @@ export async function createNodeFromModal({
       break
     case 'map':
       const mapMetaData = await getMeta(content)
+      console.log('test')
       newNode = {
         content: content,
         dateCreated: new Date(),
@@ -142,7 +142,7 @@ export async function createNodeFromModal({
         type: type,
       }
   }
-
+  console.log('tests')
   const nodeResponse = await FrontendNodeGateway.createNode(newNode)
   if (nodeResponse.success) {
     return nodeResponse.payload

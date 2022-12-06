@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import * as fa from 'react-icons/fa'
 import * as ri from 'react-icons/ri'
+import PlaceIcon from '@mui/icons-material/Place'
+import TitleIcon from '@mui/icons-material/Title';
+import DescriptionIcon from '@mui/icons-material/Description';
 import { fetchLinks } from '..'
 import { useHistory } from 'react-router-dom'
 import './MapContent.scss'
@@ -14,6 +17,7 @@ import {
   refreshLinkListState,
 } from '../../../../global/Atoms'
 import { FrontendAnchorGateway } from '../../../../anchors'
+import { FrontendPinGateway } from '../../../../pins'
 import { FrontendNodeGateway } from '../../../../nodes'
 import {
   IAnchor,
@@ -24,19 +28,37 @@ import {
 } from '../../../../types'
 import './MapContent.scss'
 import {
-  NumberInput,
-  NumberInputField,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  NumberInputStepper,
+ Popover, 
+ PopoverBody,
+ PopoverContent,
+ PopoverCloseButton,
+ PopoverHeader, 
+ PopoverArrow,
+ PopoverFooter,
+ PopoverTrigger,
+  ButtonGroup,
+  Button,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Textarea,
+
 } from '@chakra-ui/react'
-import { Button } from '../../../Button'
+import { generateObjectId } from '../../../../global'
+
 import { format } from 'path'
+import { createNodeIdsToNodesMap } from '../../../MainView';
+import { setUncaughtExceptionCaptureCallback } from 'process';
+
 
 interface IMapContentProps {}
 
 /** The content of a map node, including any pins */
 export const MapContent = () => {
+
+  const [ createPinPopoverOpen, setCreatePinPopoverOpen ] = useState(false)
+
+
   const startAnchor = useRecoilValue(startAnchorState)
 
   // recoil state management
@@ -83,20 +105,38 @@ export const MapContent = () => {
   const [selectedAnchorIds, setSelectedAnchorIds] = useState<string[]>([])
   const history = useHistory()
 
+  const [title, setTitle] = useState('')
+  const [explainer, setExplainer] = useState('')
+
   /**
    * Method to handle creating a pin on the map image when the user clicks on the image
    * @param event
    * @returns
    */
-  const handleCreatePin = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    // If we are currently dragging the image, do not create a pin
-    if (dragging) {
-      return
-    } else {
-      // Get the x and y coordinates of the click
-      const x = event.clientX
-      const y = event.clientY
+  const handleCreatePin = async () => {
+    const newPin = {
+      pinId: generateObjectId('pin'),
+      nodeId: currentNode.nodeId,
+      trails: [],
+      childNodes: [],
+      title: title,
+      explainer: explainer,
     }
+
+    const pinResponse = await FrontendPinGateway.createPin(newPin)
+    if (!pinResponse.success) {
+      setError('Error: Failed to create pin')
+      return
+    }
+    // add state fxn calls to refresh pin menu and other things that need to be refreshed
+  }
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value)
+  }
+
+  const handleExplainerChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setExplainer(event.target.value)
   }
 
   /**
@@ -208,12 +248,13 @@ export const MapContent = () => {
     const y = e.clientY // The y location of the poitner in the browser
 
     // calculate the x and y location of the pointer relative to the image
-    xLast = x - imageLeft!
-    yLast = y - imageTop!
+    xLast = x + 10 - imageLeft!
+    yLast = y - 2 - imageTop!
     // Set the initial x and y location of the selection
     if (selection.current) {
       selection.current.style.left = `${xLast}px`
       selection.current.style.top = `${yLast}px`
+      setCreatePinPopoverOpen(true)
     }
   }
 
@@ -424,31 +465,64 @@ export const MapContent = () => {
     }
   }
 
+
+
   return (
-    <div className="imageWrapper">
+    <div className="mapImageWrapper" id="mapImageWrapper">
       <div
         ref={imageContainer}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         onPointerMove={onPointerMove}
-        className="imageContent-wrapper"
+        className="map-image-content-wrapper"
+        id="map-image-content-wrapper"
         style={{ width: updatedWidth, height: updatedHeight }}
       >
         {startAnchorVisualization}
         {imageAnchors}
         {
-          <div className="selection" ref={selection}>
-            <div
-              onClick={onHandleClearSelectionClick}
-              onPointerDown={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
-              className="selection-close"
+          <div>
+
+            <Popover
+              returnFocusOnClose={false}
+              isOpen={createPinPopoverOpen}
+              onClose={() => setCreatePinPopoverOpen(false)}
+              placement='right'
+              closeOnBlur={false}
             >
-              <fa.FaTimes />
-            </div>
+              <PopoverTrigger>
+                <div className="selection" ref={selection}>
+                <PlaceIcon/>
+              </div>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverHeader fontWeight='semibold'>Create a Pin</PopoverHeader>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverBody>
+                  <InputGroup sx={{marginBottom: '10px'}}>
+                    <InputLeftElement
+                      pointerEvents='none'
+                      children={<TitleIcon/>}
+                    />
+                    <Input placeholder='Choose a Title' onChange={handleTitleChange}/>
+                  </InputGroup>
+                  <InputGroup sx={{marginBottom: '10px'}}>
+                    <Textarea placeholder='Enter a Description (optional)' onChange={handleExplainerChange}/>
+                  </InputGroup>
+                 
+                  If Google Maps, location should prob pop up automatically with optional title
+                </PopoverBody>
+                <PopoverFooter display='flex' justifyContent='flex-end'>
+                <ButtonGroup size='sm'>
+                  <Button variant='outline'>Cancel</Button>
+                  <Button onClick = {handleCreatePin} colorScheme='green'>Create</Button>
+                  </ButtonGroup>
+                </PopoverFooter>
+              </PopoverContent>
+            </Popover>
           </div>
+          
         }
         <img src={content} />
       </div>

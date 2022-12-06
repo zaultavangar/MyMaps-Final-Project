@@ -1,0 +1,20 @@
+.map-content-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  grid-template-areas: 
+    "map-content-container map-view-sidebar"
+    "comment-content-container  map-view-sidebar";
+}
+
+.map-content-container {
+  grid-area: map-content-container;
+}
+
+.map-view-sidebar {
+  grid-area: map-view-sidebar;
+}
+
+.comment-content-container{
+  grid-area: comment-content-container;
+}

@@ -487,6 +487,8 @@ export const ImageContent = () => {
   )
 }
 
+// fa.FaTimes
+
 interface INumberInputComponentProps {
   value: number
   setValue: (value: number) => void // Method to set the value (for setUpdatedWidth and setUpdatedHeight)

@@ -7,6 +7,7 @@ import { MongoClient } from 'mongodb'
 import { AnchorRouter } from './anchors'
 import { LinkRouter } from './links'
 import { TrailRouter } from './trails'
+import { PinRouter } from './pins'
 
 /* dotenv is a zero-dependency module that laods environment variables from a 
 .env file into process .env */
@@ -48,6 +49,9 @@ app.use('/link', myLinkRouter.getExpressRouter())
 // trail router
 const myTrailRouter = new TrailRouter(mongoClient)
 app.use('/trail', myTrailRouter.getExpressRouter())
+// pin router
+const myPinRouter = new PinRouter(mongoClient)
+app.use('/pin', myPinRouter.getExpressRouter())
 
 app.get('*', (req: Request, res: Response) => {
   res.send('MyHypermedia Backend Service')
