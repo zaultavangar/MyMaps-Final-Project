@@ -1,5 +1,5 @@
 import { atom } from 'recoil'
-import { INode, IAnchor, Extent, makeIFolderNode } from '../../types'
+import { INode, IAnchor, Extent, IPin, makeIFolderNode } from '../../types'
 
 // the selected node
 export const selectedNodeState = atom<INode | null>({
@@ -62,6 +62,12 @@ export const endAnchorState = atom<IAnchor | null>({
 export const selectedAnchorsState = atom<IAnchor[]>({
   key: 'selectedAnchorsState',
   default: [],
+})
+
+// selected pin
+export const selectedPinState = atom<IPin | null>({
+  key: 'selectedPinState',
+  default: null
 })
 
 // selected extent
