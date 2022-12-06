@@ -49,6 +49,7 @@ import { format } from 'path'
 import { createNodeIdsToNodesMap } from '../../../MainView';
 import { setUncaughtExceptionCaptureCallback } from 'process';
 import FocusLock from 'react-focus-lock';
+import { RiNurseFill } from 'react-icons/ri'
 
 
 interface IMapContentProps {}
@@ -81,8 +82,8 @@ export const MapContent = () => {
   const [mapPins, setMapPins] = useState<JSX.Element[]>([])
   const [startAnchorVisualization, setStartAnchorVisualization] = useState<JSX.Element>()
 
-  let xLast: number
-  let yLast: number
+  const [xLast, setXLast] = useState<number>(0)
+  const [yLast, setYLast] = useState<number>(0)
 
   /**
    * useRef Here is an example of use ref to store a mutable html object
@@ -108,6 +109,8 @@ export const MapContent = () => {
    * @returns
    */
   const handleCreatePin = async () => {
+    console.log(xLast)
+    console.log(yLast)
     const newPin = {
       pinId: generateObjectId('pin'),
       nodeId: currentNode.nodeId,
@@ -115,8 +118,9 @@ export const MapContent = () => {
       childNodes: [],
       title: title,
       explainer: explainer,
-      topJustify: yLast, 
-      leftJustify: xLast,
+      topJustify: yLast,
+      leftJustify: xLast
+      ,
     }
 
     const pinResponse = await FrontendPinGateway.createPin(newPin)
@@ -124,6 +128,7 @@ export const MapContent = () => {
       setError('Error: Failed to create pin')
       return
     }
+    setCreatePinPopoverOpen(false)
     // add state fxn calls to refresh pin menu and other things that need to be refreshed
   }
 
@@ -147,7 +152,12 @@ export const MapContent = () => {
     switch (e.detail) {
       // Left click to set selected pin
       case 1:
-        setSelectedPin && setSelectedPin(pin)
+        if (selectedPin === null) {
+          setSelectedPin && setSelectedPin(pin)
+        }
+        else {
+          setSelectedPin && setSelectedPin(null)
+        }
         break
     }
   }
@@ -164,12 +174,10 @@ export const MapContent = () => {
     }
     let newSelectedPinId: string | null = null
     if (selectedPin) {
-      if (imageContainer.current) {
-        imageContainer.current.style.outline = 'solid 5px #d7ecff'
-      }
       const pinElement = document.getElementById(selectedPin.pinId)
       if (pinElement) {
         pinElement.style.color = "blue"
+        pinElement.style.transform="scale(1.2)"
         newSelectedPinId = pinElement.id
       }
     }
@@ -195,7 +203,7 @@ export const MapContent = () => {
 
   useEffect(() => {
     displayMapPins()
-  }, [selectedPin, currentNode, refreshLinkList]) // startAmcjpr
+  }, [selectedPin, currentNode, refreshLinkList, mapPins]) // startAmcjpr
 
   useEffect(() => {
     setUpdatedWidth(currentNode.updatedWidth ?? 0)
@@ -221,15 +229,20 @@ export const MapContent = () => {
       const y = e.clientY // The y location of the poitner in the browser
   
       // calculate the x and y location of the pointer relative to the image
-      xLast = x + 10 - imageLeft!
-      yLast = y - 2 - imageTop!
+
+      let xPosLast = x + 10 - imageLeft!
+      let yPosLast = y - 2 - imageTop!
       // Set the initial x and y location of the selection
       if (selection.current) {
         selection.current.style.display = "unset"
-        selection.current.style.left = `${xLast}px`
-        selection.current.style.top = `${yLast}px`
+        console.log(xPosLast)
+        console.log(yPosLast)
+        selection.current.style.left = `${xPosLast}px`
+        selection.current.style.top = `${yPosLast}px`
         console.log('createpin')
         setCreatePinPopoverOpen(true)
+        setXLast(xPosLast)
+        setYLast(yPosLast)
       }
     }
   }
@@ -290,24 +303,30 @@ export const MapContent = () => {
       mapPins = pinsFromNode.payload
       // IAnchor array from FrontendAnchorGateway call
       mapPins.forEach((pin) => {
+        console.log('ljust: ', `${pin.leftJustify}px`)
+        console.log('tjust: ', `${pin.topJustify}px`)
+        
+        // selection
+
         pinElementList.push(
-          <div>
+          <div 
+            id={pin.pinId}
+            key={'map.' + pin.pinId}
+            onClick={(e)=> {
+              handlePinSelect(e, pin)
+            }}
+            onPointerDown={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
+            className="pins-on-map-wrapper"
+            style= {{
+              left: `${pin.leftJustify}px`, // change these variable names
+              top: `${pin.topJustify}px`
+            }}
+            > 
               <PlaceIcon 
-                  id={pin.pinId}
-                  key={'map.' + pin.pinId}
-                  className='map-pin'
-                  onClick={(e)=> {
-                    handlePinSelect(e, pin)
-                  }}
-                  onPointerDown={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                  }}
-                color="primary"
-                style= {{
-                  left: `${pin.leftJustify}px`, // change these variable names
-                  top: `${pin.topJustify}px`
-                }}/>
+                color="primary"/>
           </div>
         )
       })
@@ -344,8 +363,8 @@ export const MapContent = () => {
             >
               <PopoverTrigger>
                 <div className="selection" ref={selection}>
-                <PlaceIcon style={{color: "black"}}/>
-              </div>
+                  <PlaceIcon style={{color: "black"}}/>
+                </div>
               </PopoverTrigger>
               <PopoverContent>
                 <PopoverHeader fontWeight='semibold'>Create a Pin</PopoverHeader>

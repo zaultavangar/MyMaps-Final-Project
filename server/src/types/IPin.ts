@@ -37,8 +37,8 @@ export function isIPin(object: any): object is IPin {
     typeof (object as IPin).nodeId === 'string' && 
     typeof (object as IPin).title === 'string' &&
     typeof (object as IPin).explainer === 'string' && 
-    typeof (object as IPin).topJustify !== 'number' && 
-    typeof (object as IPin).leftJustify !== 'number' 
+    typeof (object as IPin).topJustify === 'number' && 
+    typeof (object as IPin).leftJustify === 'number' 
   )
 }
 
