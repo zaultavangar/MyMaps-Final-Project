@@ -37,6 +37,8 @@ export function isINodeProperty(object: any): boolean {
         return typeof (object as INodeProperty).value === 'number'
       case 'updatedHeight':
         return typeof (object as INodeProperty).value === 'number'
+      case 'commentContent':
+        return typeof (object as INodeProperty).value === 'string'
       default:
         return true
     }
