@@ -1,7 +1,8 @@
 import express, { Request, Response, Router } from 'express'
 import { MongoClient } from 'mongodb'
-import { IServiceResponse, isIPin, IPin, ITrail, INode } from '../types'
+import { IServiceResponse, isIPin, IPin, ITrail, INode, IPinProperty } from '../types'
 import { BackendPinGateway } from './BackendPinGateway'
+const bodyJsonParser = require('body-parser').json()
 
 // eslint-disable-next-line new-cap
 export const PinExpressRouter = express.Router()
@@ -91,6 +92,27 @@ export class PinRouter {
         }
       }
     )
+
+      /**
+     * Request to update the pin with the given pinId
+     *
+     * @param req request object coming from client
+     * @param res response object to send to client
+     */
+      PinExpressRouter.put(
+        '/:pinId',
+        bodyJsonParser,
+        async (req: Request, res: Response) => {
+          try {
+            const pinId = req.params.pinId
+            const toUpdate: IPinProperty[] = req.body.data
+            const response = await this.BackendPinGateway.updatePin(pinId, toUpdate)
+            res.status(200).send(response)
+          } catch (e) {
+            res.status(500).send(e.message)
+          }
+        }
+      )
 
     // New methods
     // PinExpressRouter.get(

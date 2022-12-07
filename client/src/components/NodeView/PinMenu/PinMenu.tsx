@@ -9,7 +9,8 @@ import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
 import { CreateNodeModal } from '../../Modals'
 import * as ai from 'react-icons/ai'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import * as ri from 'react-icons/ri'
+
 
 interface IPinMenuProps {
   selectedPin: IPin | null
@@ -42,7 +43,17 @@ export const PinMenu = (props: IPinMenuProps) => {
     setParentNode(node)
   }
 
-  const customButtonStyle = { height: 30, marginLeft: 10, width: 150 }
+  const customButtonStyle = { height: 40, width: 150, fontSize: "16px", backgroundColor: "lightblue", paddingTop: "10px", paddingBottom: "10px" }
+
+  if (selectedPin) {
+    selectedPin.childNodes.map(node => {
+      console.log(node.title)
+    })
+  }
+  else {
+    console.log("nbooo")
+  }
+
 
   return (
     <div className="pin-menu-container">
@@ -73,13 +84,15 @@ export const PinMenu = (props: IPinMenuProps) => {
             onClick={() => setSelectedPin(null)}
             icon={<ai.AiOutlineArrowLeft />}
             text="Show all pins"
-            style={{ backgroundColor: 'white', marginBottom: '10px' }}
+            style={{ backgroundColor: 'white', fontSize:"14px"}}
           />
+          <hr style={{marginBottom: "10px"}}></hr>
           <h2 className="pin-title pin-selected">{selectedPin.title}</h2>
           <p className="pin-explainer pin-selected">{selectedPin.explainer}</p>
           <h4 className="pin-documents">Pin Documents</h4>
-          {selectedPin.childNodes.map((node) => {
-            ;<div className={'item-wrapper'} onClick={() => handleLinkClick(node)}>
+          <List>
+          {selectedPin && selectedPin.childNodes.map((node) => 
+            <div className={'item-wrapper'} onClick={() => handleLinkClick(node)}>
               <Link to={pathToString(node.filePath)}>
                 <ListItem>
                   <div className="icon-date-wrapper">
@@ -90,12 +103,21 @@ export const PinMenu = (props: IPinMenuProps) => {
                 </ListItem>
               </Link>
             </div>
-          })}
+          )}
+          </List>
           <div className="create-node-button-wrapper">
             <Button
               text="Create Node"
               style={customButtonStyle}
-              icon={<ai.AiOutlinePlus />}
+              icon={<ai.AiOutlineFileAdd />}
+              onClick={onCreateNodeButtonClick}
+            />
+          </div>
+          <div className="add-to-trail-button-wrapper">
+          <Button
+              text="Add to Trail"
+              style={customButtonStyle}
+              icon={<ri.RiRouteLine />}
               onClick={onCreateNodeButtonClick}
             />
           </div>

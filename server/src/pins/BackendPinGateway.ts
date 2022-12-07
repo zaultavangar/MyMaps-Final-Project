@@ -4,8 +4,10 @@ import {
   IServiceResponse,
   IPin,
   isIPin,
+  IPinProperty,
   ITrail, 
   INode,
+  isIPinProperty,
 } from '../types'
 import { PinCollectionConnection } from './PinCollectionConnection'
 
@@ -115,6 +117,30 @@ export class BackendPinGateway {
   async getPinsByNodeId(nodeId: string): Promise<IServiceResponse<IPin[]>> {
     return this.pinCollectionConnection.findPinsByNodeId(nodeId)
   }
+
+  async updatePin(
+    pinId: string,
+    toUpdate: IPinProperty[]
+  ): Promise<IServiceResponse<IPin>> {
+    const properties: any = {}
+    for (let i=0; i< toUpdate.length; i++) {
+      if (!isIPinProperty(toUpdate[i])) {
+        return failureServiceResponse('toUpdate parameters invalid')
+      }
+      const fieldName = toUpdate[i].fieldName
+      const value = toUpdate[i].value
+      properties[fieldName] = value
+    }
+    const pinResponse = await this.pinCollectionConnection.updatePin(
+      pinId, 
+      properties
+    )
+    if (!pinResponse.success) {
+      return failureServiceResponse('This pin does not exist in the database!')
+    }
+    return pinResponse
+  }
+  
 
   // async getTrailsByPinId(pinId: string): Promise<IServiceResponse<ITrail[]>> {
   //   return this.pinCollectionConnection.getTrailsById(pinId)

@@ -15,6 +15,20 @@ export interface IPin {
   leftJustify: number
 }
 
+export type PinFields = keyof IPin
+
+
+export const allPinFields: string[] = [
+  'pinId',
+  'title',
+  'nodeId',
+  'trails',
+  'childNodes',
+  'explainer',
+  'topJustify',
+  'leftJustify'
+]
+
 export function isIPin(object: any): object is IPin {
   const propsDefined: boolean =
     typeof (object as IPin).pinId !== 'undefined' &&

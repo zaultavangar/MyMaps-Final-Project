@@ -1,5 +1,5 @@
-import { IPin, ITrail, INode, failureServiceResponse, IServiceResponse } from '../types'
-import { endpoint, get, post, remove } from '../global'
+import { IPin, ITrail, INode, failureServiceResponse, IServiceResponse, IPinProperty } from '../types'
+import { endpoint, get, post, remove, put } from '../global'
 
 /** In development mode (locally) the server is at localhost:5000*/
 const baseEndpoint = endpoint
@@ -92,6 +92,19 @@ export const FrontendPinGateway = {
       )
     } catch (exception) {
       return failureServiceResponse('[getChildNodes] Unable to access backend')
+    }
+  },
+
+  updatePin: async (
+    pinId: string,
+    properties: IPinProperty[]
+  ): Promise<IServiceResponse<IPin>> => {
+    try {
+      return await put<IServiceResponse<IPin>>(baseEndpoint + servicePath + pinId, {
+        data: properties,
+      })
+    } catch (exception) {
+      return failureServiceResponse('[updatePin] Unable to access backend')
     }
   },
 }

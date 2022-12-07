@@ -14,6 +14,8 @@ export interface IPin {
   leftJustify: number
 }
 
+export type PinFields = keyof IPin
+
 export function isIPin(object: any): object is IPin {
   const propsDefined: boolean =
     typeof (object as IPin).pinId !== 'undefined' &&

@@ -18,13 +18,14 @@ import {
   nodeTypes,
   RecursiveNodeTree,
 } from '../../../types'
+import { FrontendPinGateway } from '../../../pins'
 import { Button } from '../../Button'
 import { TreeView } from '../../TreeView'
 import './CreateNodeModal.scss'
 import { createNodeFromModal, uploadImage } from './createNodeUtils'
 import { useSetRecoilState } from 'recoil'
 import { selectedNodeState } from '../../../global/Atoms'
-import { IPin } from '../../../types'
+import { IPin, IPinProperty, makeIPinProperty } from '../../../types'
 
 export interface ICreateNodeModalProps {
   isOpen: boolean
@@ -96,8 +97,19 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
       type: selectedType as NodeType,
       selectedPin: selectedPin,
     }
-    const node = await createNodeFromModal(attributes)
-    node && setSelectedNode(node)
+
+    const node: INode | null = await createNodeFromModal(attributes)
+
+    let pinChildNodes = selectedPin?.childNodes
+    let childNodesCopy = Object.assign([], pinChildNodes)
+    if (node !== null && childNodesCopy !== undefined)  childNodesCopy.push(node)
+
+    if (node !== null && selectedPin){
+      const pinProperty: IPinProperty = makeIPinProperty('childNodes',  childNodesCopy)
+      await FrontendPinGateway.updatePin(selectedPin.pinId, [pinProperty])
+      node && setSelectedNode(node)
+    }
+   
     onSubmit()
     handleClose()
   }
