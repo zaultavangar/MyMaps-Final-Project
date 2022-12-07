@@ -14,9 +14,15 @@ import {
   refreshState,
   selectedNodeState,
 } from '../../../global/Atoms'
-import { FrontendNodeGateway, } from '../../../nodes'
+import { FrontendNodeGateway } from '../../../nodes'
 import { FrontendTrailGateway } from '../../../trails'
-import { IFolderNode, INode, ITrail, INodeProperty, makeINodeProperty } from '../../../types'
+import {
+  IFolderNode,
+  INode,
+  ITrail,
+  INodeProperty,
+  makeINodeProperty,
+} from '../../../types'
 import { Button } from '../../Button'
 import { ContextMenuItems } from '../../ContextMenu'
 import { EditableText } from '../../EditableText'
@@ -142,7 +148,6 @@ export const NodeHeader = (props: INodeHeaderProps) => {
       }
     }
   }
-  
 
   // Trigger on node load or when editingTitle changes
   useEffect(() => {
@@ -153,9 +158,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   const map: boolean = currentNode.type === 'map'
   const notRoot: boolean = currentNode.nodeId !== 'root'
 
-
   const routeMenuButtonRef = React.useRef()
-
 
   return (
     <div className="nodeHeader">
@@ -184,11 +187,13 @@ export const NodeHeader = (props: INodeHeaderProps) => {
               text="Move"
               onClick={() => onMoveButtonClick(currentNode)}
             />
-            {/* <Button
-              icon={<ri.RiExternalLinkLine />}
-              text="Start Link"
-              onClick={onHandleStartLinkClick}
-            /> */}
+            {map && (
+              <Button
+                icon={<ri.RiExternalLinkLine />}
+                text="Start Link"
+                onClick={onHandleStartLinkClick}
+              />
+            )}
             <Button
               icon={<ri.RiEyeFill />}
               text="Graph View"
@@ -202,11 +207,11 @@ export const NodeHeader = (props: INodeHeaderProps) => {
               />
             )}
             {map && (
-                <Button
-                  text="Route Menu"
-                  icon={<ri.RiMapPinLine />}
-                  onClick={onRouteMenuClick}
-                />
+              <Button
+                text="Edit Trails"
+                icon={<ri.RiMapPinLine />}
+                // add onClick handler
+              />
             )}
             {folder && (
               <div className="select">
@@ -224,7 +229,6 @@ export const NodeHeader = (props: INodeHeaderProps) => {
           </>
         )}
       </div>
-
     </div>
   )
 }
