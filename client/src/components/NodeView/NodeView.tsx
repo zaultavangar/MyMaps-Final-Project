@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FrontendAnchorGateway } from '../../anchors'
 import { generateObjectId } from '../../global'
-import { IAnchor, INode, IPin, isSameExtent, NodeIdsToNodesMap, NodeType, RecursiveNodeTree } from '../../types'
+import {
+  IAnchor,
+  INode,
+  IPin,
+  isSameExtent,
+  NodeIdsToNodesMap,
+  NodeType,
+  RecursiveNodeTree,
+} from '../../types'
 import { NodeBreadcrumb } from './NodeBreadcrumb'
 import { NodeContent } from './NodeContent'
 import { NodeHeader } from './NodeHeader'
@@ -48,9 +56,6 @@ export interface INodeViewProps {
   setParentNode: (node: INode) => void
   selectedPin: IPin | null
   setSelectedPin: (pin: IPin | null) => void
-
-
-
 }
 
 // type used for custom node in react flow graph
@@ -80,7 +85,6 @@ export const NodeView = (props: INodeViewProps) => {
     setParentNode,
     selectedPin,
     setSelectedPin,
-
   } = props
   const setIsLinking = useSetRecoilState(isLinkingState)
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState)
@@ -104,14 +108,12 @@ export const NodeView = (props: INodeViewProps) => {
     setCurrentNode(currentNode)
   })
 
-  var hasPins: boolean = pins.length > 0
+  let hasPins: boolean = pins.length > 0
 
   // New Method
   const loadPinsFromNodeId = useCallback(async () => {
-    console.log("loadPinsFromNodeId")
-    const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(
-      currentNode.nodeId
-    )
+    console.log('loadPinsFromNodeId')
+    const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(currentNode.nodeId)
     if (pinsFromNode.success && pinsFromNode.payload) {
       setPins(pinsFromNode.payload)
     }
@@ -119,7 +121,6 @@ export const NodeView = (props: INodeViewProps) => {
   }, [currentNode])
 
   const loadAnchorsFromNodeId = useCallback(async () => {
-    
     const anchorsFromNode = await FrontendAnchorGateway.getAnchorsByNodeId(
       currentNode.nodeId
     )
@@ -186,9 +187,14 @@ export const NodeView = (props: INodeViewProps) => {
   useEffect(() => {
     setSelectedAnchors([])
     loadAnchorsFromNodeId()
-      loadPinsFromNodeId()
-    
-  }, [loadAnchorsFromNodeId, currentNode, refreshLinkList, setSelectedAnchors, loadPinsFromNodeId])
+    loadPinsFromNodeId()
+  }, [
+    loadAnchorsFromNodeId,
+    currentNode,
+    refreshLinkList,
+    setSelectedAnchors,
+    loadPinsFromNodeId,
+  ])
 
   const [graphViewModalOpen, setGraphViewModalOpen] = useState(false)
 
@@ -288,8 +294,6 @@ export const NodeView = (props: INodeViewProps) => {
   const hasBreadcrumb: boolean = path.length > 1
   const hasAnchors: boolean = anchors.length > 0
 
-
- 
   let nodePropertiesWidth: number = hasAnchors ? 200 : 0
   if (hasPins) nodePropertiesWidth = 250
   const nodeViewWidth: string = `calc(100% - ${nodePropertiesWidth}px)`
@@ -336,7 +340,6 @@ export const NodeView = (props: INodeViewProps) => {
     document.removeEventListener('pointerup', onPointerUp)
   }
 
-
   return (
     <div className="node">
       <div className="nodeView" style={{ width: nodeViewWidth }}>
@@ -359,12 +362,16 @@ export const NodeView = (props: INodeViewProps) => {
               <NodeBreadcrumb path={path} nodeIdsToNodesMap={nodeIdsToNodesMap} />
             </div>
           )}
-          <div className={`nodeView-content ${currentNode.type==="map" ? "mapView-content" : ""}`}>
+          <div
+            className={`nodeView-content ${
+              currentNode.type === 'map' ? 'mapView-content' : ''
+            }`}
+          >
             <NodeContent
               childNodes={childNodes}
               onCreateNodeButtonClick={onCreateNodeButtonClick}
-              selectedPin = {selectedPin}
-              setSelectedPin = {setSelectedPin}
+              selectedPin={selectedPin}
+              setSelectedPin={setSelectedPin}
             />
           </div>
         </div>
@@ -385,15 +392,15 @@ export const NodeView = (props: INodeViewProps) => {
         </div>
       )}
       {currentNode.type === 'map' && hasPins && (
-        <div style={{width: "90%"}}>
+        <div style={{ width: '90%' }}>
           <PinMenu
-            selectedPin = {selectedPin}
+            selectedPin={selectedPin}
             setSelectedPin={setSelectedPin}
             pins={pins}
             setPins={setPins}
             setParentNode={setParentNode}
-            onCreateNodeButtonClick = {onCreateNodeButtonClick}
-            />
+            onCreateNodeButtonClick={onCreateNodeButtonClick}
+          />
         </div>
       )}
       {/**

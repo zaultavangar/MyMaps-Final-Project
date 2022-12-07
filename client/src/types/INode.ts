@@ -64,8 +64,7 @@ export function makeINode(
   children: string[] = [],
   type: NodeType = 'text',
   title: string | null = null,
-  content: any = null,
-
+  content: any = null
 ): INode {
   return {
     nodeId: nodeId,
@@ -73,7 +72,7 @@ export function makeINode(
     type: type,
     content: content ?? 'content' + nodeId,
     filePath: makeINodePath(path, children),
-    pinId: pinId
+    pinId: pinId,
   }
 }
 
@@ -94,6 +93,6 @@ export function makeIFolderNode(
     title: title ?? 'node' + nodeId,
     type: type ?? 'text',
     viewType: viewType ?? 'grid',
-    pinId: pinId
+    pinId: pinId,
   }
 }

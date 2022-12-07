@@ -316,7 +316,11 @@ export const CommentContent = (props: ITextContentProps) => {
   return (
     <div>
       <CommentTextMenu editor={editor} save={save} />
-      <EditorContent style={{width:'70%', marginLeft: '20px'}} editor={editor} onPointerUp={onPointerUp} />
+      <EditorContent
+        style={{ width: '70%', marginLeft: '20px' }}
+        editor={editor}
+        onPointerUp={onPointerUp}
+      />
     </div>
   )
 }

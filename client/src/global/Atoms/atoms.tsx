@@ -21,7 +21,6 @@ export const currentNodeState = atom<INode>({
   ),
 })
 
-
 // whether a link is in progress
 export const isLinkingState = atom<boolean>({
   key: 'isLinkingState',
@@ -67,7 +66,7 @@ export const selectedAnchorsState = atom<IAnchor[]>({
 // selected pin
 export const selectedPinState = atom<IPin | null>({
   key: 'selectedPinState',
-  default: null
+  default: null,
 })
 
 // selected extent

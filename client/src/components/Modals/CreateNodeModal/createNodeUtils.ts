@@ -98,7 +98,7 @@ export async function createNodeFromModal({
         title: title,
         type: type,
         viewType: 'grid',
-        pinId: selectedPin !== null ? selectedPin.pinId : ""
+        pinId: selectedPin !== null ? selectedPin.pinId : '',
       }
       break
     case 'map':
@@ -109,7 +109,7 @@ export async function createNodeFromModal({
         dateCreated: new Date(),
         filePath: filePath,
         nodeId: nodeId,
-        pinId: selectedPin !== null ? selectedPin.pinId : "",
+        pinId: selectedPin !== null ? selectedPin.pinId : '',
         title: title,
         type: type,
         // Initialize map node with correct, updated metadata
@@ -128,7 +128,7 @@ export async function createNodeFromModal({
         dateCreated: new Date(),
         filePath: filePath,
         nodeId: nodeId,
-        pinId: selectedPin !== null ? selectedPin.pinId : "",
+        pinId: selectedPin !== null ? selectedPin.pinId : '',
         title: title,
         type: type,
         // Initialize image node with correct, updated metadata
@@ -144,7 +144,7 @@ export async function createNodeFromModal({
         dateCreated: new Date(),
         filePath: filePath,
         nodeId: nodeId,
-        pinId: selectedPin !== null ? selectedPin.pinId : "",
+        pinId: selectedPin !== null ? selectedPin.pinId : '',
         title: title,
         type: type,
       }

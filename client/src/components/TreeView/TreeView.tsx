@@ -13,26 +13,25 @@ export interface ITreeViewProps {
 }
 
 export const TreeView = (props: ITreeViewProps) => {
-  const { roots, parentNode, setParentNode, changeUrlOnClick = true , selectedPin} = props
+  const { roots, parentNode, setParentNode, changeUrlOnClick = true, selectedPin } = props
   return (
     <div className="treeView-wrapper">
       {roots.map((tree: RecursiveNodeTree) => (
-        <div>
-        {tree.node.type==='map' &&
-          <TreeViewItem
-          node={tree.node}
-          selectedPin={selectedPin}
-          parentNode={parentNode}
-          setParentNode={setParentNode}
-          key={tree.node.nodeId}
-          type={tree.node.type}
-          title={tree.node.title}
-          childNodes={tree.children}
-          changeUrlOnClick={changeUrlOnClick}
-        />
-        }
+        <div key={tree.node.nodeId}>
+          {tree.node.type === 'map' && (
+            <TreeViewItem
+              node={tree.node}
+              selectedPin={selectedPin}
+              parentNode={parentNode}
+              setParentNode={setParentNode}
+              key={tree.node.nodeId}
+              type={tree.node.type}
+              title={tree.node.title}
+              childNodes={tree.children}
+              changeUrlOnClick={changeUrlOnClick}
+            />
+          )}
         </div>
-        
       ))}
     </div>
   )

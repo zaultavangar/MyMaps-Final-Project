@@ -86,6 +86,7 @@ export const MoveNodeModal = (props: IMoveNodeModalProps) => {
                 parentNode={selectedParentNode}
                 setParentNode={setSelectedParentNode}
                 changeUrlOnClick={false}
+                selectedPin={null}
               />
             </div>
           </ModalBody>

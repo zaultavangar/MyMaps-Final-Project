@@ -25,7 +25,7 @@ export const TreeViewItem = ({
   parentNode,
   setParentNode,
   changeUrlOnClick,
-  selectedPin
+  selectedPin,
 }: ITreeViewProps) => {
   let childrenItems: JSX.Element[] = []
   // glr: why does this not work?

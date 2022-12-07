@@ -1,9 +1,8 @@
 .node-info-container {
   border: 2px solid black;
-  width: "100px";
+  width: '100px';
   padding: 10px 10px;
   background-color: #d7ecff;
-
 }
 
 .current-node {
@@ -20,6 +19,6 @@
   font-size: 0.7em;
 }
 
-.node-info-string p::first-letter{
+.node-info-string p::first-letter {
   text-transform: capitalize;
 }

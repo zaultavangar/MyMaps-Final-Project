@@ -18,7 +18,12 @@ import { Alert } from '../Alert'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 import { Header } from '../Header'
 import { LoadingScreen } from '../LoadingScreen'
-import { CompleteLinkModal, CreateNodeModal, MoveNodeModal, CreateMapModal } from '../Modals'
+import {
+  CompleteLinkModal,
+  CreateNodeModal,
+  MoveNodeModal,
+  CreateMapModal,
+} from '../Modals'
 import { NodeView } from '../NodeView'
 import { TreeView } from '../TreeView'
 import { SearchModal } from '../Modals/SearchModal'
@@ -53,7 +58,7 @@ export const MainView = React.memo(function MainView() {
 
   /** update our frontend root nodes from the database */
   const loadRootsFromDB = useCallback(async () => {
-    console.log("test")
+    console.log('test')
     const rootsFromDB = await FrontendNodeGateway.getRoots()
     if (rootsFromDB.success) {
       rootsFromDB.payload && setRootNodes(rootsFromDB.payload)
@@ -229,7 +234,7 @@ export const MainView = React.memo(function MainView() {
             onSubmit={loadRootsFromDB}
             selectedPin={selectedPin}
             setSelectedPin={setSelectedPin}
-            />
+          />
           <CompleteLinkModal
             isOpen={completeLinkModalOpen}
             onClose={() => setCompleteLinkModalOpen(false)}
@@ -259,7 +264,7 @@ export const MainView = React.memo(function MainView() {
                 roots={rootNodes}
                 parentNode={selectedNode}
                 setParentNode={setSelectedNode}
-                selectedPin = {selectedPin}
+                selectedPin={selectedPin}
               />
             </div>
             <div className="divider" onPointerDown={onPointerDown} />
@@ -280,8 +285,6 @@ export const MainView = React.memo(function MainView() {
                 setParentNode={setSelectedNode}
                 selectedPin={selectedPin}
                 setSelectedPin={setSelectedPin}
-                              
-
               />
             </div>
           </div>

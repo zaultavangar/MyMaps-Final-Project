@@ -20,12 +20,9 @@ const servicePath = 'trail/'
 export const FrontendTrailGateway = {
   createTrail: async (trail: ITrail): Promise<IServiceResponse<ITrail>> => {
     try {
-      return await post<IServiceResponse<ITrail>>(
-        baseEndpoint + servicePath + 'create',
-        {
-          trail: trail,
-        }
-      )
+      return await post<IServiceResponse<ITrail>>(baseEndpoint + servicePath + 'create', {
+        trail: trail,
+      })
     } catch (exception) {
       return failureServiceResponse('[createTrail] Unable to access backend')
     }
@@ -54,9 +51,7 @@ export const FrontendTrailGateway = {
 
   deleteTrail: async (trailId: string): Promise<IServiceResponse<{}>> => {
     try {
-      return await remove<IServiceResponse<ITrail>>(
-        baseEndpoint + servicePath + trailId
-      )
+      return await remove<IServiceResponse<ITrail>>(baseEndpoint + servicePath + trailId)
     } catch (exception) {
       return failureServiceResponse('[deleteTrail] Unable to access backend')
     }
@@ -72,7 +67,6 @@ export const FrontendTrailGateway = {
     }
   },
 
-
   getTrailsByNodeId: async (nodeId: string): Promise<IServiceResponse<ITrail[]>> => {
     try {
       return await get<IServiceResponse<ITrail[]>>(
@@ -83,10 +77,6 @@ export const FrontendTrailGateway = {
     }
   },
 
-
   // Methods to add/delete a specific pin at a certain index
-    // Could also just do this on frontend
-
+  // Could also just do this on frontend
 }
-
-

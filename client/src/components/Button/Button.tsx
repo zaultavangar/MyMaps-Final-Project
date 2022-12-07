@@ -22,7 +22,7 @@ export const Button = (props: IButtonProps): JSX.Element => {
   const { icon, text, onClick, style, isWhite, isActive } = props
   return (
     <div
-      className= {`button ${isActive ? 'active' : ''} ${isWhite ? 'whiteButton' : ''}`}
+      className={`button ${isActive ? 'active' : ''} ${isWhite ? 'whiteButton' : ''}`}
       onClick={onClick}
       style={style}
     >

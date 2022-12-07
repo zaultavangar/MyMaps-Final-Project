@@ -11,18 +11,16 @@
   //   gap: 10px;
   // }
 
-    .map-image-content-wrapper .selection {
-      width: unset !important;
-      height: unset !important;
-      z-index: 1;
-      position: absolute;
-    }
-
-  }
-
-  .pins-on-map-wrapper {
-    position: absolute;
+  .map-image-content-wrapper .selection {
+    width: unset !important;
+    height: unset !important;
     z-index: 1;
-    transform: unset;
+    position: absolute;
   }
+}
 
+.pins-on-map-wrapper {
+  position: absolute;
+  z-index: 1;
+  transform: unset;
+}

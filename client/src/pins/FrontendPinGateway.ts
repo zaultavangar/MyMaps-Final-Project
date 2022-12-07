@@ -18,12 +18,9 @@ const servicePath = 'pin/'
 export const FrontendPinGateway = {
   createPin: async (pin: IPin): Promise<IServiceResponse<IPin>> => {
     try {
-      return await post<IServiceResponse<IPin>>(
-        baseEndpoint + servicePath + 'create',
-        {
-          pin: pin,
-        }
-      )
+      return await post<IServiceResponse<IPin>>(baseEndpoint + servicePath + 'create', {
+        pin: pin,
+      })
     } catch (exception) {
       return failureServiceResponse('[createPin] Unable to access backend')
     }
@@ -31,9 +28,7 @@ export const FrontendPinGateway = {
 
   deletePin: async (pinId: string): Promise<IServiceResponse<{}>> => {
     try {
-      return await remove<IServiceResponse<IPin>>(
-        baseEndpoint + servicePath + pinId
-      )
+      return await remove<IServiceResponse<IPin>>(baseEndpoint + servicePath + pinId)
     } catch (exception) {
       return failureServiceResponse('[deletePin] Unable to access backend')
     }
@@ -98,6 +93,5 @@ export const FrontendPinGateway = {
     } catch (exception) {
       return failureServiceResponse('[getChildNodes] Unable to access backend')
     }
-  }
-
+  },
 }

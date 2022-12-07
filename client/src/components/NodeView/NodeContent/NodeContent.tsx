@@ -27,12 +27,7 @@ export interface INodeContentProps {
  * @returns Content that any type of node renders
  */
 export const NodeContent = (props: INodeContentProps) => {
-  const { 
-    onCreateNodeButtonClick, 
-    childNodes,
-    selectedPin,
-    setSelectedPin
-   } = props
+  const { onCreateNodeButtonClick, childNodes, selectedPin, setSelectedPin } = props
   const currentNode = useRecoilValue(currentNodeState)
   switch (currentNode.type) {
     case 'image':
@@ -43,10 +38,7 @@ export const NodeContent = (props: INodeContentProps) => {
       return (
         <div className="map-content-wrapper">
           <div className="map-content-container">
-            <MapContent 
-              selectedPin= {selectedPin}
-              setSelectedPin= {setSelectedPin}
-            />
+            <MapContent selectedPin={selectedPin} setSelectedPin={setSelectedPin} />
           </div>
           <div className="comment-content-container">
             <CommentContent />

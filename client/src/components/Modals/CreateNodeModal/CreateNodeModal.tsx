@@ -42,7 +42,15 @@ export interface ICreateNodeModalProps {
  */
 export const CreateNodeModal = (props: ICreateNodeModalProps) => {
   // deconstruct props variables
-  const { isOpen, onClose, roots, nodeIdsToNodesMap, onSubmit, selectedPin, setSelectedPin } = props
+  const {
+    isOpen,
+    onClose,
+    roots,
+    nodeIdsToNodesMap,
+    onSubmit,
+    selectedPin,
+    setSelectedPin,
+  } = props
 
   // state variables
   const setSelectedNode = useSetRecoilState(selectedNodeState)
