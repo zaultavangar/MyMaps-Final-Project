@@ -98,13 +98,18 @@ export const CommentContent = (props: ITextContentProps) => {
   // Updates the content of a node
   const updateNodeContent = async (): Promise<IServiceResponse<any>> => {
     const editorHtml = editor?.getHTML() // get current editor document as HTML
-    const nodeProperty: INodeProperty = makeINodeProperty('commentContent', editorHtml) // assign to content property
+    // assign to content property
+    const nodeProperty: INodeProperty = makeINodeProperty('commentContent', editorHtml)
+    console.log('nodeProperty', nodeProperty)
+    console.log('currentNode.nodeId', currentNode.nodeId)
     const updateNodeResp = await FrontendNodeGateway.updateNode(currentNode.nodeId, [
       nodeProperty,
-    ]) // update the node with it's new content
+    ]) // update the node with its new content
     if (!updateNodeResp.success) {
+      console.log(updateNodeResp.message)
       return failureServiceResponse('Failed to update node content')
     }
+    console.log('success')
     return successfulServiceResponse('Node content updated successfully')
   }
 

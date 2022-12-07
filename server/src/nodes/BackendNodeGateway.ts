@@ -37,18 +37,25 @@ export class BackendNodeGateway {
 
   /**
    * Method to search the database by string.
-   * 
+   *
    * @param input the search input
    * @param typeFilter  // string of activated type filters
    * @param dateFilter  // boolean represented whether the date created filter is on
-   * @returns 
+   * @returns
    */
-  async search(input: string, typeFilter: string[] | undefined, dateFilter: boolean): Promise<IServiceResponse<string[]>>{
-    const queryResponse = await this.nodeCollectionConnection.search(input, typeFilter, dateFilter)
+  async search(
+    input: string,
+    typeFilter: string[] | undefined,
+    dateFilter: boolean
+  ): Promise<IServiceResponse<string[]>> {
+    const queryResponse = await this.nodeCollectionConnection.search(
+      input,
+      typeFilter,
+      dateFilter
+    )
     if (queryResponse.success) {
       return queryResponse
-    }
-    else {
+    } else {
       return failureServiceResponse('Failed to search.')
     }
   }

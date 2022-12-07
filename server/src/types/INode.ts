@@ -5,7 +5,7 @@ import INodePath, { makeINodePath } from './INodePath'
 export const nodeTypes: string[] = ['map', 'text', 'image', 'folder']
 
 // Supported nodeTypes for file browser
-export type NodeType = 'map' |'text' | 'image' | 'folder' | 'pdf' | 'audio' | 'video'
+export type NodeType = 'map' | 'text' | 'image' | 'folder' | 'pdf' | 'audio' | 'video'
 
 // INode with node metadata
 export interface INode {
@@ -21,7 +21,7 @@ export interface INode {
   originalHeight?: number
   updatedWidth?: number
   updatedHeight?: number
-
+  commentContent?: string
 }
 
 /**
@@ -55,7 +55,8 @@ export const allNodeFields: string[] = [
   'originalHeight',
   'updatedWidth',
   'updatedHeight',
-  'pinId'
+  'pinId',
+  'commentContent',
 ]
 
 // Type declaration for map from nodeId --> INode
@@ -80,7 +81,7 @@ export function makeINode(
   children?: any,
   type?: any,
   title?: any,
-  content?: any,
+  content?: any
 ): INode {
   return {
     content: content ?? 'content' + nodeId,
@@ -88,7 +89,7 @@ export function makeINode(
     nodeId: nodeId,
     title: title ?? 'node' + nodeId,
     type: type ?? 'text',
-    pinId: pinId
+    pinId: pinId,
   }
 }
 
