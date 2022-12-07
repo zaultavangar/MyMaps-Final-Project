@@ -37,6 +37,7 @@ import { FrontendNodeGateway } from '../../nodes'
 import { FrontendPinGateway } from '../../pins'
 import { GraphViewModal } from '../Modals'
 import { selectParentNode } from '@tiptap/core/dist/packages/core/src/commands'
+import { RouteDrawer } from '../RouteDrawer'
 
 export interface INodeViewProps {
   currentNode: INode
@@ -52,6 +53,7 @@ export interface INodeViewProps {
   onMoveButtonClick: (node: INode) => void
   // children used when rendering folder node
   // onGraphViewClick: (node: INode) => void
+  onRouteMenuClick: () => void
   childNodes?: INode[]
   setParentNode: (node: INode) => void
   selectedPin: IPin | null
@@ -291,6 +293,8 @@ export const NodeView = (props: INodeViewProps) => {
     [setGraphViewModalOpen, setNodes, setEdges, currentNode, refreshLinkList]
   )
 
+  const [routeDrawerOpen, setRouteDrawerOpen] = useState(false)
+
   const hasBreadcrumb: boolean = path.length > 1
   const hasAnchors: boolean = anchors.length > 0
 
@@ -340,6 +344,10 @@ export const NodeView = (props: INodeViewProps) => {
     document.removeEventListener('pointerup', onPointerUp)
   }
 
+  const handleRouteMenuButtonClick = useCallback(() => {
+    setRouteDrawerOpen(true)
+  }, [])
+
   return (
     <div className="node">
       <div className="nodeView" style={{ width: nodeViewWidth }}>
@@ -355,6 +363,7 @@ export const NodeView = (props: INodeViewProps) => {
           onHandleStartLinkClick={handleStartLinkClick}
           onHandleCompleteLinkClick={handleCompleteLinkClick}
           onGraphViewClick={() => handleGraphView(true)}
+          onRouteMenuClick={handleRouteMenuButtonClick}
         />
         <div className="nodeView-scrollable">
           {hasBreadcrumb && (
@@ -403,6 +412,11 @@ export const NodeView = (props: INodeViewProps) => {
           />
         </div>
       )}
+      <RouteDrawer
+        isOpen={routeDrawerOpen}
+        onClose= {() => setRouteDrawerOpen(false)}
+        pins = {pins}
+      />
       {/**
        * Add a Pin Menu, with pins for the map, and documents linked to those pins
        */}

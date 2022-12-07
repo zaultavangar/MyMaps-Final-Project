@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import * as bi from 'react-icons/bi'
 import * as ri from 'react-icons/ri'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { generateObjectId } from '../../../global'
 import {
   alertMessageState,
   alertOpenState,
@@ -13,12 +14,14 @@ import {
   refreshState,
   selectedNodeState,
 } from '../../../global/Atoms'
-import { FrontendNodeGateway } from '../../../nodes'
-import { IFolderNode, INode, INodeProperty, makeINodeProperty } from '../../../types'
+import { FrontendNodeGateway, } from '../../../nodes'
+import { FrontendTrailGateway } from '../../../trails'
+import { IFolderNode, INode, ITrail, INodeProperty, makeINodeProperty } from '../../../types'
 import { Button } from '../../Button'
 import { ContextMenuItems } from '../../ContextMenu'
 import { EditableText } from '../../EditableText'
 import './NodeHeader.scss'
+import { RouteDrawer } from '../../RouteDrawer'
 
 interface INodeHeaderProps {
   onHandleCompleteLinkClick: () => void
@@ -26,6 +29,7 @@ interface INodeHeaderProps {
   onDeleteButtonClick: (node: INode) => void
   onMoveButtonClick: (node: INode) => void
   onGraphViewClick: () => void
+  onRouteMenuClick: () => void
 }
 
 export const NodeHeader = (props: INodeHeaderProps) => {
@@ -33,6 +37,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
     onDeleteButtonClick,
     onMoveButtonClick,
     onHandleStartLinkClick,
+    onRouteMenuClick,
     onHandleCompleteLinkClick,
     onGraphViewClick,
   } = props
@@ -137,6 +142,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
       }
     }
   }
+  
 
   // Trigger on node load or when editingTitle changes
   useEffect(() => {
@@ -146,6 +152,11 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   const folder: boolean = currentNode.type === 'folder'
   const map: boolean = currentNode.type === 'map'
   const notRoot: boolean = currentNode.nodeId !== 'root'
+
+
+  const routeMenuButtonRef = React.useRef()
+
+
   return (
     <div className="nodeHeader">
       <div
@@ -173,11 +184,11 @@ export const NodeHeader = (props: INodeHeaderProps) => {
               text="Move"
               onClick={() => onMoveButtonClick(currentNode)}
             />
-            <Button
+            {/* <Button
               icon={<ri.RiExternalLinkLine />}
               text="Start Link"
               onClick={onHandleStartLinkClick}
-            />
+            /> */}
             <Button
               icon={<ri.RiEyeFill />}
               text="Graph View"
@@ -191,13 +202,11 @@ export const NodeHeader = (props: INodeHeaderProps) => {
               />
             )}
             {map && (
-              <div className="nodeHeader-mapView">
                 <Button
-                  text="Edit Trails"
+                  text="Route Menu"
                   icon={<ri.RiMapPinLine />}
-                  // add onClick handler
+                  onClick={onRouteMenuClick}
                 />
-              </div>
             )}
             {folder && (
               <div className="select">
@@ -215,6 +224,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
           </>
         )}
       </div>
+
     </div>
   )
 }

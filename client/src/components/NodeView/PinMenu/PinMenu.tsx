@@ -92,7 +92,7 @@ export const PinMenu = (props: IPinMenuProps) => {
           <h4 className="pin-documents">Pin Documents</h4>
           <List>
           {selectedPin && selectedPin.childNodes.map((node) => 
-            <div className={'item-wrapper'} onClick={() => handleLinkClick(node)}>
+            <div className={'pin-documents-item-wrapper'} onClick={() => handleLinkClick(node)}>
               <Link to={pathToString(node.filePath)}>
                 <ListItem>
                   <div className="icon-date-wrapper">

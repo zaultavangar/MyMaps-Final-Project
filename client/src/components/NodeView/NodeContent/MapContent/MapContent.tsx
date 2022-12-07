@@ -110,8 +110,6 @@ export const MapContent = (props: IMapContentProps) => {
    * @returns
    */
   const handleCreatePin = async () => {
-    console.log(xLast)
-    console.log(yLast)
     const newPin = {
       pinId: generateObjectId('pin'),
       nodeId: currentNode.nodeId,

@@ -29,6 +29,9 @@ import { TreeView } from '../TreeView'
 import { SearchModal } from '../Modals/SearchModal'
 import './MainView.scss'
 import { createNodeIdsToNodesMap, emptyNode, makeRootWrapper } from './mainViewUtils'
+import { RouteDrawer } from '../RouteDrawer'
+import { FaLessThanEqual } from 'react-icons/fa'
+
 
 export const MainView = React.memo(function MainView() {
   // app states
@@ -55,6 +58,8 @@ export const MainView = React.memo(function MainView() {
   const setAlertIsOpen = useSetRecoilState(alertOpenState)
   const setAlertTitle = useSetRecoilState(alertTitleState)
   const setAlertMessage = useSetRecoilState(alertMessageState)
+
+  const [routeDrawerOpen, setRouteDrawerOpen] = useState(false)
 
   /** update our frontend root nodes from the database */
   const loadRootsFromDB = useCallback(async () => {
@@ -116,6 +121,10 @@ export const MainView = React.memo(function MainView() {
 
   const handleCreateMapButtonClick = useCallback(() => {
     setCreateMapModalOpen(true)
+  }, [])
+
+  const handleRouteMenuButtonClick = useCallback(() => {
+    setRouteDrawerOpen(true)
   }, [])
 
   const handleMoveNodeButtonClick = useCallback(() => {
@@ -203,6 +212,8 @@ export const MainView = React.memo(function MainView() {
 
   const treeView = useRef<HTMLHeadingElement>(null)
 
+
+
   return (
     <ChakraProvider>
       {!isAppLoaded ? (
@@ -285,9 +296,11 @@ export const MainView = React.memo(function MainView() {
                 setParentNode={setSelectedNode}
                 selectedPin={selectedPin}
                 setSelectedPin={setSelectedPin}
+                onRouteMenuClick={handleRouteMenuButtonClick}
               />
             </div>
           </div>
+
         </div>
       )}
       <ContextMenu />

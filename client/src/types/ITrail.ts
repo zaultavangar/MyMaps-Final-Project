@@ -1,13 +1,13 @@
 export interface ITrail {
   trailId: string
-  anchorList: string[]
+  pinList: string[]
   nodeId: string
 }
 
 export function isITrail(object: any): object is ITrail {
   const propsDefined: boolean =
     typeof (object as ITrail).trailId !== 'undefined' &&
-    typeof (object as ITrail).anchorList !== 'undefined' &&
+    typeof (object as ITrail).pinList !== 'undefined' &&
     typeof (object as ITrail).nodeId !== 'undefined'
 
   if (!propsDefined) {
@@ -24,12 +24,12 @@ export function isITrail(object: any): object is ITrail {
 
 export function makeITrail(
   trailId: string,
-  anchorList: string[],
+  pinList: string[],
   nodeId: string
 ): ITrail {
   return {
     trailId: trailId,
-    anchorList: anchorList,
+    pinList: pinList,
     nodeId: nodeId,
   }
 }
@@ -37,7 +37,7 @@ export function makeITrail(
 export function isSameTrail(a1: ITrail, a2: ITrail): boolean {
   return (
     a1.trailId === a2.trailId &&
-    a1.anchorList === a2.anchorList &&
+    a1.pinList === a2.pinList &&
     a1.nodeId === a2.nodeId
     // TODO: && check if the lists are the same?
     // But what if you want two trails that go to the same exact places
