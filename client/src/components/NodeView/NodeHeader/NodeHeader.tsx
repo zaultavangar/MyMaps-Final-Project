@@ -208,8 +208,9 @@ export const NodeHeader = (props: INodeHeaderProps) => {
             )}
             {map && (
               <Button
-                text="Edit Trails"
+                text="Route Menu"
                 icon={<ri.RiMapPinLine />}
+                onClick={onRouteMenuClick}
                 // add onClick handler
               />
             )}
