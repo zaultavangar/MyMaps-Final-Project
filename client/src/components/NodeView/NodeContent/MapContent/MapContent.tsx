@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
+import ReactDOMServer from 'react-dom/server';
 import PlaceIcon from '@mui/icons-material/Place'
 import TitleIcon from '@mui/icons-material/Title'
 import { fetchLinks } from '..'
@@ -52,7 +53,7 @@ import { RiNurseFill } from 'react-icons/ri'
 import { GoogleMapContent } from './GoogleMapContent'
 // @ts-ignore
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import mapboxgl, {Marker} from '!mapbox-gl';
+import mapboxgl, {Marker, Popup} from '!mapbox-gl';
 
 interface IMapContentProps {
   selectedMapViewMode: string
@@ -216,29 +217,64 @@ export const MapContent = (props: IMapContentProps) => {
   }, [currentNode])
 
 
+  const PopoverFC: React.FC = () => {
+    return (
+      <div>
+      <InputGroup sx={{ marginBottom: '10px' }}>
+         <InputLeftElement pointerEvents="none">
+           <TitleIcon />
+         </InputLeftElement>
+         <Input placeholder="Choose a Title" onChange={handleTitleChange} />
+       </InputGroup>
+       <InputGroup sx={{ marginBottom: '10px' }}>
+         <Textarea
+           placeholder="Enter a Description (optional)"
+           onChange={handleExplainerChange}
+         />
+     </InputGroup>
+     <ButtonGroup size="sm">
+     <Button variant="outline" onClick={(e)=> handleCreatePinPopoverClose}>Cancel</Button>
+     <Button onClick={handleCreatePin} colorScheme="green">
+       Create
+     </Button>
+   </ButtonGroup>
+   </div>
+    )
+   
+  }
 
-  const onMapClick = useCallback((e: any) => {
-    console.log(createPinPopoverOpen)
-    if (createPinPopoverOpen === false) {
-      console.log(e)
+  const onMapClick = (e: mapboxgl.MapMouseEvent) => {
       let lngLat =  e.lngLat
-      console.log(lngLat.lng)
-      let marker = new mapboxgl.Marker({ color: 'black' })
-        .setLngLat(lngLat)
-        .addTo(map);
-      setNewMarker(marker)
+      const el= document.createElement('div')
+      el.id='marker'
 
-      // console.log('gothere')
-      // new mapboxgl.Popup()
-      //   .setLngLat(coordinates)
-      //   .setHTML(description)
-      //   .addTo(map);
-      setCreatePinPopoverOpen(true)
-    }
-  }, [setCreatePinPopoverOpen, setNewMarker, newMarker, createPinPopoverOpen])
+      let popup = new mapboxgl.Popup({ offset: 25,}).setHTML(`
+        <Input>Hello World!</Input>
+        <div>Hi</div>
+        `)
+          
+
+      // const popup = new mapboxgl.Popup({
+      //     anchor: 'left', 
+      //     closeOnClick: false,
+      //     offset: 25,
+      // // }).setHTML = 
+
+      let marker = new mapboxgl.Marker(el, {color: 'black'})
+        .setLngLat(lngLat)
+        .addTo(map)
+        .setPopup(popup)
+  
+
+      marker.togglePopup()
+
+
+      setNewMarker(marker)
+  }
+
+
 
   const mapStyle = 'mapbox://styles/mapbox/' + selectedMapViewMode
-
 
   useEffect(() => {
     if (currentNode.type =='googleMap') {
@@ -250,12 +286,16 @@ export const MapContent = (props: IMapContentProps) => {
       zoom: 5, // starting zoom
       })
   
-      map.on('click', (e: any) => {
+      map.on('click', (e: mapboxgl.MapMouseEvent) => {
         onMapClick(e)
       })
     }
 
   }, [selectedMapViewMode])
+
+
+
+
 
 
   /**
@@ -380,13 +420,19 @@ export const MapContent = (props: IMapContentProps) => {
   }
 
   const handleCreatePinPopoverClose = () => {
-    newMarker.remove()
-    setNewMarker(null)
+    if (currentNode.type==="googleMap") {
+      newMarker.remove()
+      setNewMarker(null)
+    }
+
     if (selection.current) {
       selection.current.style.display = 'none'
     }
     setCreatePinPopoverOpen(false)
   }
+
+  
+
 
 
 
@@ -417,17 +463,16 @@ export const MapContent = (props: IMapContentProps) => {
               closeOnBlur={false}
             >
               <PopoverTrigger>
-                {currentNode.type==='map' ? 
+                {currentNode.type==='map' ?
                  <div className="selection" ref={selection}>
-                 <PlaceIcon style={{ color: 'black' }} />
-               </div>
-               :
-               <div className='marker' ref={selection}>
-               </div>
+                  <PlaceIcon style={{ color: 'black' }} />
+                </div>
+                :
+                <div>
+                </div>
                 }
-               
               </PopoverTrigger>
-              <PopoverContent>
+              <PopoverContent id="popover-content">
                 <PopoverHeader fontWeight="semibold">Create a Pin</PopoverHeader>
                 <PopoverArrow />
                 <PopoverCloseButton />

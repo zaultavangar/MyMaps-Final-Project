@@ -35,6 +35,10 @@ export function isIPinProperty(object: any): boolean {
         return typeof (object as IPinProperty).value === 'number'
       case 'leftJustify':
         return typeof (object as IPinProperty).value === 'number'
+      case 'lat':
+        return typeof (object as IPinProperty).value === 'number'
+      case 'lng':
+        return typeof (object as IPinProperty).value === 'number'
       default:
         return true
     }
