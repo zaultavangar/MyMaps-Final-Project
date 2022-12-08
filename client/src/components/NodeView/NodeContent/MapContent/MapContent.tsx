@@ -245,28 +245,19 @@ export const MapContent = (props: IMapContentProps) => {
 
   const onMapClick = (e: mapboxgl.MapMouseEvent) => {
       let lngLat =  e.lngLat
-      const el= document.createElement('div')
-      el.id='marker'
-
+     
       let popup = new mapboxgl.Popup({ offset: 25,}).setHTML(`
-        <Input>Hello World!</Input>
+        <Input>Add create pin form here</Input>
         <div>Hi</div>
         `)
-          
 
-      // const popup = new mapboxgl.Popup({
-      //     anchor: 'left', 
-      //     closeOnClick: false,
-      //     offset: 25,
-      // // }).setHTML = 
-
-      let marker = new mapboxgl.Marker(el, {color: 'black'})
+      let marker = new mapboxgl.Marker({color: 'black'})
         .setLngLat(lngLat)
         .addTo(map)
         .setPopup(popup)
   
 
-      marker.togglePopup()
+    marker.togglePopup()
 
 
       setNewMarker(marker)
