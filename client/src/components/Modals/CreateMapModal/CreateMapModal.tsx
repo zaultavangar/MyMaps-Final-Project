@@ -8,6 +8,9 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  RadioGroup,
+  Radio,
+  Stack,
   Textarea,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
@@ -26,6 +29,8 @@ import { createNodeFromModal, uploadImage } from '../CreateNodeModal/createNodeU
 import { useSetRecoilState } from 'recoil'
 import { selectedNodeState, selectedPinState } from '../../../global/Atoms'
 import { IPin } from '../../../types'
+import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
+
 
 export interface ICreateMapModalProps {
   isOpen: boolean
@@ -58,12 +63,13 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
   const [selectedParentNode, setSelectedParentNode] = useState<INode | null>(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [selectedType, setSelectedType] = useState<NodeType>('map' as NodeType)
+  const [selectedType, setSelectedType] = useState<NodeType>('googleMap' as NodeType)
   const [error, setError] = useState<string>('')
 
   // event handlers for the modal inputs and dropdown selects
-  const handleSelectedTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedType(event.target.value.toLowerCase() as NodeType)
+  const handleSelectedTypeChange = (nextVal: string) => {
+    setSelectedType(nextVal as NodeType)
+    console.log(nextVal)
     // setSelectedType('map' as NodeType)
     setContent('')
   }
@@ -96,7 +102,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
       nodeIdsToNodesMap,
       parentNodeId: selectedParentNode ? selectedParentNode.nodeId : null,
       title,
-      type: 'map' as NodeType,
+      type: selectedType as NodeType,
       selectedPin: selectedPin,
     }
     const node = await createNodeFromModal(attributes)
@@ -124,15 +130,16 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
   // content prompts for the different node types
   let contentInputPlaceholder: string
   switch (selectedType) {
-    case 'image':
+    case 'map':
       contentInputPlaceholder = 'Image URL...'
       break
     default:
-      contentInputPlaceholder = 'Content...'
+      contentInputPlaceholder = ''
+      break
   }
 
-  const isImage: boolean = selectedType === 'image'
-  const isMap: boolean = selectedType === 'map'
+  const isImage: boolean = selectedType === 'map'
+
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
@@ -148,7 +155,28 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
               placeholder="Map Title..."
             />
             <div className="modal-input">
-              <Select
+              <RadioGroup onChange={nextVal => handleSelectedTypeChange(nextVal)} value={selectedType}>
+                <Stack direction='column'>
+                  <Radio key="googleMap" value="googleMap">
+                    <div className="radio-option use-google-maps">
+                      <img 
+                        alt="google maps image" 
+                        src="https://www.adster.ca/wp-content/uploads/2013/04/google-maps.jpg"
+                        width="140px"
+                        height="60px">
+                        </img>
+                    </div>
+
+                  </Radio>
+                  <Radio key="map" value="map">
+                    <div className="radio-option upload-image">
+                      <FileUploadRoundedIcon fontSize="large"/>
+                      <div>Upload an Image</div>
+                    </div>
+                  </Radio>
+                </Stack>
+              </RadioGroup>
+              {/* <Select
                 value={selectedType}
                 onChange={handleSelectedTypeChange}
                 placeholder="Upload an image or use Google Maps"
@@ -159,7 +187,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
                 <option key="image" value="image">
                   Upload an Image
                 </option>
-              </Select>
+              </Select> */}
             </div>
             {selectedType && isImage && (
               <div className="modal-input">
@@ -179,7 +207,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
                 />
               </div>
             )}
-            {selectedType && isMap && <div>Option to Type In Location</div>}
+            {/* {selectedType && isMap && <div>Option to Type In Location</div>} */}
             <div className="modal-section">
               <span className="modal-title">
                 <div className="modal-title-header">Choose a parent map (optional):</div>

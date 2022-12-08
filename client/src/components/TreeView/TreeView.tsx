@@ -18,7 +18,7 @@ export const TreeView = (props: ITreeViewProps) => {
     <div className="treeView-wrapper">
       {roots.map((tree: RecursiveNodeTree) => (
         <div key={tree.node.nodeId}>
-          {tree.node.type === 'map' && (
+          {(tree.node.type === 'map' || tree.node.type === 'googleMap') && (
             <TreeViewItem
               node={tree.node}
               selectedPin={selectedPin}

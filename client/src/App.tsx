@@ -3,9 +3,20 @@ import { MainView } from './components'
 
 const App = () => {
   return (
-    <div className="container">
+    <html>
+    <head>
+      
+      <script src='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js'></script>
+      <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
+
+    </head>
+    <body>
+      <div className="container">
       <MainView />
-    </div>
+      </div>
+    </body>
+    </html>
+
   )
 }
 

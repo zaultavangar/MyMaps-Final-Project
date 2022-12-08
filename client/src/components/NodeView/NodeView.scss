@@ -47,9 +47,8 @@
       }
 
       .mapView-content {
-        display: unset;
-        flex-direction: unset;
-        justify-content: unset;
+        display: flex;
+        flex-direction: column;
       }
     }
   }

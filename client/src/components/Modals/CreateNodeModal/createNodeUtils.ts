@@ -102,8 +102,25 @@ export async function createNodeFromModal({
       }
       break
     case 'map':
-      const mapMetaData = await getMeta(content)
-      console.log('test')
+      let mapMetaData = await getMeta(content)
+      newNode = {
+        content: content,
+        dateCreated: new Date(),
+        filePath: filePath,
+        nodeId: nodeId,
+        title: title,
+        type: type,
+        pinId: selectedPin !== null ? selectedPin.pinId : '',
+        // Initialize map node with correct, updated metadata
+        originalWidth: mapMetaData.normalizedWidth,
+        originalHeight: mapMetaData.normalizedHeight,
+        updatedWidth: mapMetaData.normalizedWidth,
+        updatedHeight: mapMetaData.normalizedHeight,
+        // Initialize map with empty comment content
+        commentContent: '',
+      }
+      break
+    case 'googleMap':
       newNode = {
         content: content,
         dateCreated: new Date(),
@@ -112,13 +129,7 @@ export async function createNodeFromModal({
         pinId: selectedPin !== null ? selectedPin.pinId : '',
         title: title,
         type: type,
-        // Initialize map node with correct, updated metadata
-        originalWidth: mapMetaData.normalizedWidth,
-        originalHeight: mapMetaData.normalizedHeight,
-        updatedWidth: mapMetaData.normalizedWidth,
-        updatedHeight: mapMetaData.normalizedHeight,
-        // Initialize map with empty comment content
-        commentContent: '',
+        // Initialize image node with correct, updated metadata
       }
       break
     case 'image':

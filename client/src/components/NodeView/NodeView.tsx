@@ -373,7 +373,7 @@ export const NodeView = (props: INodeViewProps) => {
           )}
           <div
             className={`nodeView-content ${
-              currentNode.type === 'map' ? 'mapView-content' : ''
+              currentNode.type === 'map' || currentNode.type=='googleMap' ? 'mapView-content' : ''
             }`}
           >
             <NodeContent

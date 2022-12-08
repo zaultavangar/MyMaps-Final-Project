@@ -25,7 +25,6 @@ app.listen(PORT, () => {
 /* CORS is a browser security feature that restrticts cross-origin HTTP 
 requests with other servers and specifies which domains access your resources.
 CORS relaxes the security applied to an API */
-
 app.use(cors())
 // serve images, CSS files, and Javascript files in a directory called dist
 app.use(express.static('dist')) 

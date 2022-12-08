@@ -15,7 +15,12 @@ export interface IPin {
   leftJustify: number
 }
 
-export type PinFields = keyof IPin
+export interface IGoogleMapPin {
+  lat: number,
+  lng: number,
+}
+
+export type PinFields = keyof IPin | keyof IGoogleMapPin
 
 
 export const allPinFields: string[] = [
@@ -26,7 +31,9 @@ export const allPinFields: string[] = [
   'childNodes',
   'explainer',
   'topJustify',
-  'leftJustify'
+  'leftJustify',
+  'lat',
+  'lng'
 ]
 
 export function isIPin(object: any): object is IPin {
@@ -36,9 +43,7 @@ export function isIPin(object: any): object is IPin {
     typeof (object as IPin).trails !== 'undefined' && 
     typeof (object as IPin).childNodes !== 'undefined' && 
     typeof (object as IPin).title !== 'undefined' && 
-    typeof (object as IPin).explainer !== 'undefined' && 
-    typeof (object as IPin).topJustify !== 'undefined' && 
-    typeof (object as IPin).leftJustify !== 'undefined' 
+    typeof (object as IPin).explainer !== 'undefined' 
 
 
   if (!propsDefined) {
@@ -50,9 +55,7 @@ export function isIPin(object: any): object is IPin {
     typeof (object as IPin).pinId === 'string' &&
     typeof (object as IPin).nodeId === 'string' && 
     typeof (object as IPin).title === 'string' &&
-    typeof (object as IPin).explainer === 'string' && 
-    typeof (object as IPin).topJustify === 'number' && 
-    typeof (object as IPin).leftJustify === 'number' 
+    typeof (object as IPin).explainer === 'string' 
   )
 }
 
@@ -67,6 +70,28 @@ export function makeIPin(pinId: string, nodeId: string, trailIds: {[trailId:stri
     explainer: explainer,
     topJustify: topJustify,
     leftJustify: leftJustify
+  }
+}
+
+export function makeIGoogleMapPin(
+  pinId: string,
+  nodeId: string,
+  trailIds: { [trailId: string]: number },
+  childNodes: string[],
+  title: string,
+  explainer: string,
+  lat: number,
+  lng: number,
+) {
+  return {
+    pinId: pinId,
+    nodeId: nodeId,
+    trailIds: trailIds,
+    childNodes: childNodes,
+    title: title,
+    explainer: explainer,
+    lat: lat,
+    lng: lng,
   }
 }
 

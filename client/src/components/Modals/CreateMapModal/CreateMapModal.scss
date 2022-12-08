@@ -1,0 +1,16 @@
+.use-google-maps{
+  width: max-content;
+  height: max-content;
+  padding: 15px 15px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.upload-image {
+  padding: 15px 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+}
