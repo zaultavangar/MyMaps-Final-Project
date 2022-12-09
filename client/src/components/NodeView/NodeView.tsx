@@ -348,6 +348,8 @@ export const NodeView = (props: INodeViewProps) => {
     setRouteDrawerOpen(true)
   }, [])
 
+  pins.map(pin=>console.log(pin.pinId))
+
   return (
     <div className="node">
       <div className="nodeView" style={{ width: nodeViewWidth }}>
@@ -412,11 +414,14 @@ export const NodeView = (props: INodeViewProps) => {
           />
         </div>
       )}
-      <RouteDrawer
+      <div>
+      <RouteDrawer 
         isOpen={routeDrawerOpen}
         onClose= {() => setRouteDrawerOpen(false)}
         pins = {pins}
+        load = {handleRouteMenuButtonClick}
       />
+      </div>
       {/**
        * Add a Pin Menu, with pins for the map, and documents linked to those pins
        */}

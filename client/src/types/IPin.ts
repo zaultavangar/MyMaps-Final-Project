@@ -97,9 +97,7 @@ export function isSamePin(a1: IPin, a2: IPin): boolean {
   return (
     a1.pinId === a2.pinId &&
     a1.nodeId === a2.nodeId &&
-    a1.trails === a2.trails &&
-    a1.childNodes === a2.childNodes &&
-    a1.title == a2.title &&
-    a1.explainer == a2.explainer 
+    a1.title === a2.title &&
+    a1.explainer === a2.explainer 
   )
 }
