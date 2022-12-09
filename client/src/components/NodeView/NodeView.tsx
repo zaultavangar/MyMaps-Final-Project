@@ -449,6 +449,8 @@ export const NodeView = (props: INodeViewProps) => {
           trails={trails}
           setTrails={setTrails}
           setPins={setPins}
+          setRouteDrawerOpen={setRouteDrawerOpen}
+          setSelectedPin={setSelectedPin}
         />
       </div>
       {/**

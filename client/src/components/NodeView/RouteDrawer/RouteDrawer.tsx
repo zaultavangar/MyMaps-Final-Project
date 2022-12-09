@@ -62,10 +62,14 @@ interface IRouteDrawerProps {
   trails: ITrail[]
   setTrails: (trail: ITrail[]) => void
   setPins: (pin: IPin[]) => void
+  setRouteDrawerOpen: (b: boolean) => void
+  setSelectedPin:(pin: IPin | null) => void
 }
 
 export const RouteDrawer = (props: IRouteDrawerProps) => {
-  const { isOpen, onClose, pins, load, currentNode, trails, setTrails } = props
+  const { isOpen, onClose, pins, load, 
+    currentNode, trails, setTrails, setRouteDrawerOpen,
+    setSelectedPin } = props
 
 
 
@@ -102,9 +106,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const [showTrailCreatedAlert, setShowTrailCreatedAlert] = useState(false)
 
-  useEffect(() => {
-    setPinsAdded([])
-  }, [])
+ 
 
   useEffect(() => {
     console.log('hi')
@@ -229,6 +231,19 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     trailsCpy.push(newTrail)
     setTrails(trailsCpy)
     setCreateTrailPopoverOpen(false)
+  }
+
+  const handlePinFromTrailClick = async (e: any, pinId: string) => {
+      if (pinId) {
+        const getPinResp = await FrontendPinGateway.getPin(pinId)
+        if (getPinResp.success && getPinResp.payload) {
+          let pin = getPinResp.payload
+            setRouteDrawerOpen(false)
+            setSelectedPin(pin)
+          
+        }
+      }
+    
   }
 
 
@@ -467,9 +482,15 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                     <PopoverContent>
                       <PopoverArrow />
                       <PopoverBody>
-                      <div style={{display:'flex', flexDirection: 'column'}}>
+                      <div style={{display:'flex', flexDirection: 'column' ,gap: '1em'}}>
                           {trail.pinList.map(pin => 
-                            <div style={{display:'flex', flexDirection: 'row', gap: '1em'}} >
+                            <div 
+                              id={pin.pinId}
+                              onClick={(e)=>handlePinFromTrailClick(e, pin.pinId)}
+                              data-value= {pin.pinId}
+                              style={{display:'flex', 
+                                flexDirection: 'row', 
+                                gap: '1em', cursor: 'pointer'}} >
                             <PlaceIcon/>
                             {pin.title}
                             </div>
