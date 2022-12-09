@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.20.2",
+    "@chakra-ui/icons": "^2.0.13",
     "@chakra-ui/react": "^1.6.7",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",

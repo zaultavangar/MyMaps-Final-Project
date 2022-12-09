@@ -27,7 +27,7 @@ import { Button } from '../../Button'
 import { ContextMenuItems } from '../../ContextMenu'
 import { EditableText } from '../../EditableText'
 import './NodeHeader.scss'
-import { RouteDrawer } from '../../RouteDrawer'
+import { RouteDrawer } from '../RouteDrawer'
 
 interface INodeHeaderProps {
   onHandleCompleteLinkClick: () => void

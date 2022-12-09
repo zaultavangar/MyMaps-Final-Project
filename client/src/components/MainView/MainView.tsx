@@ -29,9 +29,8 @@ import { TreeView } from '../TreeView'
 import { SearchModal } from '../Modals/SearchModal'
 import './MainView.scss'
 import { createNodeIdsToNodesMap, emptyNode, makeRootWrapper } from './mainViewUtils'
-import { RouteDrawer } from '../RouteDrawer'
+import { RouteDrawer } from '../NodeView/RouteDrawer'
 import { FaLessThanEqual } from 'react-icons/fa'
-
 
 export const MainView = React.memo(function MainView() {
   // app states
@@ -212,8 +211,6 @@ export const MainView = React.memo(function MainView() {
 
   const treeView = useRef<HTMLHeadingElement>(null)
 
-
-
   return (
     <ChakraProvider>
       {!isAppLoaded ? (
@@ -300,7 +297,6 @@ export const MainView = React.memo(function MainView() {
               />
             </div>
           </div>
-
         </div>
       )}
       <ContextMenu />

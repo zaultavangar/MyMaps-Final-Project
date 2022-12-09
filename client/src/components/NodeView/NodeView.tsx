@@ -8,6 +8,7 @@ import {
   isSameExtent,
   NodeIdsToNodesMap,
   NodeType,
+  ITrail,
   RecursiveNodeTree,
 } from '../../types'
 import { NodeBreadcrumb } from './NodeBreadcrumb'
@@ -35,9 +36,10 @@ import { Edge, Node } from 'react-flow-renderer'
 import { FrontendLinkGateway } from '../../links'
 import { FrontendNodeGateway } from '../../nodes'
 import { FrontendPinGateway } from '../../pins'
+import { FrontendTrailGateway } from '../../trails'
 import { GraphViewModal } from '../Modals'
 import { selectParentNode } from '@tiptap/core/dist/packages/core/src/commands'
-import { RouteDrawer } from '../RouteDrawer'
+import { RouteDrawer } from './RouteDrawer'
 
 export interface INodeViewProps {
   currentNode: INode
@@ -105,12 +107,14 @@ export const NodeView = (props: INodeViewProps) => {
   } = currentNode
 
   const [pins, setPins] = useState<IPin[]>([])
+  const [trails, setTrails] = useState<ITrail[]>([])
 
   useEffect(() => {
     setCurrentNode(currentNode)
   })
 
   let hasPins: boolean = pins.length > 0
+  let hasTrails: boolean = trails.length > 0
 
   // New Method
   const loadPinsFromNodeId = useCallback(async () => {
@@ -120,6 +124,15 @@ export const NodeView = (props: INodeViewProps) => {
       setPins(pinsFromNode.payload)
     }
     hasPins = pins.length > 0
+  }, [currentNode])
+
+  const loadTrailsFromNodeId = useCallback(async () => {
+    console.log('loadTrailsFromNodeId')
+    const trailsFromNode = await FrontendTrailGateway.getTrailsByNodeId(currentNode.nodeId)
+    if (trailsFromNode.success && trailsFromNode.payload) {
+      setTrails(trailsFromNode.payload)
+    }
+    hasTrails = trails.length > 0
   }, [currentNode])
 
   const loadAnchorsFromNodeId = useCallback(async () => {
@@ -348,7 +361,7 @@ export const NodeView = (props: INodeViewProps) => {
     setRouteDrawerOpen(true)
   }, [])
 
-  pins.map(pin=>console.log(pin.pinId))
+  pins.map((pin) => console.log(pin.pinId))
 
   return (
     <div className="node">
@@ -375,7 +388,9 @@ export const NodeView = (props: INodeViewProps) => {
           )}
           <div
             className={`nodeView-content ${
-              currentNode.type === 'map' || currentNode.type=='googleMap' ? 'mapView-content' : ''
+              currentNode.type === 'map' || currentNode.type == 'googleMap'
+                ? 'mapView-content'
+                : ''
             }`}
           >
             <NodeContent
@@ -415,12 +430,15 @@ export const NodeView = (props: INodeViewProps) => {
         </div>
       )}
       <div>
-      <RouteDrawer 
-        isOpen={routeDrawerOpen}
-        onClose= {() => setRouteDrawerOpen(false)}
-        pins = {pins}
-        load = {handleRouteMenuButtonClick}
-      />
+        <RouteDrawer
+          isOpen={routeDrawerOpen}
+          onClose={() => setRouteDrawerOpen(false)}
+          pins={pins}
+          load={handleRouteMenuButtonClick}
+          currentNode={currentNode}
+          trails={trails}
+          setTrails={setTrails}
+        />
       </div>
       {/**
        * Add a Pin Menu, with pins for the map, and documents linked to those pins
