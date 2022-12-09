@@ -24,3 +24,40 @@
 .create-trail-button-wrapper {
   grid-area: createTrailButton;
 }
+
+.trail-card-wrapper {
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start; 
+ 
+  gap: 1em;
+}
+
+.trail-card-container {
+  color: white;
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  border: 2px solid white;
+  background-color: green;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.trail-card-container:hover {
+  transform: scale(1.1);
+  transition-duration: 1s;
+}
+
+.trail-card-title {
+  font-size: 17px;
+}
+
+.trail-card-explainer {
+  font-size: 15px;
+  font-weight: lighter;
+}

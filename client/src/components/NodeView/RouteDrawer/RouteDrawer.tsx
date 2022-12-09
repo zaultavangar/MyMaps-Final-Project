@@ -33,7 +33,7 @@ import {
   IconButton,
   InputGroup,
   InputLeftElement,
-  Textarea
+  Textarea,
 } from '@chakra-ui/react'
 import FocusLock from 'react-focus-lock'
 import { FrontendPinGateway } from '../../../pins'
@@ -47,6 +47,10 @@ import { generateObjectId } from '../../../global'
 import { currentNodeState } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import TitleIcon from '@mui/icons-material/Title'
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 interface IRouteDrawerProps {
@@ -57,12 +61,17 @@ interface IRouteDrawerProps {
   currentNode: INode
   trails: ITrail[]
   setTrails: (trail: ITrail[]) => void
+  setPins: (pin: IPin[]) => void
 }
 
 export const RouteDrawer = (props: IRouteDrawerProps) => {
   const { isOpen, onClose, pins, load, currentNode, trails, setTrails } = props
 
+
+
   const [routeDrawerPins, setRouteDrawerPins] = useState<IPin[] | null>([])
+  const [dbTrails, setDbTrails] = useState<ITrail[] | null>([])
+
 
   useEffect(() => {
     console.log('hi')
@@ -89,6 +98,26 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [addPinPopoverOpen, setAddPinPopoverOpen] = useState(false)
   const [addIndex, setAddIndex] = useState<number>(pinsAdded.length)
   const [createTrailPopoverOpen, setCreateTrailPopoverOpen] = useState(false)
+
+
+  const [showTrailCreatedAlert, setShowTrailCreatedAlert] = useState(false)
+
+  useEffect(() => {
+    setPinsAdded([])
+  }, [])
+
+  useEffect(() => {
+    console.log('hi')
+    setShowTrailCreatedAlert(true)
+  },[dbTrails])
+
+
+  const handleAlertClose = (event: any, reason: any) => {
+    if (reason === 'clickaway')
+      return
+    setShowTrailCreatedAlert(false)
+    
+  }
 
   const setPopoverOpen = () => {
     setAddPinPopoverOpen(true)
@@ -201,6 +230,11 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     setTrails(trailsCpy)
     setCreateTrailPopoverOpen(false)
   }
+
+
+  // useEffect(() => {
+  //   setDbTrails(trails)
+  // }, [handleCreateTrail])
 
   const val: number = pinsAdded.slice().length + 1
   const maxInputVal = val
@@ -342,7 +376,26 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       </PopoverContent>
                     </Popover>
                     )}
-                    
+                    {/* <Snackbar
+                      open={showTrailCreatedAlert}
+                      autoHideDuration={5000}
+                      onClose={handleAlertClose}
+                      message="Trail created!"
+                      action={()=> console.log('hi')}
+                    /> */}
+                   {/* {showTrailCreatedAlert && dbTrails && dbTrails.length>0 &&
+                    <div>
+                      <Box sx={{ width: '50%' }}>
+                        <Collapse in={showTrailCreatedAlert}>
+                          <Alert
+                            sx={{ mb: 2 }}
+                          >
+                            Trail Created!
+                          </Alert>
+                        </Collapse>
+                    </Box>
+                    </div>
+                    } */}
                   </div>
                   {/**
                    * Add popover on Create trail Click with option to add a
@@ -395,12 +448,40 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                   </div>
                 </TabPanel>
                 <TabPanel>
-                  <p>View all routes...</p>
-                  {trails.map(map =>
-                    <div>
-                      {map.title}
-                    </div>
+                  <h2 style={{fontWeight: 'bold'}}>My Routes</h2>
+                  <div className='trail-card-wrapper'>
+                  {trails.map(trail=>
+                  <>
+                  <Popover size='xs' trigger='hover' placement='bottom'>
+                  <PopoverTrigger>
+                    <div className='trail-card-container'>
+                        <div className='trail-card-title'>
+                          {trail.title}
+                        </div>
+                        <div className='trail-card-explainer'>
+                          {trail.explainer}
+                        </div>
+                        <hr></hr>
+                      </div>
+                  </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverBody>
+                      <div style={{display:'flex', flexDirection: 'column'}}>
+                          {trail.pinList.map(pin => 
+                            <div style={{display:'flex', flexDirection: 'row', gap: '1em'}} >
+                            <PlaceIcon/>
+                            {pin.title}
+                            </div>
+                            )}
+                      </div>
+                      </PopoverBody>
+                    </PopoverContent>
+                   </Popover>
+                    </>
                     )}
+                    </div>
+                    
                 </TabPanel>
                 <TabPanel>
                   <p>Navigate: navigate gate through the pins in a trail</p>

@@ -40,6 +40,10 @@ import { FrontendTrailGateway } from '../../trails'
 import { GraphViewModal } from '../Modals'
 import { selectParentNode } from '@tiptap/core/dist/packages/core/src/commands'
 import { RouteDrawer } from './RouteDrawer'
+import { Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription, Collapse} from '@chakra-ui/react'
 
 export interface INodeViewProps {
   currentNode: INode
@@ -102,6 +106,9 @@ export const NodeView = (props: INodeViewProps) => {
   const setAlertTitle = useSetRecoilState(alertTitleState)
   const setAlertMessage = useSetRecoilState(alertMessageState)
   const [currNode, setCurrentNode] = useRecoilState(currentNodeState)
+
+
+
   const {
     filePath: { path },
   } = currentNode
@@ -198,6 +205,8 @@ export const NodeView = (props: INodeViewProps) => {
       onCompleteLinkClick()
     }
   }
+
+
 
   useEffect(() => {
     setSelectedAnchors([])
@@ -363,10 +372,9 @@ export const NodeView = (props: INodeViewProps) => {
     setRouteDrawerOpen(true)
   }, [])
 
-  pins.map((pin) => console.log(pin.pinId))
-
   return (
     <div className="node">
+
       <div className="nodeView" style={{ width: nodeViewWidth }}>
         <GraphViewModal
           isOpen={graphViewModalOpen}
@@ -440,6 +448,7 @@ export const NodeView = (props: INodeViewProps) => {
           currentNode={currentNode}
           trails={trails}
           setTrails={setTrails}
+          setPins={setPins}
         />
       </div>
       {/**
