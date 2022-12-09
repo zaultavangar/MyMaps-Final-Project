@@ -4,7 +4,15 @@ import { INodePath, makeINodePath } from './INodePath'
 export const nodeTypes: string[] = ['map', 'text', 'image', 'folder', 'googleMap']
 
 // Supported nodeTypes for file browser
-export type NodeType = 'map' | 'googleMap' | 'text' | 'image' | 'folder' | 'pdf' | 'audio' | 'video'
+export type NodeType =
+  | 'map'
+  | 'googleMap'
+  | 'text'
+  | 'image'
+  | 'folder'
+  | 'pdf'
+  | 'audio'
+  | 'video'
 
 // INode with node metadata
 export interface INode {

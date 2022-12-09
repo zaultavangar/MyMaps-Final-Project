@@ -102,7 +102,7 @@ export async function createNodeFromModal({
       }
       break
     case 'map':
-      let mapMetaData = await getMeta(content)
+      const mapMetaData = await getMeta(content)
       newNode = {
         content: content,
         dateCreated: new Date(),

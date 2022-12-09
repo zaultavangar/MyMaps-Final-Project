@@ -47,11 +47,10 @@ import { generateObjectId } from '../../../global'
 import { currentNodeState } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import TitleIcon from '@mui/icons-material/Title'
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import Collapse from '@mui/material/Collapse';
-import CloseIcon from '@mui/icons-material/Close';
-
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
+import Collapse from '@mui/material/Collapse'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface IRouteDrawerProps {
   isOpen: boolean
@@ -63,19 +62,24 @@ interface IRouteDrawerProps {
   setTrails: (trail: ITrail[]) => void
   setPins: (pin: IPin[]) => void
   setRouteDrawerOpen: (b: boolean) => void
-  setSelectedPin:(pin: IPin | null) => void
+  setSelectedPin: (pin: IPin | null) => void
 }
 
 export const RouteDrawer = (props: IRouteDrawerProps) => {
-  const { isOpen, onClose, pins, load, 
-    currentNode, trails, setTrails, setRouteDrawerOpen,
-    setSelectedPin } = props
-
-
+  const {
+    isOpen,
+    onClose,
+    pins,
+    load,
+    currentNode,
+    trails,
+    setTrails,
+    setRouteDrawerOpen,
+    setSelectedPin,
+  } = props
 
   const [routeDrawerPins, setRouteDrawerPins] = useState<IPin[] | null>([])
   const [dbTrails, setDbTrails] = useState<ITrail[] | null>([])
-
 
   useEffect(() => {
     console.log('hi')
@@ -103,22 +107,16 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [addIndex, setAddIndex] = useState<number>(pinsAdded.length)
   const [createTrailPopoverOpen, setCreateTrailPopoverOpen] = useState(false)
 
-
   const [showTrailCreatedAlert, setShowTrailCreatedAlert] = useState(false)
-
- 
 
   useEffect(() => {
     console.log('hi')
     setShowTrailCreatedAlert(true)
-  },[dbTrails])
-
+  }, [dbTrails])
 
   const handleAlertClose = (event: any, reason: any) => {
-    if (reason === 'clickaway')
-      return
+    if (reason === 'clickaway') return
     setShowTrailCreatedAlert(false)
-    
   }
 
   const setPopoverOpen = () => {
@@ -234,18 +232,15 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const handlePinFromTrailClick = async (e: any, pinId: string) => {
-      if (pinId) {
-        const getPinResp = await FrontendPinGateway.getPin(pinId)
-        if (getPinResp.success && getPinResp.payload) {
-          let pin = getPinResp.payload
-            setRouteDrawerOpen(false)
-            setSelectedPin(pin)
-          
-        }
+    if (pinId) {
+      const getPinResp = await FrontendPinGateway.getPin(pinId)
+      if (getPinResp.success && getPinResp.payload) {
+        const pin = getPinResp.payload
+        setRouteDrawerOpen(false)
+        setSelectedPin(pin)
       }
-    
+    }
   }
-
 
   // useEffect(() => {
   //   setDbTrails(trails)
@@ -312,7 +307,9 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             >
                               {routeDrawerPins &&
                                 routeDrawerPins.map((pin) => (
-                                  <option value={pin.pinId}>{pin.title}</option>
+                                  <option key={pin.pinId} value={pin.pinId}>
+                                    {pin.title}
+                                  </option>
                                 ))}
                             </Select>
                             <NumberInput
@@ -345,51 +342,59 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                     </Popover>
                     {pinsAdded.length > 0 && (
                       <Popover
-                      placement="right"
-                      isOpen={createTrailPopoverOpen}
-                      onClose={() => setCreateTrailPopoverOpen(false)}
-                    >
-                      <PopoverTrigger>
-                        <div className="create-trail-button-wrapper">
-                          <Button
-                            colorScheme="whatsapp"
-                            onClick={onCreateTrailPopoverClick}
-                            style={{ padding: '10px 10px' }}
-                          >
-                            Create Trail
-                          </Button>
-                        </div>
-                      </PopoverTrigger>
-                      <PopoverContent>
-                        <PopoverArrow />
-                        <PopoverHeader>Create a Trail</PopoverHeader>
-                        <PopoverCloseButton />
-                        <PopoverBody>
-                        <FocusLock returnFocus persistentFocus={false}>
-                          <InputGroup sx={{ marginBottom: '10px' }}>
-                            <InputLeftElement pointerEvents="none">
-                              <TitleIcon />
-                            </InputLeftElement>
-                            <Input placeholder="Choose a Title" onChange={handleTitleChange} />
-                          </InputGroup>
-                          <InputGroup sx={{ marginBottom: '10px' }}>
-                            <Textarea
-                              placeholder="Enter a Description (optional)"
-                              onChange={handleExplainerChange}
-                            />
-                          </InputGroup>
-                        </FocusLock>
-                        </PopoverBody>
-                        <PopoverFooter display="flex" justifyContent="flex-end">
-                          <ButtonGroup size="sm">
-                            <Button variant="outline" onClick={(e)=>setCreateTrailPopoverOpen(false)}>Cancel</Button>
-                            <Button onClick={handleCreateTrail} colorScheme="green">
-                              Create
+                        placement="right"
+                        isOpen={createTrailPopoverOpen}
+                        onClose={() => setCreateTrailPopoverOpen(false)}
+                      >
+                        <PopoverTrigger>
+                          <div className="create-trail-button-wrapper">
+                            <Button
+                              colorScheme="whatsapp"
+                              onClick={onCreateTrailPopoverClick}
+                              style={{ padding: '10px 10px' }}
+                            >
+                              Create Trail
                             </Button>
-                          </ButtonGroup>
-                        </PopoverFooter>
-                      </PopoverContent>
-                    </Popover>
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <PopoverArrow />
+                          <PopoverHeader>Create a Trail</PopoverHeader>
+                          <PopoverCloseButton />
+                          <PopoverBody>
+                            <FocusLock returnFocus persistentFocus={false}>
+                              <InputGroup sx={{ marginBottom: '10px' }}>
+                                <InputLeftElement pointerEvents="none">
+                                  <TitleIcon />
+                                </InputLeftElement>
+                                <Input
+                                  placeholder="Choose a Title"
+                                  onChange={handleTitleChange}
+                                />
+                              </InputGroup>
+                              <InputGroup sx={{ marginBottom: '10px' }}>
+                                <Textarea
+                                  placeholder="Enter a Description (optional)"
+                                  onChange={handleExplainerChange}
+                                />
+                              </InputGroup>
+                            </FocusLock>
+                          </PopoverBody>
+                          <PopoverFooter display="flex" justifyContent="flex-end">
+                            <ButtonGroup size="sm">
+                              <Button
+                                variant="outline"
+                                onClick={(e) => setCreateTrailPopoverOpen(false)}
+                              >
+                                Cancel
+                              </Button>
+                              <Button onClick={handleCreateTrail} colorScheme="green">
+                                Create
+                              </Button>
+                            </ButtonGroup>
+                          </PopoverFooter>
+                        </PopoverContent>
+                      </Popover>
                     )}
                     {/* <Snackbar
                       open={showTrailCreatedAlert}
@@ -398,7 +403,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       message="Trail created!"
                       action={()=> console.log('hi')}
                     /> */}
-                   {/* {showTrailCreatedAlert && dbTrails && dbTrails.length>0 &&
+                    {/* {showTrailCreatedAlert && dbTrails && dbTrails.length>0 &&
                     <div>
                       <Box sx={{ width: '50%' }}>
                         <Collapse in={showTrailCreatedAlert}>
@@ -428,6 +433,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                   >
                     {pinsAdded.map((pin, index) => (
                       <div
+                        key={pin.pinId}
                         style={{
                           display: 'flex',
                           justifyContent: 'center',
@@ -463,46 +469,54 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                   </div>
                 </TabPanel>
                 <TabPanel>
-                  <h2 style={{fontWeight: 'bold'}}>My Routes</h2>
-                  <div className='trail-card-wrapper'>
-                  {trails.map(trail=>
-                  <>
-                  <Popover size='xs' trigger='hover' placement='bottom'>
-                  <PopoverTrigger>
-                    <div className='trail-card-container'>
-                        <div className='trail-card-title'>
-                          {trail.title}
-                        </div>
-                        <div className='trail-card-explainer'>
-                          {trail.explainer}
-                        </div>
-                        <hr></hr>
-                      </div>
-                  </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverBody>
-                      <div style={{display:'flex', flexDirection: 'column' ,gap: '1em'}}>
-                          {trail.pinList.map(pin => 
-                            <div 
-                              id={pin.pinId}
-                              onClick={(e)=>handlePinFromTrailClick(e, pin.pinId)}
-                              data-value= {pin.pinId}
-                              style={{display:'flex', 
-                                flexDirection: 'row', 
-                                gap: '1em', cursor: 'pointer'}} >
-                            <PlaceIcon/>
-                            {pin.title}
+                  <h2 style={{ fontWeight: 'bold' }}>My Routes</h2>
+                  <div className="trail-card-wrapper">
+                    {trails.map((trail) => (
+                      <>
+                        <Popover size="xs" trigger="hover" placement="bottom">
+                          <PopoverTrigger>
+                            <div className="trail-card-container">
+                              <div className="trail-card-title">{trail.title}</div>
+                              <div className="trail-card-explainer">
+                                {trail.explainer}
+                              </div>
+                              <hr></hr>
                             </div>
-                            )}
-                      </div>
-                      </PopoverBody>
-                    </PopoverContent>
-                   </Popover>
-                    </>
-                    )}
-                    </div>
-                    
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverBody>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '1em',
+                                }}
+                              >
+                                {trail.pinList.map((pin) => (
+                                  <div
+                                    key={pin.pinId}
+                                    id={pin.pinId}
+                                    onClick={(e) => handlePinFromTrailClick(e, pin.pinId)}
+                                    data-value={pin.pinId}
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      gap: '1em',
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    <PlaceIcon />
+                                    {pin.title}
+                                  </div>
+                                ))}
+                              </div>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                      </>
+                    ))}
+                  </div>
                 </TabPanel>
                 <TabPanel>
                   <p>Navigate: navigate gate through the pins in a trail</p>

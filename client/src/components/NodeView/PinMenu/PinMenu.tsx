@@ -11,7 +11,6 @@ import { CreateNodeModal } from '../../Modals'
 import * as ai from 'react-icons/ai'
 import * as ri from 'react-icons/ri'
 
-
 interface IPinMenuProps {
   selectedPin: IPin | null
   setSelectedPin: (pin: IPin | null) => void
@@ -43,17 +42,22 @@ export const PinMenu = (props: IPinMenuProps) => {
     setParentNode(node)
   }
 
-  const customButtonStyle = { height: 40, width: 150, fontSize: "16px", backgroundColor: "lightblue", paddingTop: "10px", paddingBottom: "10px" }
+  const customButtonStyle = {
+    height: 40,
+    width: 150,
+    fontSize: '16px',
+    backgroundColor: 'lightblue',
+    paddingTop: '10px',
+    paddingBottom: '10px',
+  }
 
   if (selectedPin) {
-    selectedPin.childNodes.map(node => {
+    selectedPin.childNodes.map((node) => {
       console.log(node.title)
     })
+  } else {
+    console.log('nbooo')
   }
-  else {
-    console.log("nbooo")
-  }
-
 
   return (
     <div className="pin-menu-container">
@@ -84,26 +88,31 @@ export const PinMenu = (props: IPinMenuProps) => {
             onClick={() => setSelectedPin(null)}
             icon={<ai.AiOutlineArrowLeft />}
             text="Show all pins"
-            style={{ backgroundColor: 'white', fontSize:"14px"}}
+            style={{ backgroundColor: 'white', fontSize: '14px' }}
           />
-          <hr style={{marginBottom: "10px"}}></hr>
+          <hr style={{ marginBottom: '10px' }}></hr>
           <h2 className="pin-title pin-selected">{selectedPin.title}</h2>
           <p className="pin-explainer pin-selected">{selectedPin.explainer}</p>
           <h4 className="pin-documents">Pin Documents</h4>
           <List>
-          {selectedPin && selectedPin.childNodes.map((node) => 
-            <div className={'pin-documents-item-wrapper'} onClick={() => handleLinkClick(node)}>
-              <Link to={pathToString(node.filePath)}>
-                <ListItem>
-                  <div className="icon-date-wrapper">
-                    <div className="search-list-icon">{icon}</div>
-                    <div className="date-created">{formatDate(node.dateCreated)}</div>
-                  </div>
-                  {node.title}
-                </ListItem>
-              </Link>
-            </div>
-          )}
+            {selectedPin &&
+              selectedPin.childNodes.map((node) => (
+                <div
+                  className={'pin-documents-item-wrapper'}
+                  onClick={() => handleLinkClick(node)}
+                  key={node.nodeId}
+                >
+                  <Link to={pathToString(node.filePath)}>
+                    <ListItem>
+                      <div className="icon-date-wrapper">
+                        <div className="search-list-icon">{icon}</div>
+                        <div className="date-created">{formatDate(node.dateCreated)}</div>
+                      </div>
+                      {node.title}
+                    </ListItem>
+                  </Link>
+                </div>
+              ))}
           </List>
           <div className="create-node-button-wrapper">
             <Button
@@ -114,7 +123,7 @@ export const PinMenu = (props: IPinMenuProps) => {
             />
           </div>
           <div className="add-to-trail-button-wrapper">
-          <Button
+            <Button
               text="Add to Trail"
               style={customButtonStyle}
               icon={<ri.RiRouteLine />}

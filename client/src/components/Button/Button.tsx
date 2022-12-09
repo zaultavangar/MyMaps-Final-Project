@@ -19,7 +19,7 @@ export interface IButtonProps {
  * @returns Button component
  */
 export const Button = (props: IButtonProps): JSX.Element => {
-  const { icon, text, onClick, style, isWhite, isActive, } = props
+  const { icon, text, onClick, style, isWhite, isActive } = props
   return (
     <div
       className={`button ${isActive ? 'active' : ''} ${isWhite ? 'whiteButton' : ''}`}

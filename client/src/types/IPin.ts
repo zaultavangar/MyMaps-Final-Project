@@ -15,8 +15,8 @@ export interface IPin {
 }
 
 export interface IGoogleMapPin {
-  lat: number,
-  lng: number,
+  lat: number
+  lng: number
 }
 
 export type PinFields = keyof IPin | keyof IGoogleMapPin
@@ -39,7 +39,7 @@ export function isIPin(object: any): object is IPin {
     typeof (object as IPin).pinId === 'string' &&
     typeof (object as IPin).nodeId === 'string' &&
     typeof (object as IPin).title === 'string' &&
-    typeof (object as IPin).explainer === 'string' 
+    typeof (object as IPin).explainer === 'string'
   )
 }
 
@@ -73,7 +73,7 @@ export function makeIGoogleMapPin(
   title: string,
   explainer: string,
   lat: number,
-  lng: number,
+  lng: number
 ) {
   return {
     pinId: pinId,
@@ -98,6 +98,6 @@ export function isSamePin(a1: IPin, a2: IPin): boolean {
     a1.pinId === a2.pinId &&
     a1.nodeId === a2.nodeId &&
     a1.title === a2.title &&
-    a1.explainer === a2.explainer 
+    a1.explainer === a2.explainer
   )
 }
