@@ -1,5 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import {
+  Popover,
+  PopoverTrigger,
+  PopoverAnchor,
+  PopoverHeader,
+  PopoverBody,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  PopoverContent,
+  PopoverFooter,
+  PopoverCloseButton,
+  PopoverArrow,
+  Select,
+  ButtonGroup,
   Button,
   Drawer,
   DrawerOverlay,
@@ -7,7 +23,6 @@ import {
   DrawerContent,
   DrawerCloseButton,
   DrawerHeader,
-  useDisclosure,
   Input,
   DrawerFooter,
   Tabs,
@@ -15,24 +30,12 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Stack,
-  Popover,
-  PopoverTrigger,
-  PopoverAnchor,
-  PopoverHeader,
-  PopoverBody,
-  PopoverContent,
-  PopoverFooter,
-  PopoverCloseButton,
-  PopoverArrow,
-  Select,
   IconButton,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
+  InputGroup,
+  InputLeftElement,
+  Textarea
 } from '@chakra-ui/react'
+import FocusLock from 'react-focus-lock'
 import { FrontendPinGateway } from '../../../pins'
 import { IPin, INode, isSamePin, ITrail } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
@@ -43,6 +46,8 @@ import { valueToPercent } from '@mui/base'
 import { generateObjectId } from '../../../global'
 import { currentNodeState } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
+import TitleIcon from '@mui/icons-material/Title'
+
 
 interface IRouteDrawerProps {
   isOpen: boolean
@@ -68,7 +73,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     console.log(routeDrawerPins)
     if (routeDrawerPins && routeDrawerPins.length > 0) {
       setPinIdToAdd(routeDrawerPins[0].pinId)
-      }
+    }
   }, [routeDrawerPins])
 
   const [createModeTitle, setCreateModeTitle] = useState('')
@@ -83,6 +88,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [pinIdToAdd, setPinIdToAdd] = useState<string>('')
   const [addPinPopoverOpen, setAddPinPopoverOpen] = useState(false)
   const [addIndex, setAddIndex] = useState<number>(pinsAdded.length)
+  const [createTrailPopoverOpen, setCreateTrailPopoverOpen] = useState(false)
 
   const setPopoverOpen = () => {
     setAddPinPopoverOpen(true)
@@ -155,6 +161,16 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const [error, setError] = useState<string>('')
+  const [title, setTitle] = useState('')
+  const [explainer, setExplainer] = useState('')
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value)
+  }
+
+  const handleExplainerChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setExplainer(event.target.value)
+  }
 
   const handleNumberInputChange = (vString: string, vNumber: number) => {
     console.log(pinsAdded.length)
@@ -162,22 +178,28 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     setAddIndex(vNumber)
   }
 
+  const onCreateTrailPopoverClick = () => {
+    console.log('hi')
+    setCreateTrailPopoverOpen(true)
+  }
+
   const handleCreateTrail = async () => {
     const newTrail: ITrail = {
       trailId: generateObjectId('trail'),
       pinList: pinsAdded,
       nodeId: currentNode.nodeId,
-      title: '',
-      explainer: '',
+      title: title,
+      explainer: explainer,
     }
     const trailResponse = await FrontendTrailGateway.createTrail(newTrail)
-    if (!trailResponse.success){
+    if (!trailResponse.success) {
       setError('Error: Failed to create trail')
       return
     }
-    let trailsCpy = trails.slice()
+    const trailsCpy = trails.slice()
     trailsCpy.push(newTrail)
     setTrails(trailsCpy)
+    setCreateTrailPopoverOpen(false)
   }
 
   const val: number = pinsAdded.slice().length + 1
@@ -204,94 +226,136 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                     onChange={handleCreateModeTitleChange}
                     placeholder="Route title..."
                   />
-                  <Popover
-                    placement="right"
-                    isOpen={addPinPopoverOpen}
-                    onClose={() => setAddPinPopoverOpen(false)}
-                  >
-                    <PopoverTrigger>
-                      <Button
-                        variant="outline"
-                        mr={3}
-                        onClick={setPopoverOpen}
-                        style={{
-                          marginLeft: '5px',
-                          marginTop: '10px',
-                          padding: '40px 30px',
-                        }}
-                      >
-                        <div>
-                          <div style={{ fontWeight: '200' }}>Add Pins</div>
-                          <div style={{ fontSize: '1.5em', fontWeight: '200' }}>+</div>
-                        </div>
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverHeader>Choose a Pin</PopoverHeader>
-                      <PopoverCloseButton />
-                      <PopoverBody>
-                        <div className="select-add-pin-wrapper">
-                          <Select
-                            value={pinIdToAdd}
-                            id="select-add-pin"
-                            onChange={handleSelectChange}
-                          >
-                            {routeDrawerPins &&
-                              routeDrawerPins.map((pin) => (
-                                <option value={pin.pinId}>{pin.title}</option>
-                              ))}
-                          </Select>
-                          <NumberInput
-                            value={addIndex}
-                            onChange={handleNumberInputChange}
-                            width="45%"
-                            defaultValue={maxInputVal}
-                            max={maxInputVal}
-                            min={1}
-                          >
-                            <NumberInputField />
-                            <NumberInputStepper>
-                              <NumberIncrementStepper />
-                              <NumberDecrementStepper />
-                            </NumberInputStepper>
-                          </NumberInput>
+                  <div className="add-pin-to-trail-popover-container">
+                    <Popover
+                      placement="right"
+                      isOpen={addPinPopoverOpen}
+                      onClose={() => setAddPinPopoverOpen(false)}
+                    >
+                      <PopoverTrigger>
+                        <Button
+                          className="add-pins-to-trail-button"
+                          variant="outline"
+                          mr={3}
+                          onClick={() => setAddPinPopoverOpen(true)}
+                          style={{
+                            marginLeft: '5px',
+                            marginTop: '10px',
+                            padding: '40px 30px',
+                          }}
+                        >
                           <div>
-                            <Button
-                              colorScheme="whatsapp"
-                              onClick={handleAddPinsToTrail}
-                              style={{ padding: '10px 10px' }}
-                            >
-                              Add
-                            </Button>
+                            <div style={{ fontWeight: '200' }}>Add Pins</div>
+                            <div style={{ fontSize: '1.5em', fontWeight: '200' }}>+</div>
                           </div>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverHeader>Choose a Pin</PopoverHeader>
+                        <PopoverCloseButton />
+                        <PopoverBody>
+                          <div className="select-add-pin-wrapper">
+                            <Select
+                              value={pinIdToAdd}
+                              id="select-add-pin"
+                              onChange={handleSelectChange}
+                            >
+                              {routeDrawerPins &&
+                                routeDrawerPins.map((pin) => (
+                                  <option value={pin.pinId}>{pin.title}</option>
+                                ))}
+                            </Select>
+                            <NumberInput
+                              value={addIndex}
+                              onChange={handleNumberInputChange}
+                              width="45%"
+                              defaultValue={maxInputVal}
+                              max={maxInputVal}
+                              min={1}
+                            >
+                              <NumberInputField />
+                              <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                              </NumberInputStepper>
+                            </NumberInput>
+                            <div>
+                              <Button
+                                colorScheme="whatsapp"
+                                onClick={handleAddPinsToTrail}
+                                style={{ padding: '10px 10px' }}
+                              >
+                                Add
+                              </Button>
+                            </div>
+                          </div>
+                        </PopoverBody>
+                        <PopoverFooter></PopoverFooter>
+                      </PopoverContent>
+                    </Popover>
+                    {pinsAdded.length > 0 && (
+                      <Popover
+                      placement="right"
+                      isOpen={createTrailPopoverOpen}
+                      onClose={() => setCreateTrailPopoverOpen(false)}
+                    >
+                      <PopoverTrigger>
+                        <div className="create-trail-button-wrapper">
+                          <Button
+                            colorScheme="whatsapp"
+                            onClick={onCreateTrailPopoverClick}
+                            style={{ padding: '10px 10px' }}
+                          >
+                            Create Trail
+                          </Button>
                         </div>
-                      </PopoverBody>
-                      <PopoverFooter></PopoverFooter>
-                    </PopoverContent>
-                  </Popover>
-                  {pinsAdded.length > 0 && (
-                    <div className="create-trail-button-wrapper">
-                      <Button
-                        colorScheme="whatsapp"
-                        onClick={handleCreateTrail}
-                        style={{ padding: '10px 10px' }}
-                      >
-                        Create Trail
-                      </Button>
-                    </div>
-                  )}
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverHeader>Create a Trail</PopoverHeader>
+                        <PopoverCloseButton />
+                        <PopoverBody>
+                        <FocusLock returnFocus persistentFocus={false}>
+                          <InputGroup sx={{ marginBottom: '10px' }}>
+                            <InputLeftElement pointerEvents="none">
+                              <TitleIcon />
+                            </InputLeftElement>
+                            <Input placeholder="Choose a Title" onChange={handleTitleChange} />
+                          </InputGroup>
+                          <InputGroup sx={{ marginBottom: '10px' }}>
+                            <Textarea
+                              placeholder="Enter a Description (optional)"
+                              onChange={handleExplainerChange}
+                            />
+                          </InputGroup>
+                        </FocusLock>
+                        </PopoverBody>
+                        <PopoverFooter display="flex" justifyContent="flex-end">
+                          <ButtonGroup size="sm">
+                            <Button variant="outline" onClick={(e)=>setCreateTrailPopoverOpen(false)}>Cancel</Button>
+                            <Button onClick={handleCreateTrail} colorScheme="green">
+                              Create
+                            </Button>
+                          </ButtonGroup>
+                        </PopoverFooter>
+                      </PopoverContent>
+                    </Popover>
+                    )}
+                    
+                  </div>
                   {/**
-                   * Add popover on Create trail Click with option to add a 
-                   * title and explainer to the new trail 
+                   * Add popover on Create trail Click with option to add a
+                   * title and explainer to the new trail
                    */}
                   <div
                     style={{
-                      marginTop: '10px',
+                      marginTop: '15px',
                       display: 'flex',
                       flexDirection: 'row',
                       flexWrap: 'wrap',
                       gap: '1em',
+                      marginLeft: '20px',
                     }}
                   >
                     {pinsAdded.map((pin, index) => (
@@ -332,6 +396,11 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                 </TabPanel>
                 <TabPanel>
                   <p>View all routes...</p>
+                  {trails.map(map =>
+                    <div>
+                      {map.title}
+                    </div>
+                    )}
                 </TabPanel>
                 <TabPanel>
                   <p>Navigate: navigate gate through the pins in a trail</p>

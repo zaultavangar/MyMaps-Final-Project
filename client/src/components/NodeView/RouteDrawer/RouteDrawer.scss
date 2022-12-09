@@ -6,3 +6,21 @@
 .delete-icon {
   position: absolute;
 }
+
+.add-pin-to-trail-popover-container {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  gap: 10px;
+  justify-content: start;
+  align-items: center;
+  grid-template-areas: 
+    "addPinsButton createTrailButton";
+}
+
+.add-pins-to-trail-button {
+  grid-area: addPinsButton;
+}
+
+.create-trail-button-wrapper {
+  grid-area: createTrailButton;
+}

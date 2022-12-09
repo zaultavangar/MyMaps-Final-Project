@@ -203,12 +203,14 @@ export const NodeView = (props: INodeViewProps) => {
     setSelectedAnchors([])
     loadAnchorsFromNodeId()
     loadPinsFromNodeId()
+    loadTrailsFromNodeId()
   }, [
     loadAnchorsFromNodeId,
     currentNode,
     refreshLinkList,
     setSelectedAnchors,
     loadPinsFromNodeId,
+    loadTrailsFromNodeId,
   ])
 
   const [graphViewModalOpen, setGraphViewModalOpen] = useState(false)
