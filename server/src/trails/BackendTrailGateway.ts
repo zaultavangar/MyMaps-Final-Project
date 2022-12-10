@@ -115,4 +115,14 @@ export class BackendTrailGateway {
     return this.trailCollectionConnection.findTrailsByNodeId(nodeId)
   }
 
+  /**
+   * Method that gets all trails attached to a given pin.
+   *
+   * @param pinId the pinId of the node to get trails for
+   * @returns Promise<IServiceResponse<ITrail[]>>
+   */
+   async getTrailsByPinId(pinId: string): Promise<IServiceResponse<ITrail[]>> {
+    return this.trailCollectionConnection.findTrailsByPinId(pinId)
+  }
+
 }

@@ -8,6 +8,7 @@ import {
   RecursiveNodeTree,
   IPinProperty,
   makeIPinProperty,
+  ITrail,
 } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
 import { List, ListItem, ListIcon, OrderedList, UnorderedList } from '@chakra-ui/react'
@@ -26,6 +27,7 @@ import {
   refreshLinkListState,
   refreshState,
 } from '../../../global/Atoms'
+import { FrontendTrailGateway } from '../../../trails'
 
 interface IPinMenuProps {
   selectedPin: IPin | null
@@ -144,7 +146,35 @@ export const PinMenu = (props: IPinMenuProps) => {
       setSelectedPin(null)
     }
   }
-  
+
+  const [trails, setTrails] = useState<ITrail[]>([])
+  const trailItems = trails.map((trail: ITrail) => (
+    <ListItem key={trail.trailId}>
+      <div className="trail-card-container">
+        <div className="trail-card-title">{trail.title}</div>
+        <div className="trail-card-explainer">{trail.explainer}</div>
+        <hr></hr>
+      </div>
+    </ListItem>
+  ))
+
+  const getPinTrails = async (): Promise<void> => {
+    if (selectedPin) {
+      const resp = await FrontendTrailGateway.getTrailsByPinId(selectedPin.pinId)
+      console.log(resp)
+      if (resp.success) {
+        setTrails(resp.payload ?? [])
+      } else {
+        setAlertIsOpen(true)
+        setAlertTitle('Failed to retrieve trails!')
+        setAlertMessage(resp.message)
+      }
+    }
+  }
+
+  useEffect(() => {
+    getPinTrails()
+  }, [selectedPin])
 
   return (
     <div className="pin-menu-container">
@@ -203,9 +233,9 @@ export const PinMenu = (props: IPinMenuProps) => {
           </div>
 
           <Button
-              icon={<ri.RiDeleteBin6Line />}
-              text="Delete Pin"
-              onClick={() => onDeleteButtonClick()}
+            icon={<ri.RiDeleteBin6Line />}
+            text="Delete Pin"
+            onClick={() => onDeleteButtonClick()}
           />
 
           <h4 className="pin-documents">Pin Documents</h4>
@@ -245,6 +275,8 @@ export const PinMenu = (props: IPinMenuProps) => {
               onClick={onCreateNodeButtonClick}
             />
           </div>
+          <h4 className="pin-documents">Trails containing "{selectedPin.title}"</h4>
+          <List>{trailItems}</List>
         </div>
       )}
     </div>

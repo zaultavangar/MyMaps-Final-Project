@@ -153,9 +153,29 @@ export class TrailCollectionConnection {
    * @return successfulServiceResponse<ITrail> on success
    *         failureServiceResponse on failure
    */
-  async findTrailsByNodeId(nodeId: string): Promise<IServiceResponse<ITrail[]>> {
+   async findTrailsByNodeId(nodeId: string): Promise<IServiceResponse<ITrail[]>> {
     const foundTrails = []
     const myQuery = { nodeId: nodeId }
+    await this.client
+      .db()
+      .collection(this.collectionName)
+      .find(myQuery)
+      .forEach(function(doc) {
+        foundTrails.push(doc)
+      })
+    return successfulServiceResponse(foundTrails)
+  }
+
+  /**
+   * Finds and returns all trails attached to a given pin.
+   *
+   * @param {string[]} trailIds
+   * @return successfulServiceResponse<ITrail> on success
+   *         failureServiceResponse on failure
+   */
+   async findTrailsByPinId(pinId: string): Promise<IServiceResponse<ITrail[]>> {
+    const foundTrails = []
+    const myQuery = { "pinList.pinId" : pinId }
     await this.client
       .db()
       .collection(this.collectionName)
