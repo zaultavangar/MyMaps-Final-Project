@@ -37,7 +37,7 @@ import {
 } from '@chakra-ui/react'
 import FocusLock from 'react-focus-lock'
 import { FrontendPinGateway } from '../../../pins'
-import { IPin, INode, isSamePin, ITrail } from '../../../types'
+import { IPin, INode, isSamePin, ITrail, failureServiceResponse } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
 import { DeleteIcon } from '@chakra-ui/icons'
 
@@ -64,12 +64,16 @@ interface IRouteDrawerProps {
   setPins: (pin: IPin[]) => void
   setRouteDrawerOpen: (b: boolean) => void
   setSelectedPin:(pin: IPin | null) => void
+  setIsNavigating: (b: boolean) => void
+  startNavigation: (s: string) => void
 }
+
+
 
 export const RouteDrawer = (props: IRouteDrawerProps) => {
   const { isOpen, onClose, pins, load, 
     currentNode, trails, setTrails, setRouteDrawerOpen,
-    setSelectedPin } = props
+    setSelectedPin, setIsNavigating, startNavigation } = props
 
 
 
@@ -86,6 +90,9 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     console.log(routeDrawerPins)
     if (routeDrawerPins && routeDrawerPins.length > 0) {
       setPinIdToAdd(routeDrawerPins[0].pinId)
+      if (trails && trails.length>0) {
+        settrailIdToNavigate(trails[0].trailId)
+      }
     }
   }, [routeDrawerPins])
 
@@ -99,6 +106,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const [pinsAdded, setPinsAdded] = useState<IPin[]>([])
   const [pinIdToAdd, setPinIdToAdd] = useState<string>('')
+  const [trailIdToNavigate, settrailIdToNavigate] = useState<string>('')
+
   const [addPinPopoverOpen, setAddPinPopoverOpen] = useState(false)
   const [addIndex, setAddIndex] = useState<number>(pinsAdded.length)
   const [createTrailPopoverOpen, setCreateTrailPopoverOpen] = useState(false)
@@ -127,6 +136,10 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const handleSelectChange = (event: any) => {
     setPinIdToAdd(event.target.value)
+  }
+
+  const handleTrailNavigateSelectChange = (event: any) => {
+    settrailIdToNavigate(event.target.value)
   }
 
   const handleAddPinsToTrail = async (e: any) => {
@@ -244,6 +257,12 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         }
       }
     
+  }
+
+  const handleStartNavigationClick = () => {
+    if (trailIdToNavigate) startNavigation(trailIdToNavigate)
+    setRouteDrawerOpen(false)
+    setIsNavigating(true)
   }
 
 
@@ -481,6 +500,11 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                   </PopoverTrigger>
                     <PopoverContent>
                       <PopoverArrow />
+                      <PopoverHeader>
+                        <div style={{fontWeight: 'lighter'}}>
+                            Drag and drop pins to change order
+                        </div>
+                      </PopoverHeader>
                       <PopoverBody>
                       <div style={{display:'flex', flexDirection: 'column' ,gap: '1em'}}>
                           {trail.pinList.map(pin => 
@@ -505,7 +529,24 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                     
                 </TabPanel>
                 <TabPanel>
-                  <p>Navigate: navigate gate through the pins in a trail</p>
+                  <div>
+                    <h2>Choose a Route for Navigation Mode: </h2>
+                    <div style={{display: 'flex', gap: '1em'}}>
+                    <Select
+                      width='fit-content'
+                      value={trailIdToNavigate}
+                      id="select-navigate-trail"
+                      onChange={handleTrailNavigateSelectChange}
+                    >
+                      {trails && trails.map(trail =>
+                        <option value={trail.trailId}>{trail.title}</option>
+                      )}
+                    </Select>
+                    <Button onClick={handleStartNavigationClick} colorScheme="green">
+                        Navigate
+                    </Button>
+                    </div>
+                  </div>
                 </TabPanel>
               </TabPanels>
             </Tabs>

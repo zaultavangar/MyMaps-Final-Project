@@ -19,6 +19,7 @@ import { PinMenu } from './PinMenu'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   isLinkingState,
+  isNavigatingState,
   refreshState,
   startAnchorState,
   endAnchorState,
@@ -94,7 +95,11 @@ export const NodeView = (props: INodeViewProps) => {
     selectedPin,
     setSelectedPin,
   } = props
+
   const setIsLinking = useSetRecoilState(isLinkingState)
+  const [isNavigating, setIsNavigating] = useRecoilState(isNavigatingState)
+
+
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState)
   const setEndAnchor = useSetRecoilState(endAnchorState)
   const setSelectedAnchors = useSetRecoilState(selectedAnchorsState)
@@ -372,6 +377,20 @@ export const NodeView = (props: INodeViewProps) => {
     setRouteDrawerOpen(true)
   }, [])
 
+  const [trailToNavigate, setTrailToNavigate] = useState<ITrail | null>(null)
+
+  const startNavigation = async (trailId: string) => {
+    if (trailId) {
+      const getTrailResp = await FrontendTrailGateway.getTrail(trailId)
+      if (getTrailResp.success && getTrailResp.payload) {
+        const navTrail = getTrailResp.payload
+        console.log(navTrail)
+        setTrailToNavigate(navTrail)
+      }
+    }
+
+  }
+
   return (
     <div className="node">
 
@@ -408,13 +427,12 @@ export const NodeView = (props: INodeViewProps) => {
               onCreateNodeButtonClick={onCreateNodeButtonClick}
               selectedPin={selectedPin}
               setSelectedPin={setSelectedPin}
+              isNavigating= {isNavigating}
+              trailToNavigate={trailToNavigate}
             />
           </div>
         </div>
       </div>
-      {/**
-       * Change to hasPins, for the mapView
-       */}
       {(hasAnchors || hasPins) && (
         <div className="divider" ref={divider} onPointerDown={onPointerDown} />
       )}
@@ -451,6 +469,8 @@ export const NodeView = (props: INodeViewProps) => {
           setPins={setPins}
           setRouteDrawerOpen={setRouteDrawerOpen}
           setSelectedPin={setSelectedPin}
+          setIsNavigating={setIsNavigating}
+          startNavigation={startNavigation}
         />
       </div>
       {/**

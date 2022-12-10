@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { currentNodeState } from '../../../global/Atoms'
 import { IFolderNode, INode } from '../../../types'
@@ -9,7 +9,7 @@ import { MapSidebar } from './MapSidebar'
 import './NodeContent.scss'
 import { TextContent } from './TextContent'
 import { CommentContent } from './CommentContent'
-import { IPin } from '../../../types'
+import { IPin, ITrail } from '../../../types'
 import {
   Select
 } from '@chakra-ui/react'
@@ -21,6 +21,8 @@ export interface INodeContentProps {
   onCreateNodeButtonClick: () => void
   selectedPin: IPin | null
   setSelectedPin: (node: IPin) => void
+  isNavigating: boolean
+  trailToNavigate: ITrail | null
 }
 
 const viewModes = ["streets-v12", "outdoors-v12", "dark-v11", "satellite-v9", 
@@ -35,8 +37,9 @@ const viewModes = ["streets-v12", "outdoors-v12", "dark-v11", "satellite-v9",
  * @returns Content that any type of node renders
  */
 export const NodeContent = (props: INodeContentProps) => {
-  const { onCreateNodeButtonClick, childNodes, selectedPin, setSelectedPin } = props
+  const { onCreateNodeButtonClick, childNodes, selectedPin, setSelectedPin, isNavigating, trailToNavigate } = props
   const currentNode = useRecoilValue(currentNodeState)
+
 
   const [selectedMapViewMode, setSelectedMapViewMode] = useState<string>("streets-v12")
 
@@ -51,19 +54,34 @@ export const NodeContent = (props: INodeContentProps) => {
     case 'text':
       return <TextContent />
     case 'map':
-      return (
-        <div className="map-content-wrapper">
+      return (        
+        <>
+          {isNavigating && 
+          <div className="navigation-window">
+            {trailToNavigate && trailToNavigate.pinList.map(pin =>
+              <div>{pin.title}</div>
+            )}
+          </div>
+         }
           <div className="map-content-container">
             <MapContent selectedMapViewMode = {selectedMapViewMode} selectedPin={selectedPin} setSelectedPin={setSelectedPin} />
           </div>
           <div className="comment-content-container">
             <CommentContent />
           </div>
-        </div>
+        </>
       )
       case 'googleMap':
         return (
           <>
+           {isNavigating && localTrailToNavigate &&
+            <div className="navigation-window" key={localTrailToNavigate.trailId}>
+            {localTrailToNavigate.pinList.map(pin =>
+              {pin.title}
+            )}
+            </div>
+          }
+          
             <div style={{marginLeft: "10px", marginTop: "10px", width: 'fit-content'}}>
               <Select
                   value={selectedMapViewMode}

@@ -27,6 +27,11 @@ export const isLinkingState = atom<boolean>({
   default: false,
 })
 
+export const isNavigatingState = atom<boolean>({
+  key: 'isNavigatingState',
+  default: false,
+})
+
 // signal to refresh webpage
 export const refreshState = atom<boolean>({
   key: 'refreshState',
