@@ -25,6 +25,8 @@ import {
   NodeFields,
   INodeProperty,
   makeINodeProperty,
+  makeIGoogleMapPin,
+  makeIPin,
 } from '../../../../types'
 import './MapContent.scss'
 import {
@@ -115,18 +117,33 @@ export const MapContent = (props: IMapContentProps) => {
    * @returns
    */
   const handleCreatePin = async () => {
-    console.log(newMarker.getLngLat())
-    const newPin = {
-      pinId: generateObjectId('pin'),
-      nodeId: currentNode.nodeId,
-      trails: [],
-      childNodes: [],
-      title: title,
-      explainer: explainer,
-      lng: newMarker.getLngLat().lng,
-      lat: newMarker.getLngLat().lat,
+    const newPin: IPin = (() => {
+      const pinId = generateObjectId('pin')
+      const nodeId = currentNode.nodeId
+      const trailIds = {} as { [trailId: string]: number };
+      if (currentNode.type === 'googleMap') {
+        return {
+          pinId: pinId,
+          nodeId: nodeId,
+          trails: [],
+          childNodes: [],
+          title: title,
+          explainer: explainer,
+          lat: newMarker.getLngLat().lat,
+          lnt: newMarker.getLngLat().lng
+        }
+      }
+      return {
+        pinId: pinId,
+        nodeId: nodeId,
+        trails: [],
+        childNodes: [],
+        title: title,
+        explainer: explainer,
+        topJustify: yLast,
+        leftJustify: xLast
     }
-    return
+    })();
 
     const pinResponse = await FrontendPinGateway.createPin(newPin)
     if (!pinResponse.success) {
@@ -489,3 +506,4 @@ export const MapContent = (props: IMapContentProps) => {
     // </div>
   )
 }
+

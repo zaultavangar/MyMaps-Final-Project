@@ -1,7 +1,8 @@
 import { INodePath, makeINodePath } from './INodePath'
 
 // nodeTypes returns a string array of the types available
-export const nodeTypes: string[] = ['text', 'image', 'folder']
+// From BQW: Needed to add in map and googleMap for the create modal to run properly.
+export const nodeTypes: string[] = ['text', 'image', 'folder', 'map', 'googleMap']
 
 // Supported nodeTypes for file browser
 export type NodeType =
