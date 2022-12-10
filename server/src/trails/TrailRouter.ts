@@ -115,6 +115,20 @@ export class TrailRouter {
         }
       }
     )
+
+    TrailExpressRouter.get(
+      '/getByPinId/:pinId',
+      async (req: Request, res: Response) => {
+        try {
+          const pinId = req.params.pinId
+          const response: IServiceResponse<ITrail[]> =
+            await this.BackendTrailGateway.getTrailsByPinId(pinId)
+          res.status(200).send(response)
+        } catch (e) {
+          res.status(500).send(e.message)
+        }
+      }
+    )
   }
 
   /**

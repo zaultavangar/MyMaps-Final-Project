@@ -77,6 +77,16 @@ export const FrontendTrailGateway = {
     }
   },
 
+  getTrailsByPinId: async (pinId: string): Promise<IServiceResponse<ITrail[]>> => {
+    try {
+      return await get<IServiceResponse<ITrail[]>>(
+        baseEndpoint + servicePath + 'getByPinId/' + pinId
+      )
+    } catch (exception) {
+      return failureServiceResponse('[getTrailsByPinId] Unable to access backend')
+    }
+  },
+
   // Methods to add/delete a specific pin at a certain index
   // Could also just do this on frontend
 }
