@@ -47,6 +47,7 @@ export const NodeContent = (props: INodeContentProps) => {
     setSelectedMapViewMode(event.target.value)
   }
 
+  console.log('currentNode', currentNode)
   switch (currentNode.type) {
     case 'image':
       return <ImageContent />
@@ -96,6 +97,22 @@ export const NodeContent = (props: INodeContentProps) => {
           </div>
         </>
       )
+    case 'dashboard':
+      if (childNodes) {
+        // filter childNodes to only have map and googleMap nodes
+        const mapNodes = childNodes.filter(
+          (node) => node.type === 'map' || node.type === 'googleMap'
+        )
+        return (
+          <FolderContent
+            node={currentNode as IFolderNode}
+            onCreateNodeButtonClick={onCreateNodeButtonClick}
+            childNodes={mapNodes}
+          />
+        )
+      } else {
+        return null
+      }
     case 'folder':
       if (childNodes) {
         return (

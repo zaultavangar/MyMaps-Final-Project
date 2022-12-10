@@ -14,6 +14,7 @@ export const NodePreviewContent = (props: INodeContentPreviewProps) => {
   const { type, content } = props
   switch (type) {
     case 'image':
+    case 'map':
       return <ImagePreviewContent content={content} />
     case 'text':
       return <TextPreviewContent content={content} />

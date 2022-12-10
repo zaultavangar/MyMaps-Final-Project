@@ -2,10 +2,26 @@ import { isSameFilePath } from '.'
 import INodePath, { makeINodePath } from './INodePath'
 
 // nodeTypes returns a string array of the types available
-export const nodeTypes: string[] = ['map', 'text', 'image', 'folder', 'googleMap']
+export const nodeTypes: string[] = [
+  'map',
+  'text',
+  'image',
+  'folder',
+  'googleMap',
+  'dashboard',
+]
 
 // Supported nodeTypes for file browser
-export type NodeType = 'map' | 'googleMap' | 'text' | 'image' | 'folder' | 'pdf' | 'audio' | 'video' 
+export type NodeType =
+  | 'map'
+  | 'googleMap'
+  | 'text'
+  | 'image'
+  | 'folder'
+  | 'pdf'
+  | 'audio'
+  | 'video'
+  | 'dashboard'
 
 // INode with node metadata
 export interface INode {

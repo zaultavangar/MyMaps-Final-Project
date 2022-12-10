@@ -104,6 +104,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
       type: selectedType as NodeType,
       selectedPin: selectedPin,
     }
+    console.log(attributes)
     const node = await createNodeFromModal(attributes)
     node && setSelectedNode(node)
     onSubmit()
