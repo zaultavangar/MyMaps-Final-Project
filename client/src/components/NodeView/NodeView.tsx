@@ -20,6 +20,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   isLinkingState,
   isNavigatingState,
+  trailToNavigateState,
   refreshState,
   startAnchorState,
   endAnchorState,
@@ -377,7 +378,7 @@ export const NodeView = (props: INodeViewProps) => {
     setRouteDrawerOpen(true)
   }, [])
 
-  const [trailToNavigate, setTrailToNavigate] = useState<ITrail | null>(null)
+  const [trailToNavigate, setTrailToNavigate] = useRecoilState(trailToNavigateState)
 
   const startNavigation = async (trailId: string) => {
     if (trailId) {

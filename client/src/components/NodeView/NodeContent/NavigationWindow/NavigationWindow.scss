@@ -1,0 +1,84 @@
+
+.navigation-window {
+  margin-top: 10px;
+  border: 2px solid white;
+  background-color: green;
+  color: white;
+  width: 40%;
+  position: absolute;
+  top: 0;
+  left: 60%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  z-index: 99;
+
+  .navigation-window-options{
+    padding-bottom: 5px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .navigation-window-header {
+    background-color: white;
+    color: black;
+    padding: 3px 10px;
+    margin-bottom: 5px;
+
+    .nav-wind-route-title {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  
+    .nav-wind-route-description {
+      font-weight: lighter;
+      font-size: 0.9em;
+    }
+  }
+
+    .navigation-window-subheader {
+      display: flex;
+      align-items: center;
+      padding: 5px 0px;
+      justify-content: space-between;
+      margin-bottom: 5px;
+
+      .nav-wind-pins-header {
+        font-weight: bold;
+      }
+
+      .nav-wind-navigate-button {
+        float: right;
+        padding: 5px 5px;
+        background-color: white;
+        color: black;
+        cursor: pointer;
+        border-radius: 5px 5px;
+        font-size: 0.9em;
+      }
+    }
+
+ 
+    .navigation-window-body {
+      margin-top: 5px;
+
+      .nav-wind-pin-wrapper {
+        padding: 3px 0px;
+        margin-bottom: 5px;
+      }
+    
+      .nav-wind-pin-wrapper:hover {
+        background-color: white;
+        color: black;
+        transition-duration: 500ms;
+        cursor: pointer;
+      }
+    
+      .nav-pin-wrapper-selected {
+        background-color: white;
+        color: black;
+      }
+    }
+  
+
+  
+}

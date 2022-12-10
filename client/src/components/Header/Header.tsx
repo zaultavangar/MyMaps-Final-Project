@@ -5,9 +5,10 @@ import * as ai from 'react-icons/ai'
 
 import { NodeIdsToNodesMap } from '../../types'
 import { Link } from 'react-router-dom'
-import { useRecoilState, useSetRecoilState } from 'recoil'
-import { isLinkingState, startAnchorState, selectedExtentState } from '../../global/Atoms'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { isLinkingState, isNavigatingState, startAnchorState, selectedExtentState, trailToNavigateState } from '../../global/Atoms'
 import './Header.scss'
+import { TriangleDownIcon } from '@chakra-ui/icons'
 
 interface IHeaderProps {
   nodeIdsToNodesMap: NodeIdsToNodesMap
@@ -27,7 +28,9 @@ export const Header = (props: IHeaderProps) => {
   } = props
   const customButtonStyle = { height: 30, marginLeft: 10, width: 30 }
   const [isLinking, setIsLinking] = useRecoilState(isLinkingState)
+  const [isNavigating, setIsNavigating] = useRecoilState(isNavigatingState)
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState)
+  const [trailToNavigate, setTrailToNavigate] = useRecoilState(trailToNavigateState)
   const setSelectedExtent = useSetRecoilState(selectedExtentState)
 
   const handleCancelLink = () => {
@@ -36,12 +39,17 @@ export const Header = (props: IHeaderProps) => {
     setIsLinking(false)
   }
 
+  const handleCancelNavigation= () => {
+    setIsNavigating(false)
+    setTrailToNavigate(null)
+  }
+
   const handleSearchClick = useCallback(() => {
     setSearchModalOpen(true)
   }, [])
 
   return (
-    <div className={isLinking ? 'header-linking' : 'header'}>
+    <div className={isLinking || isNavigating ? 'header-linking' : 'header'}>
       <div className="left-bar">
         <Link to={'/'}>
           <div className="name" onClick={onHomeClick}>
@@ -50,7 +58,7 @@ export const Header = (props: IHeaderProps) => {
         </Link>
         <Link to={'/'}>
           <Button
-            isWhite={isLinking}
+            isWhite={isLinking }
             style={customButtonStyle}
             icon={<ri.RiHome2Line />}
             onClick={onHomeClick}
@@ -68,30 +76,59 @@ export const Header = (props: IHeaderProps) => {
           }}
         />
       </div>
-      {isLinking && startAnchor ? (
-        <div className="right-bar">
-          <div className="linking-from">
-            Linking from <b>{nodeIdsToNodesMap[startAnchor.nodeId].title}</b>
+      {(isLinking && startAnchor) || (isNavigating && trailToNavigate) ? (
+        <>
+        {isLinking && startAnchor && 
+          <div className="right-bar">
+            <div className="linking-from">
+              Linking from <b>{nodeIdsToNodesMap[startAnchor.nodeId].title}</b>
+            </div>
+            <Button
+              onClick={handleCancelLink}
+              isWhite
+              text="Cancel"
+              style={{ fontWeight: 600, height: 30, marginLeft: 20 }}
+              icon={<ri.RiCloseLine />}
+            />
+            <Button
+              icon={<ri.RiSearchEyeLine />}
+              text="Search"
+              onClick={() => handleSearchClick()}
+              isWhite
+              style={{
+                width: 'fit-content',
+                height: 30,
+                fontWeight: 600,
+              }}
+            />
           </div>
-          <Button
-            icon={<ri.RiSearchEyeLine />}
-            text="Search"
-            onClick={() => handleSearchClick()}
-            isWhite
-            style={{
-              width: 'fit-content',
-              height: 30,
-              fontWeight: 600,
-            }}
-          />
-          <Button
-            onClick={handleCancelLink}
-            isWhite
-            text="Cancel"
-            style={{ fontWeight: 600, height: 30, marginLeft: 20 }}
-            icon={<ri.RiCloseLine />}
-          />
-        </div>
+        }
+        {isNavigating && trailToNavigate &&
+          <div className="right-bar">
+            <div className="linking-from">
+                Navigating <b>{trailToNavigate.title}</b>
+            </div>
+            <Button
+              onClick={handleCancelNavigation}
+              isWhite
+              text="Cancel"
+              style={{ fontWeight: 600, height: 30, marginLeft: 20 }}
+              icon={<ri.RiCloseLine />}
+            />
+            <Button
+              icon={<ri.RiSearchEyeLine />}
+              text="Search"
+              onClick={() => handleSearchClick()}
+              isWhite
+              style={{
+                width: 'fit-content',
+                height: 30,
+                fontWeight: 600,
+              }}
+            />
+          </div>
+        }
+        </>
       ) : (
         <div className="right-bar">
           <div className="button-right-bar">

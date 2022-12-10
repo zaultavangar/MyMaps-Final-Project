@@ -93,7 +93,10 @@ export function makeIGoogleMapPin(
  * e.g. for the rectangular selection on an image node.
  */
 
-export function isSamePin(a1: IPin, a2: IPin): boolean {
+export function isSamePin(a1: IPin | null, a2: IPin | null): boolean {
+  if (!a1 || !a2) {
+    return false
+  }
   return (
     a1.pinId === a2.pinId &&
     a1.nodeId === a2.nodeId &&

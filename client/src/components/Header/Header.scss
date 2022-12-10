@@ -56,7 +56,7 @@
   }
 
   .linking-from {
-    width: 150px;
+    width: max-content;
   }
 
   .right-bar {
@@ -64,6 +64,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    gap: 1em;
   }
 }
 

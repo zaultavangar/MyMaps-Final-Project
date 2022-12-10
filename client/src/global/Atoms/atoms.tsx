@@ -1,9 +1,14 @@
 import { atom } from 'recoil'
-import { INode, IAnchor, Extent, IPin, makeIFolderNode } from '../../types'
+import { INode, IAnchor, Extent, IPin, ITrail, makeIFolderNode } from '../../types'
 
 // the selected node
 export const selectedNodeState = atom<INode | null>({
   key: 'selectedNodeState',
+  default: null,
+})
+
+export const trailToNavigateState = atom<ITrail | null>({
+  key: 'trailToNavigateState',
   default: null,
 })
 
@@ -72,6 +77,16 @@ export const selectedAnchorsState = atom<IAnchor[]>({
 export const selectedPinState = atom<IPin | null>({
   key: 'selectedPinState',
   default: null,
+})
+
+export const prevNavigationPinState = atom<IPin | null>({
+  key: 'prevNavigationPinState',
+  default: null
+})
+
+export const currentNavigationPinState = atom<IPin | null>({
+  key: 'currentNavigationPinState',
+  default: null
 })
 
 // selected extent

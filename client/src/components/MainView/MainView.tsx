@@ -266,7 +266,7 @@ export const MainView = React.memo(function MainView() {
             </div>
           )}
           <div className="content">
-            <div className="treeView-container" ref={treeView} style={{ width: 350 }}>
+            <div className="treeView-container" ref={treeView} style={{ width: 280 }}>
               <div className="search-container"></div>
               <TreeView
                 roots={rootNodes}

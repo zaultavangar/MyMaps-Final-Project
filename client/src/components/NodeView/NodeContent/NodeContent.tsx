@@ -9,10 +9,16 @@ import { MapSidebar } from './MapSidebar'
 import './NodeContent.scss'
 import { TextContent } from './TextContent'
 import { CommentContent } from './CommentContent'
-import { IPin, ITrail } from '../../../types'
+import { IPin, isSamePin, ITrail } from '../../../types'
 import {
-  Select
+  Select, 
+  OrderedList,
+  ListItem,
 } from '@chakra-ui/react'
+import { Button } from '@mui/material';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
+import { NavigationWindow } from './NavigationWindow'
 
 /** Props needed to render any node content */
 
@@ -20,7 +26,7 @@ export interface INodeContentProps {
   childNodes?: INode[]
   onCreateNodeButtonClick: () => void
   selectedPin: IPin | null
-  setSelectedPin: (node: IPin) => void
+  setSelectedPin: (node: IPin | null) => void
   isNavigating: boolean
   trailToNavigate: ITrail | null
 }
@@ -48,6 +54,8 @@ export const NodeContent = (props: INodeContentProps) => {
     setSelectedMapViewMode(event.target.value)
   }
 
+  // fix positioing of navigation window
+
   switch (currentNode.type) {
     case 'image':
       return <ImageContent />
@@ -56,13 +64,14 @@ export const NodeContent = (props: INodeContentProps) => {
     case 'map':
       return (        
         <>
-          {isNavigating && 
-          <div className="navigation-window">
-            {trailToNavigate && trailToNavigate.pinList.map(pin =>
-              <div>{pin.title}</div>
-            )}
-          </div>
-         }
+        {isNavigating && trailToNavigate &&
+          <NavigationWindow
+            trailToNavigate={trailToNavigate}
+            selectedPin={selectedPin}
+            setSelectedPin={setSelectedPin}
+            isNavigating={isNavigating}
+            />
+          }
           <div className="map-content-container">
             <MapContent selectedMapViewMode = {selectedMapViewMode} selectedPin={selectedPin} setSelectedPin={setSelectedPin} />
           </div>
@@ -74,11 +83,23 @@ export const NodeContent = (props: INodeContentProps) => {
       case 'googleMap':
         return (
           <>
-           {isNavigating && localTrailToNavigate &&
-            <div className="navigation-window" key={localTrailToNavigate.trailId}>
-            {localTrailToNavigate.pinList.map(pin =>
-              {pin.title}
-            )}
+           {isNavigating && trailToNavigate &&
+            <div className="navigation-window" key={trailToNavigate.trailId}>
+              <div className="navigation-window-header">
+                <h3>Route: {trailToNavigate.title}</h3>
+                <div>{trailToNavigate.explainer}</div>
+              </div>
+              <div className="navigation-window-subheader">
+                <h5>Pins</h5>
+              </div>
+              <hr></hr>
+                <OrderedList>
+                <div className="navigation-window-pins">
+                  {trailToNavigate.pinList.map((pin, index) =>
+                    <ListItem>{pin.title}</ListItem>
+                  )}
+               </div>
+              </OrderedList>
             </div>
           }
           
