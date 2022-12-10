@@ -43,10 +43,10 @@ export class NodeRouter {
         // Req.body allows you to access data in a string or JSON object from the client side
         const node = req.body.node
         if (!isINode(node)) {
-          console.log('byeee')
+          console.log('Not an INode (byeee)')
           res.status(400).send('not INode!')
         } else {
-          console.log('hiiii')
+          console.log('creating node (hiiii)')
           const response = await this.BackendNodeGateway.createNode(node)
           res.status(200).send(response)
         }

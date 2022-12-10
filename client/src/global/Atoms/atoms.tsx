@@ -15,15 +15,7 @@ export const trailToNavigateState = atom<ITrail | null>({
 // the current node, same as selected node unless selected node is null
 export const currentNodeState = atom<INode>({
   key: 'currentNodeState',
-  default: makeIFolderNode(
-    'root',
-    [],
-    [],
-    'folder',
-    'MyHypermedia Dashboard',
-    '',
-    'grid'
-  ),
+  default: makeIFolderNode('root', [], [], 'folder', 'dashboard', '', 'grid'),
 })
 
 // whether a link is in progress

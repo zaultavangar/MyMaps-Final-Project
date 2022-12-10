@@ -187,7 +187,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
               text="Move"
               onClick={() => onMoveButtonClick(currentNode)}
             />
-            {map && (
+            {!map && (
               <Button
                 icon={<ri.RiExternalLinkLine />}
                 text="Start Link"

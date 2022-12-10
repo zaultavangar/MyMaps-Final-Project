@@ -1,4 +1,11 @@
-import { IPin, ITrail, INode, failureServiceResponse, IServiceResponse, IPinProperty } from '../types'
+import {
+  IPin,
+  ITrail,
+  INode,
+  failureServiceResponse,
+  IServiceResponse,
+  IPinProperty,
+} from '../types'
 import { endpoint, get, post, remove, put } from '../global'
 
 /** In development mode (locally) the server is at localhost:5000*/

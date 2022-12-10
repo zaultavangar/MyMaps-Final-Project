@@ -31,10 +31,14 @@ export interface INodeContentProps {
   trailToNavigate: ITrail | null
 }
 
-const viewModes = ["streets-v12", "outdoors-v12", "dark-v11", "satellite-v9", 
-  "satellite-streets-v12", "navigation-day-v12"]
-
-
+const viewModes = [
+  'streets-v12',
+  'outdoors-v12',
+  'dark-v11',
+  'satellite-v9',
+  'satellite-streets-v12',
+  'navigation-day-v12',
+]
 
 /**
  * This is the node content.
@@ -47,7 +51,7 @@ export const NodeContent = (props: INodeContentProps) => {
   const currentNode = useRecoilValue(currentNodeState)
 
 
-  const [selectedMapViewMode, setSelectedMapViewMode] = useState<string>("streets-v12")
+  const [selectedMapViewMode, setSelectedMapViewMode] = useState<string>('streets-v12')
 
   const handleSelectedMapViewMode = (event: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(event.target.value)
@@ -56,6 +60,7 @@ export const NodeContent = (props: INodeContentProps) => {
 
   // fix positioing of navigation window
 
+  console.log('currentNode', currentNode)
   switch (currentNode.type) {
     case 'image':
       return <ImageContent />
@@ -73,7 +78,11 @@ export const NodeContent = (props: INodeContentProps) => {
             />
           }
           <div className="map-content-container">
-            <MapContent selectedMapViewMode = {selectedMapViewMode} selectedPin={selectedPin} setSelectedPin={setSelectedPin} />
+            <MapContent
+              selectedMapViewMode={selectedMapViewMode}
+              selectedPin={selectedPin}
+              setSelectedPin={setSelectedPin}
+            />
           </div>
           <div className="comment-content-container">
             <CommentContent />

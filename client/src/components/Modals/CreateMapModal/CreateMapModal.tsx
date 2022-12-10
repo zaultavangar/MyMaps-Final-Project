@@ -29,8 +29,7 @@ import { createNodeFromModal, uploadImage } from '../CreateNodeModal/createNodeU
 import { useSetRecoilState } from 'recoil'
 import { selectedNodeState, selectedPinState } from '../../../global/Atoms'
 import { IPin } from '../../../types'
-import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
-
+import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded'
 
 export interface ICreateMapModalProps {
   isOpen: boolean
@@ -105,6 +104,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
       type: selectedType as NodeType,
       selectedPin: selectedPin,
     }
+    console.log(attributes)
     const node = await createNodeFromModal(attributes)
     node && setSelectedNode(node)
     onSubmit()
@@ -140,7 +140,6 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
 
   const isImage: boolean = selectedType === 'map'
 
-
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
       <div className="modal-font">
@@ -155,22 +154,24 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
               placeholder="Map Title..."
             />
             <div className="modal-input">
-              <RadioGroup onChange={nextVal => handleSelectedTypeChange(nextVal)} value={selectedType}>
-                <Stack direction='column'>
+              <RadioGroup
+                onChange={(nextVal) => handleSelectedTypeChange(nextVal)}
+                value={selectedType}
+              >
+                <Stack direction="column">
                   <Radio key="googleMap" value="googleMap">
                     <div className="radio-option use-google-maps">
-                      <img 
-                        alt="google maps image" 
+                      <img
+                        alt="google maps image"
                         src="https://www.adster.ca/wp-content/uploads/2013/04/google-maps.jpg"
                         width="140px"
-                        height="60px">
-                        </img>
+                        height="60px"
+                      ></img>
                     </div>
-
                   </Radio>
                   <Radio key="map" value="map">
                     <div className="radio-option upload-image">
-                      <FileUploadRoundedIcon fontSize="large"/>
+                      <FileUploadRoundedIcon fontSize="large" />
                       <div>Upload an Image</div>
                     </div>
                   </Radio>
