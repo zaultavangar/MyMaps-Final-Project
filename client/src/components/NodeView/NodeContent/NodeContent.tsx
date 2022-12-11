@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil'
-import { currentNodeState } from '../../../global/Atoms'
+import { useRecoilValue, useRecoilState } from 'recoil'
+import { currentNodeState, selectedPinState} from '../../../global/Atoms'
 import { IFolderNode, INode } from '../../../types'
 import { FolderContent } from './FolderContent'
 import { ImageContent } from './ImageContent'
@@ -21,8 +21,6 @@ import { NavigationWindow } from './NavigationWindow'
 export interface INodeContentProps {
   childNodes?: INode[]
   onCreateNodeButtonClick: () => void
-  selectedPin: IPin | null
-  setSelectedPin: (node: IPin | null) => void
   isNavigating: boolean
   trailToNavigate: ITrail | null
 }
@@ -46,12 +44,11 @@ export const NodeContent = (props: INodeContentProps) => {
   const {
     onCreateNodeButtonClick,
     childNodes,
-    selectedPin,
-    setSelectedPin,
     isNavigating,
     trailToNavigate,
   } = props
   const currentNode = useRecoilValue(currentNodeState)
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
   const [selectedMapViewMode, setSelectedMapViewMode] = useState<string>('streets-v12')
 
@@ -74,16 +71,12 @@ export const NodeContent = (props: INodeContentProps) => {
           {isNavigating && trailToNavigate && (
             <NavigationWindow
               trailToNavigate={trailToNavigate}
-              selectedPin={selectedPin}
-              setSelectedPin={setSelectedPin}
               isNavigating={isNavigating}
             />
           )}
           <div className="map-content-container">
             <MapContent
               selectedMapViewMode={selectedMapViewMode}
-              selectedPin={selectedPin}
-              setSelectedPin={setSelectedPin}
             />
           </div>
           <div className="comment-content-container">
@@ -131,8 +124,6 @@ export const NodeContent = (props: INodeContentProps) => {
           <div className="map-content-container">
             <MapContent
               selectedMapViewMode={selectedMapViewMode}
-              selectedPin={selectedPin}
-              setSelectedPin={setSelectedPin}
             />
           </div>
           <div className="comment-content-container">

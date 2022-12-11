@@ -32,6 +32,7 @@ import {
   currentNodeState,
   refreshLinkListState,
   mapPinsState,
+  selectedPinState,
 } from '../../global/Atoms'
 import './NodeView.scss'
 import NodeInfo from '../Modals/GraphViewModal/Flow/NodeInfo'
@@ -68,8 +69,6 @@ export interface INodeViewProps {
   onRouteMenuClick: () => void
   childNodes?: INode[]
   setParentNode: (node: INode) => void
-  selectedPin: IPin | null
-  setSelectedPin: (pin: IPin | null) => void
 }
 
 // type used for custom node in react flow graph
@@ -97,10 +96,9 @@ export const NodeView = (props: INodeViewProps) => {
     onMoveButtonClick,
     childNodes,
     setParentNode,
-    selectedPin,
-    setSelectedPin,
   } = props
 
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
   const setIsLinking = useSetRecoilState(isLinkingState)
   const [isNavigating, setIsNavigating] = useRecoilState(isNavigatingState)
 
@@ -488,8 +486,6 @@ export const NodeView = (props: INodeViewProps) => {
             <NodeContent
               childNodes={childNodes}
               onCreateNodeButtonClick={onCreateNodeButtonClick}
-              selectedPin={selectedPin}
-              setSelectedPin={setSelectedPin}
               isNavigating={isNavigating}
               trailToNavigate={trailToNavigate}
             />
@@ -518,8 +514,6 @@ export const NodeView = (props: INodeViewProps) => {
             ) : (
               <div style={{ width: resizableWidth }} ref={resizablePinMenu}>
                 <PinMenu
-                  selectedPin={selectedPin}
-                  setSelectedPin={setSelectedPin}
                   setParentNode={setParentNode}
                   onCreateNodeButtonClick={onCreateNodeButtonClick}
                 />
@@ -559,7 +553,6 @@ export const NodeView = (props: INodeViewProps) => {
           setTrails={setTrails}
           setPins={setPins}
           setRouteDrawerOpen={setRouteDrawerOpen}
-          setSelectedPin={setSelectedPin}
           setIsNavigating={setIsNavigating}
           startNavigation={startNavigation}
         />

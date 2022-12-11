@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil'
 import {
   prevNavigationPinState,
   currentNavigationPinState,
+  selectedPinState
 } from '../../../../global/Atoms'
 import { IconButton } from '@mui/material'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
@@ -15,13 +16,14 @@ import React, { useEffect, useState } from 'react'
 
 export interface INavigationWindowProps {
   trailToNavigate: ITrail
-  selectedPin: IPin | null
-  setSelectedPin: (pin: IPin | null) => void
   isNavigating: boolean
 }
 
 export const NavigationWindow = (props: INavigationWindowProps) => {
-  const { trailToNavigate, selectedPin, setSelectedPin, isNavigating } = props
+  const { trailToNavigate, isNavigating } = props
+
+
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
   const [prevNavigationPin, setPrevNavigationPin] = useRecoilState(prevNavigationPinState)
   const [currentNavigationPin, setCurrentNavigationPin] = useRecoilState(

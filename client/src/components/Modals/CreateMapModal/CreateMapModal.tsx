@@ -26,7 +26,7 @@ import { Button } from '../../Button'
 import { TreeView } from '../../TreeView'
 import './CreateMapModal.scss'
 import { createNodeFromModal, uploadImage } from '../CreateNodeModal/createNodeUtils'
-import { useSetRecoilState } from 'recoil'
+import { useSetRecoilState, useRecoilState } from 'recoil'
 import { selectedNodeState, selectedPinState } from '../../../global/Atoms'
 import { IPin } from '../../../types'
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded'
@@ -37,8 +37,6 @@ export interface ICreateMapModalProps {
   onClose: () => void
   onSubmit: () => unknown
   roots: RecursiveNodeTree[]
-  selectedPin: IPin | null
-  setSelectedPin: (pin: IPin | null) => void
 }
 
 /**
@@ -53,8 +51,6 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
     roots,
     nodeIdsToNodesMap,
     onSubmit,
-    selectedPin,
-    setSelectedPin,
   } = props
 
   // state variables
@@ -64,6 +60,7 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
   const [content, setContent] = useState('')
   const [selectedType, setSelectedType] = useState<NodeType>('googleMap' as NodeType)
   const [error, setError] = useState<string>('')
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
   // event handlers for the modal inputs and dropdown selects
   const handleSelectedTypeChange = (nextVal: string) => {

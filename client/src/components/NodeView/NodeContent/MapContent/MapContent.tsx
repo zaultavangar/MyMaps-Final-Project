@@ -60,16 +60,17 @@ import mapboxgl, { Marker, Popup } from '!mapbox-gl'
 
 interface IMapContentProps {
   selectedMapViewMode: string
-  selectedPin: IPin | null
-  setSelectedPin: (pin: IPin) => void
 }
 
 /** The content of a map node, including any pins */
 export const MapContent = (props: IMapContentProps) => {
+
+  const { selectedMapViewMode} = props
   let map: mapboxgl.Map
   const [newMarker, setNewMarker] = useState<mapboxgl.Marker | null>(null)
 
-  const { selectedMapViewMode, selectedPin, setSelectedPin } = props
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
+
 
   const [createPinPopoverOpen, setCreatePinPopoverOpen] = useState<boolean>(false)
 
@@ -141,11 +142,15 @@ const startAnchor = useRecoilValue(startAnchorState)
       console.log('hi')
       setError('Error: Failed to create pin')
       return
+    }   
+    else {
+      setSelectedPin(null)
+      setCreatePinPopoverOpen(false)
+      let pins = mapPins.slice()
+      pins.push(newPin)
+      setMapPins(pins)
     }
-    setCreatePinPopoverOpen(false)
-    let pins = mapPins.slice()
-    pins.push(newPin)
-    setMapPins(pins)
+
     // add state fxn calls to refresh pin menu and other things that need to be refreshed
   }
 
@@ -168,7 +173,8 @@ const startAnchor = useRecoilValue(startAnchorState)
     setSelectedPin && setSelectedPin(pin)
   }
 
-  const displaySelectedPin = useCallback(() => {
+  const displaySelectedPin = (() => {
+    console.log('displayselectedPin')
     if (selectedPinId) {
       const prevSelectedPin = document.getElementById(selectedPinId)
       if (prevSelectedPin) {
@@ -181,15 +187,17 @@ const startAnchor = useRecoilValue(startAnchorState)
     }
     let newSelectedPinId: string | null = null
     if (selectedPin) {
+      console.log('SIUUUU')
       const pinElement = document.getElementById(selectedPin.pinId)
       if (pinElement) {
+        console.log('NOOO')
         pinElement.style.color = 'blue'
         pinElement.style.transform = 'scale(1.3)'
         newSelectedPinId = pinElement.id
       }
     }
     setSelectedPinId(newSelectedPinId)
-  }, [selectedPinId, selectedPin])
+  })
 
   /**
    * To trigger on load and when we setSelectedExtent
@@ -204,13 +212,51 @@ const startAnchor = useRecoilValue(startAnchorState)
     }
   }, [setSelectedExtent, refreshLinkList])
 
-  useEffect(() => {
-    displaySelectedPin()
-  }, [selectedPin]) // eventually add refreshPinMenu dependency
+  const displayMapPins = async (): Promise<void> => {
+    let mapPins: IPin[]
+    const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(currentNode.nodeId)
+    if (pinsFromNode.success && pinsFromNode.payload) {
+      const pinElementList: JSX.Element[] = []
+      // List of anchor elements to return
+      mapPins = pinsFromNode.payload
+      // IAnchor array from FrontendAnchorGateway call
+      mapPins.forEach((pin) => {
+        // selection
+
+        pinElementList.push(
+          <div
+            id={pin.pinId}
+            key={'map.' + pin.pinId}
+            onClick={(e) => {
+              handlePinSelect(e, pin)
+            }}
+            onPointerDown={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
+            className="pins-on-map-wrapper"
+            style={{
+              left: `${pin.leftJustify}px`, // change these variable names
+              top: `${pin.topJustify}px`,
+            }}
+          >
+            <PlaceIcon color="primary" />
+          </div>
+        )
+      })
+      setMapPinsElements(pinElementList)
+    }
+  }
 
   useEffect(() => {
+    console.log('bye')
+    displaySelectedPin()
+  }, [mapPinsElements]) // eventually add refreshPinMenu dependency
+
+  useEffect(() => {
+    console.log('hi')
     displayMapPins()
-  }, [selectedPin, currentNode, refreshLinkList, mapPinsElements, mapPins]) // startAmcjpr
+  }, [selectedPin, currentNode, mapPins]) // startAmcjpr
 
   useEffect(() => {
     if (currentNode.type === 'googleMap') {
@@ -354,41 +400,7 @@ const startAnchor = useRecoilValue(startAnchorState)
    * the data with a call to FrontendAnchorGateway.getAnchorsByNodeId
    * which returns a list of IAnchors that are on currentNode
    */
-  const displayMapPins = async (): Promise<void> => {
-    let mapPins: IPin[]
-    const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(currentNode.nodeId)
-    if (pinsFromNode.success && pinsFromNode.payload) {
-      const pinElementList: JSX.Element[] = []
-      // List of anchor elements to return
-      mapPins = pinsFromNode.payload
-      // IAnchor array from FrontendAnchorGateway call
-      mapPins.forEach((pin) => {
-        // selection
-
-        pinElementList.push(
-          <div
-            id={pin.pinId}
-            key={'map.' + pin.pinId}
-            onClick={(e) => {
-              handlePinSelect(e, pin)
-            }}
-            onPointerDown={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-            }}
-            className="pins-on-map-wrapper"
-            style={{
-              left: `${pin.leftJustify}px`, // change these variable names
-              top: `${pin.topJustify}px`,
-            }}
-          >
-            <PlaceIcon color="primary" />
-          </div>
-        )
-      })
-      setMapPinsElements(pinElementList)
-    }
-  }
+  
 
   const handleCreatePinPopoverClose = () => {
     console.log('test')

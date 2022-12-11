@@ -51,6 +51,10 @@ import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import Collapse from '@mui/material/Collapse'
 import CloseIcon from '@mui/icons-material/Close'
+import { useSetRecoilState } from 'recoil'
+import {
+  selectedPinState
+} from '../../../global/Atoms'
 
 interface IRouteDrawerProps {
   isOpen: boolean
@@ -62,7 +66,6 @@ interface IRouteDrawerProps {
   setTrails: (trail: ITrail[]) => void
   setPins: (pin: IPin[]) => void
   setRouteDrawerOpen: (b: boolean) => void
-  setSelectedPin: (pin: IPin | null) => void
   setIsNavigating: (b: boolean) => void
   startNavigation: (s: string) => void
 }
@@ -77,13 +80,14 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     trails,
     setTrails,
     setRouteDrawerOpen,
-    setSelectedPin,
     setIsNavigating,
     startNavigation,
   } = props
 
   const [routeDrawerPins, setRouteDrawerPins] = useState<IPin[] | null>([])
   const [dbTrails, setDbTrails] = useState<ITrail[] | null>([])
+
+  const setSelectedPin = useSetRecoilState(selectedPinState)
 
   useEffect(() => {
     console.log('hi')

@@ -26,25 +26,23 @@ import {
   alertTitleState,
   refreshLinkListState,
   refreshState,
-  mapPinsState
+  mapPinsState,
+  selectedPinState
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 
 interface IPinMenuProps {
-  selectedPin: IPin | null
-  setSelectedPin: (pin: IPin | null) => void
   setParentNode: (node: INode) => void
   onCreateNodeButtonClick: () => void
 }
 
 export const PinMenu = (props: IPinMenuProps) => {
   const {
-    selectedPin,
-    setSelectedPin,
     setParentNode,
     onCreateNodeButtonClick,
   } = props
 
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
   const icon = nodeTypeIcon('map') // icon based on type
   const [mapPins, setMapPins] = useRecoilState(mapPinsState)
 

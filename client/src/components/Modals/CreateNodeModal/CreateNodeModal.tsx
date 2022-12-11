@@ -23,8 +23,8 @@ import { Button } from '../../Button'
 import { TreeView } from '../../TreeView'
 import './CreateNodeModal.scss'
 import { createNodeFromModal, uploadImage } from './createNodeUtils'
-import { useSetRecoilState } from 'recoil'
-import { selectedNodeState } from '../../../global/Atoms'
+import { useSetRecoilState, useRecoilState } from 'recoil'
+import { selectedNodeState, selectedPinState } from '../../../global/Atoms'
 import { IPin, IPinProperty, makeIPinProperty } from '../../../types'
 
 export interface ICreateNodeModalProps {
@@ -33,8 +33,6 @@ export interface ICreateNodeModalProps {
   onClose: () => void
   onSubmit: () => unknown
   roots: RecursiveNodeTree[]
-  selectedPin: IPin | null
-  setSelectedPin: (pin: IPin | null) => void
 }
 
 /**
@@ -49,8 +47,6 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
     roots,
     nodeIdsToNodesMap,
     onSubmit,
-    selectedPin,
-    setSelectedPin,
   } = props
 
   // state variables
@@ -60,6 +56,7 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
   const [content, setContent] = useState('')
   const [selectedType, setSelectedType] = useState<NodeType>('' as NodeType)
   const [error, setError] = useState<string>('')
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
   // event handlers for the modal inputs and dropdown selects
   const handleSelectedTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
