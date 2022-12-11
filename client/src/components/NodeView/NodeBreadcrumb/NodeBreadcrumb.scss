@@ -13,6 +13,8 @@
   }
 
   .breadcrumb-item {
+    display: flex;
+    align-items: center;
     cursor: pointer;
     width: fit-content;
     transition: 0.2s;
@@ -28,4 +30,8 @@
       background-color: $selected-color;
     }
   }
+}
+
+.item-icon {
+  margin-right: 5px;
 }

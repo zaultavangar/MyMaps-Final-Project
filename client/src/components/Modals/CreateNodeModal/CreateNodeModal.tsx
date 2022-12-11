@@ -89,10 +89,13 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
       setError('Error: No title')
       return
     }
+    // get the node id of the map that we're creating the node in
+    const mapId = selectedPin?.nodeId
+
     const attributes = {
       content,
       nodeIdsToNodesMap,
-      parentNodeId: selectedParentNode ? selectedParentNode.nodeId : null,
+      parentNodeId: mapId ? mapId : null,
       title,
       type: selectedType as NodeType,
       selectedPin: selectedPin,
@@ -195,7 +198,7 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
                 />
               </div>
             )}
-            <div className="modal-section">
+            {/* <div className="modal-section">
               <span className="modal-title">
                 <div className="modal-title-header">Choose a parent node (optional):</div>
               </span>
@@ -208,7 +211,7 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
                   selectedPin={selectedPin}
                 />
               </div>
-            </div>
+            </div> */}
           </ModalBody>
           <ModalFooter>
             {error.length > 0 && <div className="modal-error">{error}</div>}

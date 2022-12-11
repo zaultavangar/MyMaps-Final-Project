@@ -155,7 +155,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   }, [editingTitle])
 
   const folder: boolean = currentNode.type === 'folder'
-  const map: boolean = currentNode.type === 'map'
+  const map: boolean = currentNode.type === 'map' || currentNode.type === 'googleMap'
   const notRoot: boolean = currentNode.nodeId !== 'root'
 
   const routeMenuButtonRef = React.useRef()
@@ -194,11 +194,13 @@ export const NodeHeader = (props: INodeHeaderProps) => {
                 onClick={onHandleStartLinkClick}
               />
             )}
-            <Button
-              icon={<ri.RiEyeFill />}
-              text="Graph View"
-              onClick={() => onGraphViewClick()}
-            />
+            {!map && (
+              <Button
+                icon={<ri.RiEyeFill />}
+                text="Graph View"
+                onClick={() => onGraphViewClick()}
+              />
+            )}
             {isLinking && (
               <Button
                 text="Complete Link"
@@ -211,7 +213,6 @@ export const NodeHeader = (props: INodeHeaderProps) => {
                 text="Route Menu"
                 icon={<ri.RiMapPinLine />}
                 onClick={onRouteMenuClick}
-                // add onClick handler
               />
             )}
             {folder && (

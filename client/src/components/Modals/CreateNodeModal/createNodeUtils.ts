@@ -112,10 +112,10 @@ export async function createNodeFromModal({
         type: type,
         pinId: selectedPin !== null ? selectedPin.pinId : '',
         // Initialize map node with correct, updated metadata
-        originalWidth: mapMetaData.normalizedWidth,
-        originalHeight: mapMetaData.normalizedHeight,
-        updatedWidth: mapMetaData.normalizedWidth,
-        updatedHeight: mapMetaData.normalizedHeight,
+        originalWidth: mapMetaData.normalizedWidth * 1.5,
+        originalHeight: mapMetaData.normalizedHeight * 1.5,
+        updatedWidth: mapMetaData.normalizedWidth * 1.5,
+        updatedHeight: mapMetaData.normalizedHeight * 1.5,
         // Initialize map with empty comment content
         commentContent: '',
       }

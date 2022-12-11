@@ -21,6 +21,8 @@ export interface IGoogleMapPin {
 
 export type PinFields = keyof IPin | keyof IGoogleMapPin
 
+export type PinIdsToPinsMap = { [pinId: string]: IPin }
+
 export function isIPin(object: any): object is IPin {
   const propsDefined: boolean =
     typeof (object as IPin).pinId !== 'undefined' &&

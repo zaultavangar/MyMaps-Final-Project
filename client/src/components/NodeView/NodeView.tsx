@@ -122,6 +122,9 @@ export const NodeView = (props: INodeViewProps) => {
   const [pins, setPins] = useState<IPin[]>([])
   const [trails, setTrails] = useState<ITrail[]>([])
 
+  // Define PinIdsToPinsMap
+  const [pinIdsToPinsMap, setPinIdsToPinsMap] = useState<{ [pinId: string]: IPin }>({})
+
   useEffect(() => {
     setCurrentNode(currentNode)
   })
@@ -137,11 +140,39 @@ export const NodeView = (props: INodeViewProps) => {
   // New Method
   const loadPinsFromNodeId = useCallback(async () => {
     console.log('loadPinsFromNodeId')
-    const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(currentNode.nodeId)
-    if (pinsFromNode.success && pinsFromNode.payload) {
-      setPins(pinsFromNode.payload)
+    if (!currentNode) {
+      return
     }
-    hasPins = pins.length > 0
+
+    // if this is not a map node, keep traversing up the tree until we find a map node
+    let mapNode: INode = currentNode
+    while (mapNode && mapNode.type !== 'map') {
+      // check if the current node has a parent node
+      if (mapNode.filePath.path.length >= 2) {
+        const parentId = mapNode.filePath.path[mapNode.filePath.path.length - 2]
+        mapNode = nodeIdsToNodesMap[parentId]
+      } else {
+        break
+      }
+    }
+
+    console.log('mapNode: ', mapNode)
+
+    if (!mapNode || mapNode.type !== 'map') {
+      console.log('No map node found')
+      const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(currentNode.nodeId)
+      if (pinsFromNode.success && pinsFromNode.payload) {
+        setPins(pinsFromNode.payload)
+      }
+    } else {
+      const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(mapNode.nodeId)
+      if (pinsFromNode.success && pinsFromNode.payload) {
+        console.log('PINSFROMNODE: ', pinsFromNode.payload)
+        setPins(pinsFromNode.payload)
+        console.log('PINS: ', pins)
+      }
+    }
+    hasPins = currentNode.type === 'map' && pins.length > 0
   }, [currentNode])
 
   const loadTrailsFromNodeId = useCallback(async () => {
@@ -154,6 +185,15 @@ export const NodeView = (props: INodeViewProps) => {
     }
     hasTrails = trails.length > 0
   }, [currentNode])
+
+  // Update the pinIdsToPinsMap
+  useEffect(() => {
+    const newPinIdsToPinsMap: { [pinId: string]: IPin } = {}
+    pins.forEach((pin) => {
+      newPinIdsToPinsMap[pin.pinId] = pin
+    })
+    setPinIdsToPinsMap(newPinIdsToPinsMap)
+  }, [currentNode, pins])
 
   const loadAnchorsFromNodeId = useCallback(async () => {
     const anchorsFromNode = await FrontendAnchorGateway.getAnchorsByNodeId(
@@ -408,6 +448,7 @@ export const NodeView = (props: INodeViewProps) => {
     }
   }
   console.log(hasPins)
+  console.log('pinIdsToPinsMap', pinIdsToPinsMap)
 
   return (
     <div className="node">
@@ -429,7 +470,11 @@ export const NodeView = (props: INodeViewProps) => {
         <div className="nodeView-scrollable">
           {hasBreadcrumb && (
             <div className="nodeView-breadcrumb">
-              <NodeBreadcrumb path={path} nodeIdsToNodesMap={nodeIdsToNodesMap} />
+              <NodeBreadcrumb
+                path={path}
+                nodeIdsToNodesMap={nodeIdsToNodesMap}
+                pinIdsToPinsMap={pinIdsToPinsMap}
+              />
             </div>
           )}
           <div
