@@ -131,8 +131,9 @@ export const NodeView = (props: INodeViewProps) => {
     setIsNavigating(false)
   }, [currentNode])
 
-  let hasPins: boolean = pins.length > 0
-  let hasTrails: boolean = trails.length > 0
+  var hasAnchors: boolean = anchors.length > 0
+  var hasPins: boolean = pins.length> 0
+  var hasTrails: boolean = trails.length> 0
 
   // New Method
   const loadPinsFromNodeId = useCallback(async () => {
@@ -331,14 +332,17 @@ export const NodeView = (props: INodeViewProps) => {
   const [routeDrawerOpen, setRouteDrawerOpen] = useState(false)
 
   const hasBreadcrumb: boolean = path.length > 1
-  const hasAnchors: boolean = anchors.length > 0
 
-  let nodePropertiesWidth: number = hasAnchors ? 200 : 0
-  if (hasPins) nodePropertiesWidth = 250
-  const nodeViewWidth: string = `calc(100% - ${nodePropertiesWidth}px)`
 
-  const nodeProperties = useRef<HTMLHeadingElement>(null)
+  var resizableWidth: number = hasAnchors ? 200 : 0
+  if (hasPins) resizableWidth = 250
+  var nodeViewWidth: string = `calc(100% - ${resizableWidth}px)`
+
+
+  const resizablePinMenu = useRef<HTMLHeadingElement>(null)
+  const resizableAnchorMenu = useRef<HTMLHeadingElement>((null))
   const divider = useRef<HTMLHeadingElement>(null)
+
   let xLast: number
   let dragging: boolean = false
 
@@ -356,16 +360,28 @@ export const NodeView = (props: INodeViewProps) => {
   const onPointerMove = (e: PointerEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    let resizable
+    if (resizablePinMenu.current) {
+      resizable = resizablePinMenu
+    }
+    if (resizableAnchorMenu.current) {
+      resizable = resizableAnchorMenu
+    }
     if (divider.current) divider.current.style.width = '10px'
-    if (nodeProperties.current && dragging) {
-      const nodePropertiesElement = nodeProperties.current
-      let width = parseFloat(nodePropertiesElement.style.width)
+    if (resizable && resizable.current && dragging) {
+      console.log('moving')
+      const resizableElement = resizable.current
+      let width = parseFloat(resizableElement.style.width)
       const deltaX = e.screenX - xLast // The change in the x location
-      const newWidth = (width -= deltaX)
-      if (!(newWidth < 200 || newWidth > 480)) {
-        nodePropertiesElement.style.width = String(width) + 'px'
-        nodePropertiesWidth = width
+      const newWidth = (width += deltaX)
+      if (!(newWidth < 245 || newWidth > 600)) {
+        console.log('hi')
+        resizableElement.style.width = String(width) + 'px'
+        //resizableWidth = width
         xLast = e.screenX
+      }
+      else {
+        console.log('bye')
       }
     }
   }
@@ -378,6 +394,7 @@ export const NodeView = (props: INodeViewProps) => {
     document.removeEventListener('pointermove', onPointerMove)
     document.removeEventListener('pointerup', onPointerUp)
   }
+
 
   const handleRouteMenuButtonClick = useCallback(() => {
     setRouteDrawerOpen(true)
@@ -399,7 +416,7 @@ export const NodeView = (props: INodeViewProps) => {
 
   return (
     <div className="node">
-      <div className="nodeView" style={{ width: nodeViewWidth }}>
+      <div className="nodeView" style={{ width: `calc(100% - ${resizableWidth}px)` }}>
         <GraphViewModal
           isOpen={graphViewModalOpen}
           onClose={() => setGraphViewModalOpen(false)}
@@ -439,19 +456,21 @@ export const NodeView = (props: INodeViewProps) => {
         </div>
       </div>
       {(hasAnchors || hasPins) && (
-        <div className="divider" ref={divider} onPointerDown={onPointerDown} />
+        <div className="divider" ref={divider} onPointerDown={onPointerDown} 
+          style={{width:'5px'}}/>
       )}
-      {hasAnchors && (
-        <div
-          className={'nodeProperties'}
-          ref={nodeProperties}
-          style={{ width: nodePropertiesWidth }}
-        >
-          <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
-        </div>
-      )}
-      {currentNode.type === 'map' && hasPins && (
-        <div style={{ width: '90%' }}>
+      {hasAnchors || hasPins &&
+        <>
+        {hasAnchors ? 
+           <div
+           className={'resizable-node-properties'}
+           ref={resizableAnchorMenu}
+           style={{ width: resizableWidth }}
+         >
+           <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
+         </div>
+         :
+         <div style={{ width: resizableWidth }} ref={resizablePinMenu}>
           <PinMenu
             selectedPin={selectedPin}
             setSelectedPin={setSelectedPin}
@@ -461,7 +480,30 @@ export const NodeView = (props: INodeViewProps) => {
             onCreateNodeButtonClick={onCreateNodeButtonClick}
           />
         </div>
+        }
+        </>
+      }
+      {/* {hasAnchors && (
+        <div
+          className={'resizable-node-properties'}
+          ref={resizableAnchorMenu}
+          style={{ width: resizableWidth }}
+        >
+          <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
+        </div>
       )}
+      {currentNode.type === 'map' && hasPins && (
+        <div style={{ width: resizableWidth }} ref={resizablePinMenu}>
+          <PinMenu
+            selectedPin={selectedPin}
+            setSelectedPin={setSelectedPin}
+            pins={pins}
+            setPins={setPins}
+            setParentNode={setParentNode}
+            onCreateNodeButtonClick={onCreateNodeButtonClick}
+          />
+        </div>
+      )} */}
       <div>
         <RouteDrawer
           isOpen={routeDrawerOpen}

@@ -4,7 +4,7 @@
   height: calc(100vh - 50px);
   display: flex;
 
-  .nodeProperties {
+  .resizable-node-properties {
     position: relative;
     height: 100%;
     z-index: 4;
@@ -13,7 +13,6 @@
 
   .nodeView {
     height: calc(100vh - 50px);
-    width: fit-content;
     position: relative;
 
     .nodeView-json {
