@@ -14,6 +14,7 @@ import {
   currentNodeState,
   startAnchorState,
   refreshLinkListState,
+  mapPinsState
 } from '../../../../global/Atoms'
 import { FrontendAnchorGateway } from '../../../../anchors'
 import { FrontendPinGateway } from '../../../../pins'
@@ -25,7 +26,7 @@ import {
   NodeFields,
   INodeProperty,
   makeINodeProperty,
-  makeIGoogleMapPin,
+  makeIMapboxPin,
   makeIPin,
 } from '../../../../types'
 import './MapContent.scss'
@@ -89,7 +90,8 @@ const startAnchor = useRecoilValue(startAnchorState)
   const [updatedHeight, setUpdatedHeight] = useState<any>(currentNode.updatedHeight ?? 0)
 
   /* State variable to keep track of anchors rendered on image */
-  const [mapPins, setMapPins] = useState<JSX.Element[]>([])
+  const [mapPinsElements, setMapPinsElements] = useState<JSX.Element[]>([])
+  const [mapPins, setMapPins] = useRecoilState(mapPinsState)
   const [startAnchorVisualization, setStartAnchorVisualization] = useState<JSX.Element>()
 
   const [xLast, setXLast] = useState<number>(0)
@@ -121,43 +123,29 @@ const startAnchor = useRecoilValue(startAnchorState)
    * @returns
    */
   const handleCreatePin = async () => {
-    const newPin: IPin = (() => {
-      const pinId = generateObjectId('pin')
-      const nodeId = currentNode.nodeId
-      const trailIds = {} as { [trailId: string]: number }
-      if (currentNode.type === 'googleMap') {
-        return {
-          pinId: pinId,
-          nodeId: nodeId,
-          trails: [],
-          childNodes: [],
-          title: title,
-          explainer: explainer,
-          lat: newMarker.getLngLat().lat,
-          lnt: newMarker.getLngLat().lng,
-        }
+    let newPin: IPin
+    const pinId = generateObjectId('pin')
+    const nodeId = currentNode.nodeId
+
+    if (currentNode.type == 'googleMap') {
+      let lat =  newMarker.getLngLat().lat
+      let lng = newMarker.getLngLat().lng
+      newPin = makeIMapboxPin(pinId,nodeId,[],[],title,explainer,lat,lng)
+    }
+      else {
+        newPin = makeIPin(pinId, nodeId, [], [], title, explainer, yLast, xLast)
       }
-      return {
-        pinId: pinId,
-        nodeId: nodeId,
-        trails: [],
-        childNodes: [],
-        title: title,
-        explainer: explainer,
-        topJustify: yLast,
-        leftJustify: xLast,
-      }
-    })()
 
     const pinResponse = await FrontendPinGateway.createPin(newPin)
     if (!pinResponse.success) {
+      console.log('hi')
       setError('Error: Failed to create pin')
       return
     }
     setCreatePinPopoverOpen(false)
-    // let pins = mapPins
-    // pins.push(newPin)
-    // setMapPins(pins)
+    let pins = mapPins.slice()
+    pins.push(newPin)
+    setMapPins(pins)
     // add state fxn calls to refresh pin menu and other things that need to be refreshed
   }
 
@@ -222,7 +210,7 @@ const startAnchor = useRecoilValue(startAnchorState)
 
   useEffect(() => {
     displayMapPins()
-  }, [selectedPin, currentNode, refreshLinkList, mapPins]) // startAmcjpr
+  }, [selectedPin, currentNode, refreshLinkList, mapPinsElements, mapPins]) // startAmcjpr
 
   useEffect(() => {
     if (currentNode.type === 'googleMap') {
@@ -398,7 +386,7 @@ const startAnchor = useRecoilValue(startAnchorState)
           </div>
         )
       })
-      setMapPins(pinElementList)
+      setMapPinsElements(pinElementList)
     }
   }
 
@@ -428,7 +416,7 @@ const startAnchor = useRecoilValue(startAnchorState)
         {currentNode.type === 'map' ? (
           <div>
             {startAnchorVisualization}
-            {mapPins}
+            {mapPinsElements}
           </div>
         ) : (
           <div>

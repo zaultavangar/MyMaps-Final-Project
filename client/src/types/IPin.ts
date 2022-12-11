@@ -1,3 +1,4 @@
+import { transformFileAsync } from '@babel/core'
 import { INode } from './INode'
 import { ITrail } from './ITrail'
 /**
@@ -14,7 +15,7 @@ export interface IPin {
   leftJustify?: number
 }
 
-export interface IGoogleMapPin {
+export interface IGoogleMapPin extends IPin {
   lat: number
   lng: number
 }
@@ -48,8 +49,8 @@ export function isIPin(object: any): object is IPin {
 export function makeIPin(
   pinId: string,
   nodeId: string,
-  trailIds: { [trailId: string]: number },
-  childNodes: string[],
+  trails: ITrail [],
+  childNodes: INode [],
   title: string,
   explainer: string,
   topJustify: number,
@@ -58,7 +59,7 @@ export function makeIPin(
   return {
     pinId: pinId,
     nodeId: nodeId,
-    trailIds: trailIds,
+    trails: trails,
     childNodes: childNodes,
     title: title,
     explainer: explainer,
@@ -67,11 +68,11 @@ export function makeIPin(
   }
 }
 
-export function makeIGoogleMapPin(
+export function makeIMapboxPin(
   pinId: string,
   nodeId: string,
-  trailIds: { [trailId: string]: number },
-  childNodes: string[],
+  trails: ITrail [],
+  childNodes: INode [],
   title: string,
   explainer: string,
   lat: number,
@@ -80,7 +81,7 @@ export function makeIGoogleMapPin(
   return {
     pinId: pinId,
     nodeId: nodeId,
-    trailIds: trailIds,
+    trails: trails,
     childNodes: childNodes,
     title: title,
     explainer: explainer,

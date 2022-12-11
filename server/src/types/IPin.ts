@@ -15,7 +15,7 @@ export interface IPin {
   leftJustify: number
 }
 
-export interface IGoogleMapPin {
+export interface IGoogleMapPin extends IPin{
   lat: number,
   lng: number,
 }
@@ -59,12 +59,12 @@ export function isIPin(object: any): object is IPin {
   )
 }
 
-export function makeIPin(pinId: string, nodeId: string, trailIds: {[trailId:string]: number}, 
-   childNodes: string[], title: string, explainer: string, topJustify: number, leftJustify: number) {
+export function makeIPin(pinId: string, nodeId: string, trails: [], 
+   childNodes: [], title: string, explainer: string, topJustify: number, leftJustify: number) {
   return {
     pinId: pinId,
     nodeId: nodeId,
-    trailIds: trailIds,
+    trails: trails,
     childNodes: childNodes,
     title: title,
     explainer: explainer,
@@ -76,8 +76,8 @@ export function makeIPin(pinId: string, nodeId: string, trailIds: {[trailId:stri
 export function makeIGoogleMapPin(
   pinId: string,
   nodeId: string,
-  trailIds: { [trailId: string]: number },
-  childNodes: string[],
+  trails: ITrail [],
+  childNodes: INode [],
   title: string,
   explainer: string,
   lat: number,
@@ -86,7 +86,7 @@ export function makeIGoogleMapPin(
   return {
     pinId: pinId,
     nodeId: nodeId,
-    trailIds: trailIds,
+    trails: trails,
     childNodes: childNodes,
     title: title,
     explainer: explainer,

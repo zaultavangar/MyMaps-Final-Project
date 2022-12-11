@@ -47,6 +47,11 @@ export const refreshLinkListState = atom<boolean>({
   default: false,
 })
 
+export const mapPinsState = atom<IPin[]>({
+  key: 'mapPinsState',
+  default: []
+})
+
 // start anchor for link
 export const startAnchorState = atom<IAnchor | null>({
   key: 'startAnchorState',

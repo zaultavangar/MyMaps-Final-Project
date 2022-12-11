@@ -26,14 +26,13 @@ import {
   alertTitleState,
   refreshLinkListState,
   refreshState,
+  mapPinsState
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 
 interface IPinMenuProps {
   selectedPin: IPin | null
   setSelectedPin: (pin: IPin | null) => void
-  pins: IPin[]
-  setPins: (pins: IPin[]) => void
   setParentNode: (node: INode) => void
   onCreateNodeButtonClick: () => void
 }
@@ -42,13 +41,12 @@ export const PinMenu = (props: IPinMenuProps) => {
   const {
     selectedPin,
     setSelectedPin,
-    pins,
-    setPins,
     setParentNode,
     onCreateNodeButtonClick,
   } = props
 
   const icon = nodeTypeIcon('map') // icon based on type
+  const [mapPins, setMapPins] = useRecoilState(mapPinsState)
 
   // Formats a date, could be global method ***
   const formatDate = (date: any) => {
@@ -174,7 +172,7 @@ export const PinMenu = (props: IPinMenuProps) => {
         <div>
           <h2 className="your-pins">Your Pins</h2>
           <List>
-            {pins.map((pin) => (
+            {mapPins.map((pin) => (
               <ListItem key={pin.pinId}>
                 <div
                   className="pin-menu-item-wrapper"

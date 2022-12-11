@@ -31,6 +31,7 @@ import {
   alertMessageState,
   currentNodeState,
   refreshLinkListState,
+  mapPinsState,
 } from '../../global/Atoms'
 import './NodeView.scss'
 import NodeInfo from '../Modals/GraphViewModal/Flow/NodeInfo'
@@ -119,7 +120,7 @@ export const NodeView = (props: INodeViewProps) => {
     filePath: { path },
   } = currentNode
 
-  const [pins, setPins] = useState<IPin[]>([])
+  const [pins, setPins] = useRecoilState(mapPinsState)
   const [trails, setTrails] = useState<ITrail[]>([])
 
   // Define PinIdsToPinsMap
@@ -519,8 +520,6 @@ export const NodeView = (props: INodeViewProps) => {
                 <PinMenu
                   selectedPin={selectedPin}
                   setSelectedPin={setSelectedPin}
-                  pins={pins}
-                  setPins={setPins}
                   setParentNode={setParentNode}
                   onCreateNodeButtonClick={onCreateNodeButtonClick}
                 />
