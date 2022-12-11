@@ -49,7 +49,7 @@ export function isIPin(object: any): object is IPin {
 export function makeIPin(
   pinId: string,
   nodeId: string,
-  trails: ITrail [],
+  trails: ITrail[],
   childNodes: INode [],
   title: string,
   explainer: string,

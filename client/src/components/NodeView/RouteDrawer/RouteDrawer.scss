@@ -1,6 +1,18 @@
+@import '../../../global/globalCssVariables';
+
 .select-add-pin-wrapper {
   display: flex;
   gap: 5px;
+}
+
+.pins-added-list-wrapper {
+  display: 'flex';
+  justify-content: 'center';
+  align-items: 'center';
+  border: '1px solid grey';
+  border-radius: '5px';
+  padding: '10px 10px';
+
 }
 
 .delete-icon {
@@ -9,11 +21,12 @@
 
 .add-pin-to-trail-popover-container {
   display: grid;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: max-content max-content max-content;
   gap: 10px;
   justify-content: start;
   align-items: center;
-  grid-template-areas: 'addPinsButton createTrailButton';
+  grid-template-areas: 'addPinsButton createTrailButton errorMessage';
+  height: fit-content;
 }
 
 .add-pins-to-trail-button {
@@ -22,6 +35,26 @@
 
 .create-trail-button-wrapper {
   grid-area: createTrailButton;
+
+}
+
+.modal-error-create-trail {
+  color: white;
+  font-size: 0.8rem;
+  background-color: $error-color;
+  padding: 5px 10px;
+  margin: 0px 20px;
+  position: unset;
+  left: unset;
+  font-weight: 500;
+  grid-area: errorMessage;
+}
+
+
+
+.add-a-route-link {
+  color: blue;
+  cursor: pointer;
 }
 
 .trail-card-wrapper {

@@ -124,6 +124,11 @@ const startAnchor = useRecoilValue(startAnchorState)
    * @returns
    */
   const handleCreatePin = async () => {
+    if (title.length === 0) {
+      setError('Error: No title')
+      return
+    }
+
     let newPin: IPin
     const pinId = generateObjectId('pin')
     const nodeId = currentNode.nodeId
@@ -423,7 +428,7 @@ const startAnchor = useRecoilValue(startAnchorState)
         onClick={onPointerDown}
         className="map-image-content-wrapper"
         id="map-image-content-wrapper"
-        style={{ width: updatedWidth, height: updatedHeight }}
+        style={{ width: updatedWidth, height: updatedHeight}}
       >
         {currentNode.type === 'map' ? (
           <div>
@@ -473,6 +478,7 @@ const startAnchor = useRecoilValue(startAnchorState)
                 </FocusLock>
               </PopoverBody>
               <PopoverFooter display="flex" justifyContent="flex-end">
+              {error.length > 0 && <div className="modal-error">{error}</div>}
                 <ButtonGroup size="sm">
                   <Button variant="outline" onClick={handleCreatePinPopoverClose}>
                     Cancel

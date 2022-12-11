@@ -34,27 +34,29 @@ import {
   InputGroup,
   InputLeftElement,
   Textarea,
+  Text,
 } from '@chakra-ui/react'
 import FocusLock from 'react-focus-lock'
 import { FrontendPinGateway } from '../../../pins'
-import { IPin, INode, isSamePin, ITrail, failureServiceResponse } from '../../../types'
+import { IPin, INode, isSamePin, ITrail, IPinProperty, makeIPinProperty } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
 import { DeleteIcon } from '@chakra-ui/icons'
 
 import './RouteDrawer.scss'
 import { valueToPercent } from '@mui/base'
 import { generateObjectId } from '../../../global'
-import { currentNodeState } from '../../../global/Atoms'
+import { currentNodeState, alertOpenState, alertTitleState, alertMessageState } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import TitleIcon from '@mui/icons-material/Title'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import Collapse from '@mui/material/Collapse'
 import CloseIcon from '@mui/icons-material/Close'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import {
   selectedPinState
 } from '../../../global/Atoms'
+import {DropResult,  DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd'
 
 interface IRouteDrawerProps {
   isOpen: boolean
@@ -87,7 +89,10 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [routeDrawerPins, setRouteDrawerPins] = useState<IPin[] | null>([])
   const [dbTrails, setDbTrails] = useState<ITrail[] | null>([])
 
-  const setSelectedPin = useSetRecoilState(selectedPinState)
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
+  const setAlertIsOpen = useSetRecoilState(alertOpenState)
+  const setAlertTitle = useSetRecoilState(alertTitleState)
+  const setAlertMessage = useSetRecoilState(alertMessageState)
 
   useEffect(() => {
     console.log('hi')
@@ -103,12 +108,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       }
     }
   }, [routeDrawerPins])
-
-  const [createModeTitle, setCreateModeTitle] = useState('')
-
-  const handleCreateModeTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCreateModeTitle(event.target.value)
-  }
 
   const getPinsForMap = async () => {}
 
@@ -154,9 +153,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         pin = getPinIdResponse.payload
         console.log(pin)
         const newPins = pinsAdded.slice()
-        console.log(addIndex)
-        newPins.splice(addIndex - 1, 0, pin)
-        // newPins.push(pin)
+         newPins.push(pin)
         console.log(newPins)
         setPinsAdded(newPins)
         setAddPinPopoverOpen(false)
@@ -211,6 +208,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [explainer, setExplainer] = useState('')
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (error.length> 0 && event.target.value.length > 0) setError('')
     setTitle(event.target.value)
   }
 
@@ -230,6 +228,12 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const handleCreateTrail = async () => {
+    if (title.length === 0) {
+      setError('Error: No title')
+      return
+    }
+    console.log(title)
+
     const newTrail: ITrail = {
       trailId: generateObjectId('trail'),
       pinList: pinsAdded,
@@ -245,6 +249,17 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     const trailsCpy = trails.slice()
     trailsCpy.push(newTrail)
     setTrails(trailsCpy)
+    for (let i=0; i< pinsAdded.length; i++) {
+      const pinProperty: IPinProperty = makeIPinProperty('trails', pinsAdded)
+      const updateResp = await FrontendPinGateway.updatePin(pinsAdded[i].pinId,
+        [pinProperty])
+      if (!updateResp.success) {
+        console.log('error')
+        setAlertIsOpen(true)
+        setAlertTitle('Title update failed')
+        setAlertMessage(updateResp.message)
+      }
+    }
     setCreateTrailPopoverOpen(false)
   }
 
@@ -270,7 +285,48 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   // }, [handleCreateTrail])
 
   const val: number = pinsAdded.slice().length + 1
-  const maxInputVal = val
+
+  const onDragEnd = (result: DropResult) => {
+    console.log(result)
+    const {source, destination} = result 
+    if (!destination) return
+
+    const items = Array.from(pinsAdded)
+    const [newOrder] = items.splice(source.index, 1)
+    items.splice(destination.index, 0, newOrder)
+
+    setPinsAdded(items)
+  }
+
+  const createTrailClass = 
+    pinsAdded.length>0 ? 'create-trail-button-wrapper' : 'disabled-button-wrapper'
+
+  const getPinItemStyle = (isDragging: boolean, draggableStyle: any) => (
+    {
+
+      background: isDragging ? "black" : "white",
+      color: isDragging ? "white" : "black",
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      border: '1px solid grey',
+      borderRadius: '5px',
+      padding: '10px 10px',
+      
+      ...draggableStyle,
+  
+    }
+  )
+
+  const [tabIndex, setTabIndex] = useState<number>(0)
+  const handleTabsChange = (index: number) => {
+    setTabIndex(index)
+  }
+
+  const handleCreateTabClick = () => {
+    setTabIndex(0)
+  }
+
 
   return (
     <>
@@ -280,7 +336,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
           <DrawerCloseButton />
           <DrawerHeader>Route Menu</DrawerHeader>
           <DrawerBody>
-            <Tabs variant="enclosed">
+            <Tabs index={tabIndex} onChange={handleTabsChange} variant="enclosed">
               <TabList>
                 <Tab>Create</Tab>
                 <Tab>View</Tab>
@@ -289,9 +345,15 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
               <TabPanels>
                 <TabPanel>
                   <Input
-                    value={createModeTitle}
-                    onChange={handleCreateModeTitleChange}
+                    value={title}
+                    onChange={handleTitleChange}
                     placeholder="Route title..."
+                    style={{marginBottom: '10px'}}
+                  />
+                  <Textarea
+                    value={explainer}
+                    placeholder="Enter a Description (optional)"
+                    onChange={handleExplainerChange}
                   />
                   <div className="add-pin-to-trail-popover-container">
                     <Popover
@@ -335,20 +397,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                   </option>
                                 ))}
                             </Select>
-                            <NumberInput
-                              value={addIndex}
-                              onChange={handleNumberInputChange}
-                              width="45%"
-                              defaultValue={maxInputVal}
-                              max={maxInputVal}
-                              min={1}
-                            >
-                              <NumberInputField />
-                              <NumberInputStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
-                              </NumberInputStepper>
-                            </NumberInput>
                             <div>
                               <Button
                                 colorScheme="whatsapp"
@@ -363,191 +411,150 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                         <PopoverFooter></PopoverFooter>
                       </PopoverContent>
                     </Popover>
-                    {pinsAdded.length > 0 && (
-                      <Popover
-                        placement="right"
-                        isOpen={createTrailPopoverOpen}
-                        onClose={() => setCreateTrailPopoverOpen(false)}
+                    {pinsAdded.length>0 && 
+                    <div className='create-trail-button-wrapper'>
+                     
+                        <Button
+                        colorScheme="whatsapp"
+                        onClick={handleCreateTrail}
+                        style={{ padding: '10px 10px' }}
                       >
+                        Create Trail
+                      </Button>                     
+                    </div>
+                  }
+                  {error.length > 0 && 
+                    <div  className="modal-error modal-error-create-trail" style={{marginLeft: '-5px'}}>
+                        {error}
+                    </div>
+                    }
+                  </div> 
+                   <DragDropContext onDragEnd = {onDragEnd}>
+                    <Droppable droppableId="pinsAdded" direction="horizontal">
+                      {(provided) => (
+                        <div
+                          className="pinsAdded" {...provided.droppableProps} ref={provided.innerRef}
+                          style={{
+                            marginTop: '15px',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            gap: '1em',
+                            marginLeft: '20px',
+                          }}
+                        >
+                          {pinsAdded.map((pin, index) => (
+                            <Draggable key={pin.pinId} draggableId={pin.pinId} index={index}> 
+                              {(provided, snapshot) => (
+                                <div
+                                  key={pin.pinId}
+                                  className='pins-added-list-wrapper'
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  style={getPinItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                                > 
+                                <div>{index + 1}. </div>
+
+                                <div id="route-drawer-pin-title" data-value={pin.pinId}>
+                                  {pin.title}
+                                </div>
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <IconButton
+                                    onClick={(e) => handleRemoveTempPin(e)}
+                                    className="delete-icon"
+                                    style={{ marginLeft: '10px' }}
+                                    size="s"
+                                    aria-label="Search database"
+                                    icon={<DeleteIcon />}
+                                  />
+                                </div>
+                                </div>
+                              )}
+                             
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                        
+                          
+                        
+                    </Droppable>  
+                  </DragDropContext>
+                </TabPanel>
+                <TabPanel>
+                  <h2 style={{ fontWeight: 'bold', marginBottom: '5px' }}>My Routes</h2>
+                  {trails.length > 0 ?
+                  <div className="trail-card-wrapper">
+                  {trails.map((trail) => (
+                    <>
+                      <Popover size="xs" trigger="hover" placement="bottom">
                         <PopoverTrigger>
-                          <div className="create-trail-button-wrapper">
-                            <Button
-                              colorScheme="whatsapp"
-                              onClick={onCreateTrailPopoverClick}
-                              style={{ padding: '10px 10px' }}
-                            >
-                              Create Trail
-                            </Button>
+                          <div className="trail-card-container">
+                            <div className="trail-card-title">{trail.title}</div>
+                            <div className="trail-card-explainer">
+                              {trail.explainer}
+                            </div>
+                            <hr></hr>
                           </div>
                         </PopoverTrigger>
                         <PopoverContent>
                           <PopoverArrow />
-                          <PopoverHeader>Create a Trail</PopoverHeader>
-                          <PopoverCloseButton />
+                          <PopoverHeader>
+                            <div style={{ fontWeight: 'lighter' }}>
+                              Drag and drop pins to change order
+                            </div>
+                          </PopoverHeader>
                           <PopoverBody>
-                            <FocusLock returnFocus persistentFocus={false}>
-                              <InputGroup sx={{ marginBottom: '10px' }}>
-                                <InputLeftElement pointerEvents="none">
-                                  <TitleIcon />
-                                </InputLeftElement>
-                                <Input
-                                  placeholder="Choose a Title"
-                                  onChange={handleTitleChange}
-                                />
-                              </InputGroup>
-                              <InputGroup sx={{ marginBottom: '10px' }}>
-                                <Textarea
-                                  placeholder="Enter a Description (optional)"
-                                  onChange={handleExplainerChange}
-                                />
-                              </InputGroup>
-                            </FocusLock>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '1em',
+                              }}
+                            >
+                              {trail.pinList.map((pin) => (
+                                <div
+                                  key={pin.pinId}
+                                  id={pin.pinId}
+                                  onClick={(e) => handlePinFromTrailClick(e, pin.pinId)}
+                                  data-value={pin.pinId}
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    gap: '1em',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  <PlaceIcon />
+                                  {pin.title}
+                                </div>
+                              ))}
+                            </div>
                           </PopoverBody>
-                          <PopoverFooter display="flex" justifyContent="flex-end">
-                            <ButtonGroup size="sm">
-                              <Button
-                                variant="outline"
-                                onClick={(e) => setCreateTrailPopoverOpen(false)}
-                              >
-                                Cancel
-                              </Button>
-                              <Button onClick={handleCreateTrail} colorScheme="green">
-                                Create
-                              </Button>
-                            </ButtonGroup>
-                          </PopoverFooter>
                         </PopoverContent>
                       </Popover>
-                    )}
-                    {/* <Snackbar
-                      open={showTrailCreatedAlert}
-                      autoHideDuration={5000}
-                      onClose={handleAlertClose}
-                      message="Trail created!"
-                      action={()=> console.log('hi')}
-                    /> */}
-                    {/* {showTrailCreatedAlert && dbTrails && dbTrails.length>0 &&
+                    </>
+                  ))}
+                </div>
+                  :
+                  <div >
+                    No routes have been add for this map. Want to 
+                    <span onClick={handleCreateTabClick} className="add-a-route-link"> <u>add a route?</u></span>
+                  </div>
+                  }
+                  
+                </TabPanel>
+                <TabPanel>
+                  {trails.length > 0 ?
                     <div>
-                      <Box sx={{ width: '50%' }}>
-                        <Collapse in={showTrailCreatedAlert}>
-                          <Alert
-                            sx={{ mb: 2 }}
-                          >
-                            Trail Created!
-                          </Alert>
-                        </Collapse>
-                    </Box>
-                    </div>
-                    } */}
-                  </div>
-                  {/**
-                   * Add popover on Create trail Click with option to add a
-                   * title and explainer to the new trail
-                   */}
-                  <div
-                    style={{
-                      marginTop: '15px',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      gap: '1em',
-                      marginLeft: '20px',
-                    }}
-                  >
-                    {pinsAdded.map((pin, index) => (
-                      <div
-                        key={pin.pinId}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          border: '1px solid grey',
-                          borderRadius: '5px',
-                          padding: '10px 10px',
-                        }}
-                      >
-                        <div>{index + 1}. </div>
-
-                        <div id="route-drawer-pin-title" data-value={pin.pinId}>
-                          {pin.title}
-                        </div>
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <IconButton
-                            onClick={(e) => handleRemoveTempPin(e)}
-                            className="delete-icon"
-                            style={{ marginLeft: '10px' }}
-                            size="s"
-                            aria-label="Search database"
-                            icon={<DeleteIcon />}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </TabPanel>
-                <TabPanel>
-                  <h2 style={{ fontWeight: 'bold' }}>My Routes</h2>
-                  <div className="trail-card-wrapper">
-                    {trails.map((trail) => (
-                      <>
-                        <Popover size="xs" trigger="hover" placement="bottom">
-                          <PopoverTrigger>
-                            <div className="trail-card-container">
-                              <div className="trail-card-title">{trail.title}</div>
-                              <div className="trail-card-explainer">
-                                {trail.explainer}
-                              </div>
-                              <hr></hr>
-                            </div>
-                          </PopoverTrigger>
-                          <PopoverContent>
-                            <PopoverArrow />
-                            <PopoverHeader>
-                              <div style={{ fontWeight: 'lighter' }}>
-                                Drag and drop pins to change order
-                              </div>
-                            </PopoverHeader>
-                            <PopoverBody>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '1em',
-                                }}
-                              >
-                                {trail.pinList.map((pin) => (
-                                  <div
-                                    key={pin.pinId}
-                                    id={pin.pinId}
-                                    onClick={(e) => handlePinFromTrailClick(e, pin.pinId)}
-                                    data-value={pin.pinId}
-                                    style={{
-                                      display: 'flex',
-                                      flexDirection: 'row',
-                                      gap: '1em',
-                                      cursor: 'pointer',
-                                    }}
-                                  >
-                                    <PlaceIcon />
-                                    {pin.title}
-                                  </div>
-                                ))}
-                              </div>
-                            </PopoverBody>
-                          </PopoverContent>
-                        </Popover>
-                      </>
-                    ))}
-                  </div>
-                </TabPanel>
-                <TabPanel>
-                  <div>
                     <h2 style={{ marginBottom: '5px' }}>
                       Choose a Route for Navigation Mode:{' '}
                     </h2>
@@ -570,6 +577,13 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       </Button>
                     </div>
                   </div>
+                  :
+                  <div >
+                  This map has no routes through which to navigate. Want to 
+                  <span onClick={handleCreateTabClick} className="add-a-route-link"> <u>add a route?</u></span>
+                </div>
+                  }
+                  
                 </TabPanel>
               </TabPanels>
             </Tabs>

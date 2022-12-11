@@ -59,8 +59,7 @@ export const PinMenu = (props: IPinMenuProps) => {
   const customButtonStyle = {
     height: 40,
     width: 150,
-    fontSize: '16px',
-    backgroundColor: 'gainsboro',
+    fontSize: '15px',
     paddingTop: '10px',
     paddingBottom: '10px',
   }
@@ -189,14 +188,23 @@ export const PinMenu = (props: IPinMenuProps) => {
         </div>
       ) : (
         <div>
-          <Button
+          <div style={{minHeight: '40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <Button
             onClick={() => setSelectedPin(null)}
             icon={<ai.AiOutlineArrowLeft />}
             text="Show all pins"
             style={{ backgroundColor: 'white', fontSize: '14px' }}
-          />
-          <hr style={{ marginBottom: '10px' }}></hr>
-          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            />
+            <div className="pin-menu-delete-pin-wrapper" 
+            style={{ marginRight: '20px', fontSize:'0.8em'}}>
+              <Button
+                icon={<ri.RiDeleteBin6Line />}
+                text="Delete Pin"
+                onClick={() => onDeleteButtonClick()}
+              />
+            </div>
+          </div>
+          <hr style={{ marginBottom: '10px'}}></hr>
             <div>
               <h2
               className="pin-title pin-selected"
@@ -221,18 +229,9 @@ export const PinMenu = (props: IPinMenuProps) => {
                 onEdit={handleUpdateExplainer}
               />
             </div>
-            </div>
-            <div className="pin-menu-delete-pin-wrapper" style={{marginBottom: '10px', marginRight: '20px'}}>
-              <Button
-                icon={<ri.RiDeleteBin6Line />}
-                text="Delete Pin"
-                onClick={() => onDeleteButtonClick()}
-              />
-            </div>
-          </div>
-          
-
-          <h4 className="pin-documents">Pin Documents</h4>
+            </div>         
+          <hr style={{ width: '70%', margin: '0 auto'}}></hr>
+          <h4 className="pin-documents" style={{marginTop: '10px', fontWeight:'500'}}>Pin Documents</h4>
           <List>
             {selectedPin &&
               selectedPin.childNodes.map((node) => (
