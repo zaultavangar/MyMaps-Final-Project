@@ -18,7 +18,7 @@ interface IGoogleMapProps {
 
 export const GoogleMapContent = (props: IGoogleMapProps) => {
   const { onMapClick } = props
-return <div id="map" style={{ width: '550px', height: '400px' }}></div>
+  return <div id="map" style={{ width: '550px', height: '400px' }}></div>
 }
 
 // const deepCompareEqualsForMaps = createCustomEqual(

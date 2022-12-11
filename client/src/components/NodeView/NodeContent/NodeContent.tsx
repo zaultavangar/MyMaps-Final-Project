@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
-import { currentNodeState, selectedPinState} from '../../../global/Atoms'
+import { currentNodeState, selectedPinState } from '../../../global/Atoms'
 import { IFolderNode, INode } from '../../../types'
 import { FolderContent } from './FolderContent'
 import { ImageContent } from './ImageContent'
@@ -41,12 +41,7 @@ const viewModes = [
  * @returns Content that any type of node renders
  */
 export const NodeContent = (props: INodeContentProps) => {
-  const {
-    onCreateNodeButtonClick,
-    childNodes,
-    isNavigating,
-    trailToNavigate,
-  } = props
+  const { onCreateNodeButtonClick, childNodes, isNavigating, trailToNavigate } = props
   const currentNode = useRecoilValue(currentNodeState)
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
@@ -75,9 +70,7 @@ export const NodeContent = (props: INodeContentProps) => {
             />
           )}
           <div className="map-content-container">
-            <MapContent
-              selectedMapViewMode={selectedMapViewMode}
-            />
+            <MapContent selectedMapViewMode={selectedMapViewMode} />
           </div>
           <div className="comment-content-container">
             <CommentContent />
@@ -122,14 +115,20 @@ export const NodeContent = (props: INodeContentProps) => {
             </Select>
           </div>
           <div className="map-content-container">
-            <MapContent
-              selectedMapViewMode={selectedMapViewMode}
-            />
+            <MapContent selectedMapViewMode={selectedMapViewMode} />
           </div>
           <div className="comment-content-container">
             <CommentContent />
           </div>
         </>
+      )
+    case 'dashboard':
+      return (
+        <FolderContent
+          node={currentNode as IFolderNode}
+          onCreateNodeButtonClick={onCreateNodeButtonClick}
+          childNodes={childNodes || []}
+        />
       )
     case 'folder':
       if (childNodes) {

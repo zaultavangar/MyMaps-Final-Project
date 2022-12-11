@@ -14,7 +14,7 @@ import {
   currentNodeState,
   startAnchorState,
   refreshLinkListState,
-  mapPinsState
+  mapPinsState,
 } from '../../../../global/Atoms'
 import { FrontendAnchorGateway } from '../../../../anchors'
 import { FrontendPinGateway } from '../../../../pins'
@@ -64,17 +64,15 @@ interface IMapContentProps {
 
 /** The content of a map node, including any pins */
 export const MapContent = (props: IMapContentProps) => {
-
-  const { selectedMapViewMode} = props
+  const { selectedMapViewMode } = props
   let map: mapboxgl.Map
   const [newMarker, setNewMarker] = useState<mapboxgl.Marker | null>(null)
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
-
   const [createPinPopoverOpen, setCreatePinPopoverOpen] = useState<boolean>(false)
 
-const startAnchor = useRecoilValue(startAnchorState)
+  const startAnchor = useRecoilValue(startAnchorState)
 
   // recoil state management
   const currentNode = useRecoilValue(currentNodeState)
@@ -134,24 +132,22 @@ const startAnchor = useRecoilValue(startAnchorState)
     const nodeId = currentNode.nodeId
 
     if (currentNode.type == 'googleMap') {
-      let lat =  newMarker.getLngLat().lat
-      let lng = newMarker.getLngLat().lng
-      newPin = makeIMapboxPin(pinId,nodeId,[],[],title,explainer,lat,lng)
+      const lat = newMarker.getLngLat().lat
+      const lng = newMarker.getLngLat().lng
+      newPin = makeIMapboxPin(pinId, nodeId, [], [], title, explainer, lat, lng)
+    } else {
+      newPin = makeIPin(pinId, nodeId, [], [], title, explainer, yLast, xLast)
     }
-      else {
-        newPin = makeIPin(pinId, nodeId, [], [], title, explainer, yLast, xLast)
-      }
 
     const pinResponse = await FrontendPinGateway.createPin(newPin)
     if (!pinResponse.success) {
       console.log('hi')
       setError('Error: Failed to create pin')
       return
-    }   
-    else {
+    } else {
       setSelectedPin(null)
       setCreatePinPopoverOpen(false)
-      let pins = mapPins.slice()
+      const pins = mapPins.slice()
       pins.push(newPin)
       setMapPins(pins)
     }
@@ -178,7 +174,7 @@ const startAnchor = useRecoilValue(startAnchorState)
     setSelectedPin && setSelectedPin(pin)
   }
 
-  const displaySelectedPin = (() => {
+  const displaySelectedPin = () => {
     console.log('displayselectedPin')
     if (selectedPinId) {
       const prevSelectedPin = document.getElementById(selectedPinId)
@@ -202,7 +198,7 @@ const startAnchor = useRecoilValue(startAnchorState)
       }
     }
     setSelectedPinId(newSelectedPinId)
-  })
+  }
 
   /**
    * To trigger on load and when we setSelectedExtent
@@ -405,7 +401,6 @@ const startAnchor = useRecoilValue(startAnchorState)
    * the data with a call to FrontendAnchorGateway.getAnchorsByNodeId
    * which returns a list of IAnchors that are on currentNode
    */
-  
 
   const handleCreatePinPopoverClose = () => {
     console.log('test')
@@ -428,7 +423,7 @@ const startAnchor = useRecoilValue(startAnchorState)
         onClick={onPointerDown}
         className="map-image-content-wrapper"
         id="map-image-content-wrapper"
-        style={{ width: updatedWidth, height: updatedHeight}}
+        style={{ width: updatedWidth, height: updatedHeight }}
       >
         {currentNode.type === 'map' ? (
           <div>
@@ -478,7 +473,7 @@ const startAnchor = useRecoilValue(startAnchorState)
                 </FocusLock>
               </PopoverBody>
               <PopoverFooter display="flex" justifyContent="flex-end">
-              {error.length > 0 && <div className="modal-error">{error}</div>}
+                {error.length > 0 && <div className="modal-error">{error}</div>}
                 <ButtonGroup size="sm">
                   <Button variant="outline" onClick={handleCreatePinPopoverClose}>
                     Cancel

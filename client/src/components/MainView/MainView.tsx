@@ -231,8 +231,8 @@ export const MainView = React.memo(function MainView() {
             roots={rootNodes}
             nodeIdsToNodesMap={nodeIdsToNodesMap}
             onSubmit={loadRootsFromDB}
-            selectedPin={selectedPin}
-            setSelectedPin={setSelectedPin}
+            // selectedPin={selectedPin}
+            // setSelectedPin={setSelectedPin}
           />
           <CreateMapModal
             isOpen={createMapModalOpen}
@@ -240,8 +240,8 @@ export const MainView = React.memo(function MainView() {
             roots={rootNodes}
             nodeIdsToNodesMap={nodeIdsToNodesMap}
             onSubmit={loadRootsFromDB}
-            selectedPin={selectedPin}
-            setSelectedPin={setSelectedPin}
+            // selectedPin={selectedPin}
+            // setSelectedPin={setSelectedPin}
           />
           <CompleteLinkModal
             isOpen={completeLinkModalOpen}
@@ -291,8 +291,8 @@ export const MainView = React.memo(function MainView() {
                 // onGraphViewClick={handleGraphViewClick}
                 nodeIdsToNodesMap={nodeIdsToNodesMap}
                 setParentNode={setSelectedNode}
-                selectedPin={selectedPin}
-                setSelectedPin={setSelectedPin}
+                // selectedPin={selectedPin}
+                // setSelectedPin={setSelectedPin}
                 onRouteMenuClick={handleRouteMenuButtonClick}
               />
             </div>

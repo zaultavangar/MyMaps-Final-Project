@@ -27,7 +27,7 @@ import {
   refreshLinkListState,
   refreshState,
   mapPinsState,
-  selectedPinState
+  selectedPinState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 
@@ -37,10 +37,7 @@ interface IPinMenuProps {
 }
 
 export const PinMenu = (props: IPinMenuProps) => {
-  const {
-    setParentNode,
-    onCreateNodeButtonClick,
-  } = props
+  const { setParentNode, onCreateNodeButtonClick } = props
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
   const icon = nodeTypeIcon('map') // icon based on type
@@ -188,15 +185,24 @@ export const PinMenu = (props: IPinMenuProps) => {
         </div>
       ) : (
         <div>
-          <div style={{minHeight: '40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+          <div
+            style={{
+              minHeight: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
             <Button
-            onClick={() => setSelectedPin(null)}
-            icon={<ai.AiOutlineArrowLeft />}
-            text="Show all pins"
-            style={{ backgroundColor: 'white', fontSize: '14px' }}
+              onClick={() => setSelectedPin(null)}
+              icon={<ai.AiOutlineArrowLeft />}
+              text="Show all pins"
+              style={{ backgroundColor: 'white', fontSize: '14px' }}
             />
-            <div className="pin-menu-delete-pin-wrapper" 
-            style={{ marginRight: '20px', fontSize:'0.8em'}}>
+            <div
+              className="pin-menu-delete-pin-wrapper"
+              style={{ marginRight: '20px', fontSize: '0.8em' }}
+            >
               <Button
                 icon={<ri.RiDeleteBin6Line />}
                 text="Delete Pin"
@@ -204,9 +210,9 @@ export const PinMenu = (props: IPinMenuProps) => {
               />
             </div>
           </div>
-          <hr style={{ marginBottom: '10px'}}></hr>
-            <div>
-              <h2
+          <hr style={{ marginBottom: '10px' }}></hr>
+          <div>
+            <h2
               className="pin-title pin-selected"
               onDoubleClick={(e) => setEditingTitle(true)}
             >
@@ -229,9 +235,11 @@ export const PinMenu = (props: IPinMenuProps) => {
                 onEdit={handleUpdateExplainer}
               />
             </div>
-            </div>         
-          <hr style={{ width: '70%', margin: '0 auto'}}></hr>
-          <h4 className="pin-documents" style={{marginTop: '10px', fontWeight:'500'}}>Pin Documents</h4>
+          </div>
+          <hr style={{ width: '70%', margin: '0 auto' }}></hr>
+          <h4 className="pin-documents" style={{ marginTop: '10px', fontWeight: '500' }}>
+            Pin Documents
+          </h4>
           <List>
             {selectedPin &&
               selectedPin.childNodes.map((node) => (
