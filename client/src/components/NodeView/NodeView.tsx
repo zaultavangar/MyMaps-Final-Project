@@ -103,7 +103,6 @@ export const NodeView = (props: INodeViewProps) => {
   const setIsLinking = useSetRecoilState(isLinkingState)
   const [isNavigating, setIsNavigating] = useRecoilState(isNavigatingState)
 
-
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState)
   const setEndAnchor = useSetRecoilState(endAnchorState)
   const setSelectedAnchors = useSetRecoilState(selectedAnchorsState)
@@ -131,9 +130,9 @@ export const NodeView = (props: INodeViewProps) => {
     setIsNavigating(false)
   }, [currentNode])
 
-  var hasAnchors: boolean = anchors.length > 0
-  var hasPins: boolean = pins.length> 0
-  var hasTrails: boolean = trails.length> 0
+  const hasAnchors: boolean = anchors.length > 0
+  let hasPins: boolean = pins.length > 0
+  let hasTrails: boolean = trails.length > 0
 
   // New Method
   const loadPinsFromNodeId = useCallback(async () => {
@@ -333,14 +332,12 @@ export const NodeView = (props: INodeViewProps) => {
 
   const hasBreadcrumb: boolean = path.length > 1
 
-
-  var resizableWidth: number = hasAnchors ? 200 : 0
+  let resizableWidth: number = hasAnchors ? 200 : 0
   if (hasPins) resizableWidth = 250
-  var nodeViewWidth: string = `calc(100% - ${resizableWidth}px)`
-
+  const nodeViewWidth: string = `calc(100% - ${resizableWidth}px)`
 
   const resizablePinMenu = useRef<HTMLHeadingElement>(null)
-  const resizableAnchorMenu = useRef<HTMLHeadingElement>((null))
+  const resizableAnchorMenu = useRef<HTMLHeadingElement>(null)
   const divider = useRef<HTMLHeadingElement>(null)
 
   let xLast: number
@@ -377,10 +374,9 @@ export const NodeView = (props: INodeViewProps) => {
       if (!(newWidth < 245 || newWidth > 600)) {
         console.log('hi')
         resizableElement.style.width = String(width) + 'px'
-        //resizableWidth = width
+        // resizableWidth = width
         xLast = e.screenX
-      }
-      else {
+      } else {
         console.log('bye')
       }
     }
@@ -394,7 +390,6 @@ export const NodeView = (props: INodeViewProps) => {
     document.removeEventListener('pointermove', onPointerMove)
     document.removeEventListener('pointerup', onPointerUp)
   }
-
 
   const handleRouteMenuButtonClick = useCallback(() => {
     setRouteDrawerOpen(true)
@@ -411,7 +406,6 @@ export const NodeView = (props: INodeViewProps) => {
         setTrailToNavigate(navTrail)
       }
     }
-
   }
   console.log(hasPins)
 
@@ -450,40 +444,45 @@ export const NodeView = (props: INodeViewProps) => {
               onCreateNodeButtonClick={onCreateNodeButtonClick}
               selectedPin={selectedPin}
               setSelectedPin={setSelectedPin}
-              isNavigating= {isNavigating}
+              isNavigating={isNavigating}
               trailToNavigate={trailToNavigate}
             />
           </div>
         </div>
       </div>
       {(hasAnchors || hasPins) && (
-        <div className="divider" ref={divider} onPointerDown={onPointerDown} 
-          style={{width:'5px'}}/>
+        <div
+          className="divider"
+          ref={divider}
+          onPointerDown={onPointerDown}
+          style={{ width: '5px' }}
+        />
       )}
-      {hasAnchors || hasPins &&
-        <>
-        {hasAnchors ? 
-           <div
-           className={'resizable-node-properties'}
-           ref={resizableAnchorMenu}
-           style={{ width: resizableWidth }}
-         >
-           <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
-         </div>
-         :
-         <div style={{ width: resizableWidth }} ref={resizablePinMenu}>
-          <PinMenu
-            selectedPin={selectedPin}
-            setSelectedPin={setSelectedPin}
-            pins={pins}
-            setPins={setPins}
-            setParentNode={setParentNode}
-            onCreateNodeButtonClick={onCreateNodeButtonClick}
-          />
-        </div>
-        }
-        </>
-      }
+      {hasAnchors ||
+        (hasPins && (
+          <>
+            {hasAnchors ? (
+              <div
+                className={'resizable-node-properties'}
+                ref={resizableAnchorMenu}
+                style={{ width: resizableWidth }}
+              >
+                <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
+              </div>
+            ) : (
+              <div style={{ width: resizableWidth }} ref={resizablePinMenu}>
+                <PinMenu
+                  selectedPin={selectedPin}
+                  setSelectedPin={setSelectedPin}
+                  pins={pins}
+                  setPins={setPins}
+                  setParentNode={setParentNode}
+                  onCreateNodeButtonClick={onCreateNodeButtonClick}
+                />
+              </div>
+            )}
+          </>
+        ))}
       {/* {hasAnchors && (
         <div
           className={'resizable-node-properties'}

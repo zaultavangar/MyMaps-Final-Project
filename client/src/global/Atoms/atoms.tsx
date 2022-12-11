@@ -73,12 +73,12 @@ export const selectedPinState = atom<IPin | null>({
 
 export const prevNavigationPinState = atom<IPin | null>({
   key: 'prevNavigationPinState',
-  default: null
+  default: null,
 })
 
 export const currentNavigationPinState = atom<IPin | null>({
   key: 'currentNavigationPinState',
-  default: null
+  default: null,
 })
 
 // selected extent

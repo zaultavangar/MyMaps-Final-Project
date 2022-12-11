@@ -267,7 +267,9 @@ export const PinMenu = (props: IPinMenuProps) => {
               onClick={onCreateNodeButtonClick}
             />
           </div>
-          <h4 className="pin-documents">Trails containing "{selectedPin.title}"</h4>
+          <h4 className="pin-documents">
+            Trails containing &quot;{selectedPin.title}&quot;
+          </h4>
           <List>{trailItems}</List>
         </div>
       )}

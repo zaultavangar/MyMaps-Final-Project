@@ -62,12 +62,10 @@ interface IRouteDrawerProps {
   setTrails: (trail: ITrail[]) => void
   setPins: (pin: IPin[]) => void
   setRouteDrawerOpen: (b: boolean) => void
-  setSelectedPin:(pin: IPin | null) => void
+  setSelectedPin: (pin: IPin | null) => void
   setIsNavigating: (b: boolean) => void
   startNavigation: (s: string) => void
 }
-
-
 
 export const RouteDrawer = (props: IRouteDrawerProps) => {
   const {
@@ -96,7 +94,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     console.log(routeDrawerPins)
     if (routeDrawerPins && routeDrawerPins.length > 0) {
       setPinIdToAdd(routeDrawerPins[0].pinId)
-      if (trails && trails.length>0) {
+      if (trails && trails.length > 0) {
         settrailIdToNavigate(trails[0].trailId)
       }
     }
@@ -262,7 +260,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     setRouteDrawerOpen(false)
     setIsNavigating(true)
   }
-
 
   // useEffect(() => {
   //   setDbTrails(trails)
@@ -491,69 +488,82 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                   </div>
                 </TabPanel>
                 <TabPanel>
-                  <h2 style={{fontWeight: 'bold'}}>My Routes</h2>
-                  <div className='trail-card-wrapper'>
-                  {trails.map(trail=>
-                  <>
-                  <Popover size='xs' trigger='hover' placement='bottom'>
-                  <PopoverTrigger>
-                    <div className='trail-card-container'>
-                        <div className='trail-card-title'>
-                          {trail.title}
-                        </div>
-                        <div className='trail-card-explainer'>
-                          {trail.explainer}
-                        </div>
-                        <hr></hr>
-                      </div>
-                  </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverHeader>
-                        <div style={{fontWeight: 'lighter'}}>
-                            Drag and drop pins to change order
-                        </div>
-                      </PopoverHeader>
-                      <PopoverBody>
-                      <div style={{display:'flex', flexDirection: 'column' ,gap: '1em'}}>
-                          {trail.pinList.map(pin => 
-                            <div 
-                              id={pin.pinId}
-                              onClick={(e)=>handlePinFromTrailClick(e, pin.pinId)}
-                              data-value= {pin.pinId}
-                              style={{display:'flex', 
-                                flexDirection: 'row', 
-                                gap: '1em', cursor: 'pointer'}} >
-                            <PlaceIcon/>
-                            {pin.title}
+                  <h2 style={{ fontWeight: 'bold' }}>My Routes</h2>
+                  <div className="trail-card-wrapper">
+                    {trails.map((trail) => (
+                      <>
+                        <Popover size="xs" trigger="hover" placement="bottom">
+                          <PopoverTrigger>
+                            <div className="trail-card-container">
+                              <div className="trail-card-title">{trail.title}</div>
+                              <div className="trail-card-explainer">
+                                {trail.explainer}
+                              </div>
+                              <hr></hr>
                             </div>
-                            )}
-                      </div>
-                      </PopoverBody>
-                    </PopoverContent>
-                   </Popover>
-                    </>
-                    )}
-                    </div>
-                    
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverHeader>
+                              <div style={{ fontWeight: 'lighter' }}>
+                                Drag and drop pins to change order
+                              </div>
+                            </PopoverHeader>
+                            <PopoverBody>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '1em',
+                                }}
+                              >
+                                {trail.pinList.map((pin) => (
+                                  <div
+                                    key={pin.pinId}
+                                    id={pin.pinId}
+                                    onClick={(e) => handlePinFromTrailClick(e, pin.pinId)}
+                                    data-value={pin.pinId}
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      gap: '1em',
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    <PlaceIcon />
+                                    {pin.title}
+                                  </div>
+                                ))}
+                              </div>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                      </>
+                    ))}
+                  </div>
                 </TabPanel>
                 <TabPanel>
                   <div>
-                    <h2 style={{marginBottom: '5px'}}>Choose a Route for Navigation Mode: </h2>
-                    <div style={{display: 'flex', gap: '1em'}}>
-                    <Select
-                      width='fit-content'
-                      value={trailIdToNavigate}
-                      id="select-navigate-trail"
-                      onChange={handleTrailNavigateSelectChange}
-                    >
-                      {trails && trails.map(trail =>
-                        <option value={trail.trailId}>{trail.title}</option>
-                      )}
-                    </Select>
-                    <Button onClick={handleStartNavigationClick} colorScheme="green">
+                    <h2 style={{ marginBottom: '5px' }}>
+                      Choose a Route for Navigation Mode:{' '}
+                    </h2>
+                    <div style={{ display: 'flex', gap: '1em' }}>
+                      <Select
+                        width="fit-content"
+                        value={trailIdToNavigate}
+                        id="select-navigate-trail"
+                        onChange={handleTrailNavigateSelectChange}
+                      >
+                        {trails &&
+                          trails.map((trail) => (
+                            <option key={trail.trailId} value={trail.trailId}>
+                              {trail.title}
+                            </option>
+                          ))}
+                      </Select>
+                      <Button onClick={handleStartNavigationClick} colorScheme="green">
                         Navigate
-                    </Button>
+                      </Button>
                     </div>
                   </div>
                 </TabPanel>
