@@ -65,7 +65,7 @@ interface IMapContentProps {
 
 /** The content of a map node, including any pins */
 export const MapContent = (props: IMapContentProps) => {
-  let map: mapboxgl.Map
+  var map: mapboxgl.Map
   const [newMarker, setNewMarker] = useState<mapboxgl.Marker | null>(null)
 
   const { selectedMapViewMode, selectedPin, setSelectedPin } = props
@@ -236,11 +236,13 @@ export const MapContent = (props: IMapContentProps) => {
 
 
   const markerRef = useRef<HTMLDivElement | null>(null)
+
  
   const onMapClick = (e: mapboxgl.MapMouseEvent) => {
+    e.preventDefault()
 
-    const lngLat = e.lngLat
-
+    console.log(e)
+    const lngLat = {lng: e.lngLat.lng, lat: e.lngLat.lat}
     if (!createPinPopoverOpen) {
       const marker = new mapboxgl.Marker({ color: 'black' })
         .setLngLat(lngLat)
@@ -262,6 +264,7 @@ export const MapContent = (props: IMapContentProps) => {
   const mapStyle = 'mapbox://styles/mapbox/' + selectedMapViewMode
 
   useEffect(() => {
+    console.log('hi')
     if (currentNode.type == 'googleMap') {
       mapboxgl.accessToken =
         'pk.eyJ1IjoiemF1bHQiLCJhIjoiY2xiZjkwcHM5MDN2bzNybWUxbjViZGg5MyJ9.TNLPyVnYb7KKHUfm_XGw5A'
@@ -437,7 +440,9 @@ export const MapContent = (props: IMapContentProps) => {
           </div>
         ) : (
           <div>
-            <GoogleMapContent />
+            <GoogleMapContent 
+              onMapClick={onMapClick}
+              />
           </div>
         )}
           <div>

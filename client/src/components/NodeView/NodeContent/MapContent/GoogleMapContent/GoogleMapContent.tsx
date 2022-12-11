@@ -13,10 +13,11 @@ import mapboxgl, { Marker } from '!mapbox-gl'
 import { UrlWithStringQuery } from 'url'
 
 interface IGoogleMapProps {
-
+  onMapClick: (e: mapboxgl.MapMouseEvent) => void
 }
 
 export const GoogleMapContent = (props: IGoogleMapProps) => {
+  const {onMapClick} = props
   return <div id="map" style={{ width: '550px', height: '400px' }}>
   </div>
 }
