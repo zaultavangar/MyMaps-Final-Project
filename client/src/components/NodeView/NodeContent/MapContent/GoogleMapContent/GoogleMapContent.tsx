@@ -12,10 +12,13 @@ import Map from 'react-map-gl'
 import mapboxgl, { Marker } from '!mapbox-gl'
 import { UrlWithStringQuery } from 'url'
 
-interface IGoogleMapProps {}
+interface IGoogleMapProps {
+
+}
 
 export const GoogleMapContent = (props: IGoogleMapProps) => {
-  return <div id="map" style={{ width: '550px', height: '400px' }}></div>
+  return <div id="map" style={{ width: '550px', height: '400px' }}>
+  </div>
 }
 
 // const deepCompareEqualsForMaps = createCustomEqual(

@@ -38,6 +38,7 @@ import {
   PopoverArrow,
   PopoverFooter,
   PopoverTrigger,
+  PopoverAnchor,
   ButtonGroup,
   Button,
   InputGroup,
@@ -69,7 +70,7 @@ export const MapContent = (props: IMapContentProps) => {
 
   const { selectedMapViewMode, selectedPin, setSelectedPin } = props
 
-  const [createPinPopoverOpen, setCreatePinPopoverOpen] = useState(false)
+  const [createPinPopoverOpen, setCreatePinPopoverOpen] = useState<boolean>(false)
 
   const startAnchor = useRecoilValue(startAnchorState)
 
@@ -93,6 +94,9 @@ export const MapContent = (props: IMapContentProps) => {
 
   const [xLast, setXLast] = useState<number>(0)
   const [yLast, setYLast] = useState<number>(0)
+
+  const [lngLast, setLngLast] = useState<number>(0)
+  const [latLast, setLatLast] = useState<number>(0)
 
   /**
    * useRef Here is an example of use ref to store a mutable html object
@@ -151,6 +155,9 @@ export const MapContent = (props: IMapContentProps) => {
       return
     }
     setCreatePinPopoverOpen(false)
+    // let pins = mapPins
+    // pins.push(newPin)
+    // setMapPins(pins)
     // add state fxn calls to refresh pin menu and other things that need to be refreshed
   }
 
@@ -227,49 +234,29 @@ export const MapContent = (props: IMapContentProps) => {
     }
   }, [currentNode])
 
-  const PopoverFC: React.FC = () => {
-    return (
-      <div>
-        <InputGroup sx={{ marginBottom: '10px' }}>
-          <InputLeftElement pointerEvents="none">
-            <TitleIcon />
-          </InputLeftElement>
-          <Input placeholder="Choose a Title" onChange={handleTitleChange} />
-        </InputGroup>
-        <InputGroup sx={{ marginBottom: '10px' }}>
-          <Textarea
-            placeholder="Enter a Description (optional)"
-            onChange={handleExplainerChange}
-          />
-        </InputGroup>
-        <ButtonGroup size="sm">
-          <Button variant="outline" onClick={(e) => handleCreatePinPopoverClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleCreatePin} colorScheme="green">
-            Create
-          </Button>
-        </ButtonGroup>
-      </div>
-    )
-  }
 
+  const markerRef = useRef<HTMLDivElement | null>(null)
+ 
   const onMapClick = (e: mapboxgl.MapMouseEvent) => {
+
     const lngLat = e.lngLat
 
-    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-        <Input>Add create pin form here</Input>
-        <div>Hi</div>
-        `)
+    if (!createPinPopoverOpen) {
+      const marker = new mapboxgl.Marker({ color: 'black' })
+        .setLngLat(lngLat)
+        .addTo(map)
+      
+      const markerEl = marker.getElement()
+      markerRef.current = markerEl
 
-    const marker = new mapboxgl.Marker({ color: 'black' })
-      .setLngLat(lngLat)
-      .addTo(map)
-      .setPopup(popup)
+      console.log(markerRef)
+      console.log(markerRef.current)
 
-    marker.togglePopup()
-
-    setNewMarker(marker)
+      // setCreatePinPopoverOpen(true)
+      setLngLast(lngLat.lng)
+      setLatLast(lngLat.lat)
+      setNewMarker(marker)
+    }
   }
 
   const mapStyle = 'mapbox://styles/mapbox/' + selectedMapViewMode
@@ -289,45 +276,55 @@ export const MapContent = (props: IMapContentProps) => {
         onMapClick(e)
       })
     }
-  }, [selectedMapViewMode])
+  }, [currentNode, selectedMapViewMode])
 
   /**
    * onPointerDown initializes the creation of a new pin on the map image
    * @param e
    */
-  const onPointerDown = (e: React.PointerEvent) => {
+  const onPointerDown = (e: any) => {
     console.log(e)
-    console.log(currentNode.type)
-    addEventListener('pointerup', (event) => {
-      if (currentNode.type === 'map' && createPinPopoverOpen === false) {
-        e.preventDefault()
-        e.stopPropagation()
-        // dragging = true
+    console.log(!createPinPopoverOpen)
+    if (!createPinPopoverOpen) {
+  
+        console.log('hi')
+          e.preventDefault()
+          e.stopPropagation()
+          // dragging = true
 
-        const imageTop = imageContainer.current?.getBoundingClientRect().top
-        // The x location of the image left in the browser
-        const imageLeft = imageContainer.current?.getBoundingClientRect().left
+          const imageTop = imageContainer.current?.getBoundingClientRect().top
+          // The x location of the image left in the browser
+          const imageLeft = imageContainer.current?.getBoundingClientRect().left
 
-        const x = e.clientX // The x location of the pointer in the browser
-        const y = e.clientY // The y location of the poitner in the browser
+          const x = e.clientX // The x location of the pointer in the browser
+          const y = e.clientY // The y location of the poitner in the browser
 
-        // calculate the x and y location of the pointer relative to the image
+          // calculate the x and y location of the pointer relative to the image
 
-        const xPosLast = x + 10 - imageLeft!
-        const yPosLast = y - 2 - imageTop!
-        // Set the initial x and y location of the selection
-        if (selection.current) {
-          selection.current.style.display = 'unset'
-          selection.current.style.left = `${xPosLast}px`
-          selection.current.style.top = `${yPosLast}px`
-          setCreatePinPopoverOpen(true)
-          setXLast(xPosLast)
-          setYLast(yPosLast)
-        }
+          const xPosLast = x + 10 - imageLeft!
+          let yPosLast 
+
+          if (currentNode.type==='googleMap') yPosLast = y+68-imageTop!
+          else yPosLast = y - 2 - imageTop!
+          // Set the initial x and y location of the selection
+          let ref = currentNode.type==='map' ? selection.current : markerRef.current
+          if (ref) {
+            if (currentNode.type === 'map') {
+              ref.style.display = 'unset'
+            }
+              ref.style.left = `${xPosLast}px`
+              ref.style.top = `${yPosLast}px`
+            
+            setCreatePinPopoverOpen(true)
+            setXLast(xPosLast)
+            setYLast(yPosLast)
+          }
 
         // The y location of the image top in the browser
-      }
-    })
+      
+    
+  }
+   
   }
 
   useEffect(() => {
@@ -411,6 +408,7 @@ export const MapContent = (props: IMapContentProps) => {
   }
 
   const handleCreatePinPopoverClose = () => {
+    console.log('test')
     if (currentNode.type === 'googleMap') {
       newMarker.remove()
       setNewMarker(null)
@@ -422,16 +420,17 @@ export const MapContent = (props: IMapContentProps) => {
     setCreatePinPopoverOpen(false)
   }
 
+  // console.log(createPinPopoverOpen)
   return (
     <div className="mapImageWrapper" id="mapImageWrapper">
       <div
         ref={imageContainer}
-        onPointerDown={onPointerDown}
+        onClick={onPointerDown}
         className="map-image-content-wrapper"
         id="map-image-content-wrapper"
         style={{ width: updatedWidth, height: updatedHeight }}
       >
-        {currentNode.type === 'map' ? (
+      {currentNode.type === 'map' ? (
           <div>
             {startAnchorVisualization}
             {mapPins}
@@ -441,26 +440,24 @@ export const MapContent = (props: IMapContentProps) => {
             <GoogleMapContent />
           </div>
         )}
-        {
           <div>
             <Popover
               returnFocusOnClose={false}
               isOpen={createPinPopoverOpen}
               onClose={handleCreatePinPopoverClose}
-              placement="right"
-              closeOnBlur={false}
-            >
-              <PopoverTrigger>
-                {currentNode.type === 'map' ? (
+              placement={`${currentNode.type === 'map' ? 'right' : 'right-end'}`}
+              closeOnBlur={false}>
+            <PopoverAnchor>
+            {currentNode.type === 'map' ? (
                   <div className="selection" ref={selection}>
                     <PlaceIcon style={{ color: 'black' }} />
                   </div>
                 ) : (
-                  <div></div>
+                  <div className="mapbox-marker" ref={markerRef}></div>
                 )}
-              </PopoverTrigger>
-              <PopoverContent id="popover-content">
-                <PopoverHeader fontWeight="semibold">Create a Pin</PopoverHeader>
+            </PopoverAnchor>
+            <PopoverContent>
+            <PopoverHeader fontWeight="semibold">Create a Pin</PopoverHeader>
                 <PopoverArrow />
                 <PopoverCloseButton />
                 <PopoverBody>
@@ -478,14 +475,12 @@ export const MapContent = (props: IMapContentProps) => {
                       />
                     </InputGroup>
                   </FocusLock>
-                  If Google Maps, location should prob pop up automatically with optional
-                  title
                 </PopoverBody>
                 <PopoverFooter display="flex" justifyContent="flex-end">
                   <ButtonGroup size="sm">
                     <Button
                       variant="outline"
-                      onClick={(e) => handleCreatePinPopoverClose}
+                      onClick={handleCreatePinPopoverClose}
                     >
                       Cancel
                     </Button>
@@ -494,10 +489,10 @@ export const MapContent = (props: IMapContentProps) => {
                     </Button>
                   </ButtonGroup>
                 </PopoverFooter>
-              </PopoverContent>
-            </Popover>
+            </PopoverContent>
+          </Popover>
           </div>
-        }
+        
         <img src={content} />
       </div>
     </div>

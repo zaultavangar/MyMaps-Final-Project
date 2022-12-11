@@ -413,6 +413,7 @@ export const NodeView = (props: INodeViewProps) => {
     }
 
   }
+  console.log(hasPins)
 
   return (
     <div className="node">

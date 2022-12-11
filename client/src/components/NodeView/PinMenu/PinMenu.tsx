@@ -69,14 +69,6 @@ export const PinMenu = (props: IPinMenuProps) => {
     paddingBottom: '10px',
   }
 
-  if (selectedPin) {
-    selectedPin.childNodes.map((node) => {
-      console.log(node.title)
-    })
-  } else {
-    console.log('nbooo')
-  }
-
   /**
    * Added in these from NodeHeader to make the pin title and explainer editable! :D
    */
