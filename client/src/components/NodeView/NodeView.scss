@@ -3,7 +3,7 @@
 .node {
   height: calc(100vh - 50px);
   display: grid;
-  grid-template-columns: minmax(400px, 800px) fit-content(100%) auto;
+  grid-template-columns: 4fr fit-content(100%) 1fr;
 
   .resizable-node-properties {
     position: relative;

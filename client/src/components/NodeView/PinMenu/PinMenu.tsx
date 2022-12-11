@@ -64,7 +64,7 @@ export const PinMenu = (props: IPinMenuProps) => {
     height: 40,
     width: 150,
     fontSize: '16px',
-    backgroundColor: 'lightblue',
+    backgroundColor: 'gainsboro',
     paddingTop: '10px',
     paddingBottom: '10px',
   }
@@ -200,36 +200,42 @@ export const PinMenu = (props: IPinMenuProps) => {
             style={{ backgroundColor: 'white', fontSize: '14px' }}
           />
           <hr style={{ marginBottom: '10px' }}></hr>
-          <h2
-            className="pin-title pin-selected"
-            onDoubleClick={(e) => setEditingTitle(true)}
-          >
-            <EditableText
-              text={title ?? ''}
-              editing={editingTitle}
-              setEditing={setEditingTitle}
-              onEdit={handleUpdateTitle}
-            />
-          </h2>
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <div>
+              <h2
+              className="pin-title pin-selected"
+              onDoubleClick={(e) => setEditingTitle(true)}
+            >
+              <EditableText
+                text={title ?? ''}
+                editing={editingTitle}
+                setEditing={setEditingTitle}
+                onEdit={handleUpdateTitle}
+              />
+            </h2>
 
-          <div
-            className="pin-explainer pin-selected"
-            onDoubleClick={(e) => setEditingExplainer(true)}
-          >
-            <EditableText
-              text={explainer ?? ''}
-              editing={editingExplainer}
-              setEditing={setEditingExplainer}
-              onEdit={handleUpdateExplainer}
-            />
+            <div
+              className="pin-explainer pin-selected"
+              onDoubleClick={(e) => setEditingExplainer(true)}
+            >
+              <EditableText
+                text={explainer ?? ''}
+                editing={editingExplainer}
+                setEditing={setEditingExplainer}
+                onEdit={handleUpdateExplainer}
+              />
+            </div>
+            </div>
+            <div className="pin-menu-delete-pin-wrapper" style={{marginBottom: '10px', marginRight: '20px'}}>
+              <Button
+                icon={<ri.RiDeleteBin6Line />}
+                text="Delete Pin"
+                onClick={() => onDeleteButtonClick()}
+              />
+            </div>
           </div>
-          <div className="pin-menu-delete-pin-wrapper">
-          <Button
-            icon={<ri.RiDeleteBin6Line />}
-            text="Delete Pin"
-            onClick={() => onDeleteButtonClick()}
-          />
-          </div>
+          
+
           <h4 className="pin-documents">Pin Documents</h4>
           <List>
             {selectedPin &&
