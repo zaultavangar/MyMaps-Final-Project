@@ -410,8 +410,8 @@ export const NodeView = (props: INodeViewProps) => {
       const resizableElement = resizable.current
       let width = parseFloat(resizableElement.style.width)
       const deltaX = e.screenX - xLast // The change in the x location
-      const newWidth = (width += deltaX)
-      if (!(newWidth < 245 || newWidth > 600)) {
+      const newWidth = (width -= deltaX)
+      if (!(newWidth < 245 || newWidth > 420)) {
         console.log('hi')
         resizableElement.style.width = String(width) + 'px'
         // resizableWidth = width
@@ -449,10 +449,10 @@ export const NodeView = (props: INodeViewProps) => {
   }
   console.log(hasPins)
   console.log('pinIdsToPinsMap', pinIdsToPinsMap)
-
+//width: `calc(100% - ${resizableWidth}px)`
   return (
     <div className="node">
-      <div className="nodeView" style={{ width: `calc(100% - ${resizableWidth}px)` }}>
+      <div className="nodeView">
         <GraphViewModal
           isOpen={graphViewModalOpen}
           onClose={() => setGraphViewModalOpen(false)}
@@ -494,7 +494,7 @@ export const NodeView = (props: INodeViewProps) => {
             />
           </div>
         </div>
-      </div>
+  </div>
       {(hasAnchors || hasPins) && (
         <div
           className="divider"

@@ -223,13 +223,13 @@ export const PinMenu = (props: IPinMenuProps) => {
               onEdit={handleUpdateExplainer}
             />
           </div>
-
+          <div className="pin-menu-delete-pin-wrapper">
           <Button
             icon={<ri.RiDeleteBin6Line />}
             text="Delete Pin"
             onClick={() => onDeleteButtonClick()}
           />
-
+          </div>
           <h4 className="pin-documents">Pin Documents</h4>
           <List>
             {selectedPin &&

@@ -2,7 +2,8 @@
 
 .node {
   height: calc(100vh - 50px);
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(400px, 800px) fit-content(100%) auto;
 
   .resizable-node-properties {
     position: relative;

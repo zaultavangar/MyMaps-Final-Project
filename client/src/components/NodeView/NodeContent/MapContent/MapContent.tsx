@@ -72,7 +72,7 @@ export const MapContent = (props: IMapContentProps) => {
 
   const [createPinPopoverOpen, setCreatePinPopoverOpen] = useState<boolean>(false)
 
-  const startAnchor = useRecoilValue(startAnchorState)
+const startAnchor = useRecoilValue(startAnchorState)
 
   // recoil state management
   const currentNode = useRecoilValue(currentNodeState)
