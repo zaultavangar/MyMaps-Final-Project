@@ -15,7 +15,7 @@ import {
 } from '../../global/Atoms'
 import { useLocation } from 'react-router-dom'
 import { FrontendNodeGateway } from '../../nodes'
-import { INode, NodeIdsToNodesMap, RecursiveNodeTree } from '../../types'
+import { INode, IPin, NodeIdsToNodesMap, RecursiveNodeTree } from '../../types'
 import { Alert } from '../Alert'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 import { Header } from '../Header'
@@ -33,6 +33,7 @@ import './MainView.scss'
 import { createNodeIdsToNodesMap, emptyNode, makeRootWrapper } from './mainViewUtils'
 import { RouteDrawer } from '../NodeView/RouteDrawer'
 import { FaLessThanEqual } from 'react-icons/fa'
+import { FrontendPinGateway } from '../../pins'
 
 export const MainView = React.memo(function MainView() {
   // app states
@@ -61,13 +62,39 @@ export const MainView = React.memo(function MainView() {
   const setAlertMessage = useSetRecoilState(alertMessageState)
 
   const [routeDrawerOpen, setRouteDrawerOpen] = useRecoilState(routeDrawerOpenState)
+  const [pins, setPins] = useState<IPin[]>([])
 
   /** update our frontend root nodes from the database */
+  // const loadRootsFromDB = useCallback(async () => {
+  //   const rootsFromDB = await FrontendNodeGateway.getRoots()
+  //   if (rootsFromDB.success) {
+  //     rootsFromDB.payload && setRootNodes(rootsFromDB.payload)
+  //     setIsAppLoaded(true)
+  //   }
+  // }, [])
+
+  /** update our frontend root nodes and pins from the database */
   const loadRootsFromDB = useCallback(async () => {
-    console.log('test')
     const rootsFromDB = await FrontendNodeGateway.getRoots()
     if (rootsFromDB.success) {
       rootsFromDB.payload && setRootNodes(rootsFromDB.payload)
+      if (rootsFromDB.payload) {
+        let pinsCollection: IPin[] = []
+        // put the root nodes in a local recursive node tree
+        const rootNodesTemp = rootsFromDB.payload
+        console.log('rootNodes before loop', rootNodesTemp)
+        for (let i = 0; i < rootNodesTemp.length; i++) {
+          const pinsFromDB = await FrontendPinGateway.getPinsByNodeId(
+            rootNodesTemp[i].node.nodeId
+          )
+          if (pinsFromDB.success && pinsFromDB.payload) {
+            console.log('pinsFromDB.payload', pinsFromDB.payload)
+            pinsCollection = pinsCollection.concat(pinsFromDB.payload)
+          }
+        }
+        console.log('pinsCollection', pinsCollection)
+        setPins(pinsCollection)
+      }
       setIsAppLoaded(true)
     }
   }, [])
@@ -273,6 +300,7 @@ export const MainView = React.memo(function MainView() {
                 parentNode={selectedNode}
                 setParentNode={setSelectedNode}
                 selectedPin={selectedPin}
+                pins={pins}
               />
             </div>
             <div className="divider" onPointerDown={onPointerDown} />

@@ -90,7 +90,6 @@ export class PinCollectionConnection {
     }
   }
 
-
   /**
    * Finds pins when given a list of pinIds.
    * Note, we return successfulServiceResponse with empty array when no pins found.
@@ -166,7 +165,7 @@ export class PinCollectionConnection {
     return successfulServiceResponse(foundPins)
   }
 
-    /**
+  /**
    * Updates pin when given a pinId and a set of properties to update.
    *
    * @param {string} pinId
@@ -174,26 +173,24 @@ export class PinCollectionConnection {
    * @return successfulServiceResponse<INode> on success
    *         failureServiceResponse on failure
    */
-     async updatePin(
-      pinId: string,
-      updatedProperties: Object
-    ): Promise<IServiceResponse<IPin>> {
-      const updateResponse = await this.client
-        .db()
-        .collection(this.collectionName)
-        .findOneAndUpdate(
-          { pinId: pinId },
-          { $set: updatedProperties },
-          { returnDocument: 'after' }
-        )
-      if (updateResponse.ok && updateResponse.lastErrorObject.n) {
-        return successfulServiceResponse(updateResponse.value)
-      }
-      return failureServiceResponse(
-        'Failed to update pin, lastErrorObject: ' +
-          updateResponse.lastErrorObject.toString()
+  async updatePin(
+    pinId: string,
+    updatedProperties: Object
+  ): Promise<IServiceResponse<IPin>> {
+    const updateResponse = await this.client
+      .db()
+      .collection(this.collectionName)
+      .findOneAndUpdate(
+        { pinId: pinId },
+        { $set: updatedProperties },
+        { returnDocument: 'after' }
       )
+    if (updateResponse.ok && updateResponse.lastErrorObject.n) {
+      return successfulServiceResponse(updateResponse.value)
     }
-
-
+    return failureServiceResponse(
+      'Failed to update pin, lastErrorObject: ' +
+        updateResponse.lastErrorObject.toString()
+    )
+  }
 }

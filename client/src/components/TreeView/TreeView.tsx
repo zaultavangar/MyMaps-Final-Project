@@ -10,10 +10,20 @@ export interface ITreeViewProps {
   parentNode: INode | null
   setParentNode: (node: INode) => void
   selectedPin: IPin | null
+  pins?: IPin[]
 }
 
 export const TreeView = (props: ITreeViewProps) => {
-  const { roots, parentNode, setParentNode, changeUrlOnClick = true, selectedPin } = props
+  const {
+    roots,
+    parentNode,
+    setParentNode,
+    changeUrlOnClick = true,
+    selectedPin,
+    pins,
+  } = props
+  console.log('roots', roots)
+  console.log('------------------pins-------------', pins)
   return (
     <div className="treeView-wrapper">
       {roots.map((tree: RecursiveNodeTree) => (
@@ -29,6 +39,7 @@ export const TreeView = (props: ITreeViewProps) => {
               title={tree.node.title}
               childNodes={tree.children}
               changeUrlOnClick={changeUrlOnClick}
+              relevantPins={pins!.filter((pin) => pin.nodeId === tree.node.nodeId)}
             />
           )}
         </div>

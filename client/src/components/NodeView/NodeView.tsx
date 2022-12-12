@@ -167,9 +167,7 @@ export const NodeView = (props: INodeViewProps) => {
     } else {
       const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(mapNode.nodeId)
       if (pinsFromNode.success && pinsFromNode.payload) {
-        console.log('PINSFROMNODE: ', pinsFromNode.payload)
         setPins(pinsFromNode.payload)
-        console.log('PINS: ', pins)
       }
     }
     hasPins = currentNode.type === 'map' && pins.length > 0
@@ -447,8 +445,8 @@ export const NodeView = (props: INodeViewProps) => {
       }
     }
   }
-  console.log(hasPins)
-  console.log('pinIdsToPinsMap', pinIdsToPinsMap)
+  // console.log(hasPins)
+  // console.log('pinIdsToPinsMap', pinIdsToPinsMap)
   // width: `calc(100% - ${resizableWidth}px)`
   return (
     <div className="node">
