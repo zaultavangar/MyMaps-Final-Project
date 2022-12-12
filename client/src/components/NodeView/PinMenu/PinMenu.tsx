@@ -180,6 +180,8 @@ export const PinMenu = (props: IPinMenuProps) => {
     setSpecificTrail(trail)
   }
 
+  const [seeMoreTrails, setSeeMoreTrails] = useState(false)
+
   return (
     <div className="pin-menu-container">
       {selectedPin === null ? (
@@ -333,8 +335,11 @@ export const PinMenu = (props: IPinMenuProps) => {
             Routes containing &quot;{selectedPin.title}&quot;
           </h4>
           <div className="routes-containing-wrapper">
-            {trails.map((trail, index) => (
-              <div
+            {trails.map((trail, index) => 
+              <>
+              {(index < 5 || seeMoreTrails) &&
+                <>
+                <div
                 key={index}
                 className="pin-menu-trail-card-wrapper"
                 onClick={(e) => handleGoToTrail(e, trail)}
@@ -347,9 +352,22 @@ export const PinMenu = (props: IPinMenuProps) => {
                   {trail.explainer}
                 </div>
               </div>
-            ))}
+               
+               </>
+              }
+              </>
+            )}
           </div>
+          <div className='see-more-routes-wrapper' style={{display:'flex', marginTop: '15px', justifyContent: 'center', alignItems: 'center'}}>
+            {trails.length> 5 &&
+              <Button 
+              text={seeMoreTrails ? 'See Less' : 'See More'}
+              icon = {seeMoreTrails ? <ai.AiFillCaretUp/> : <ai.AiFillCaretDown/>}
+              onClick = {() => setSeeMoreTrails(!seeMoreTrails)}/>
+            }
+           </div>
         </div>
+
       )}
     </div>
   )

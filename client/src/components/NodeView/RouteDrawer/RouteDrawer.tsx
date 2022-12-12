@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverAnchor,
-  PopoverHeader,
-  PopoverBody,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  PopoverContent,
+  Popover, PopoverTrigger, PopoverHeader, PopoverBody, PopoverContent,
   PopoverFooter,
   PopoverCloseButton,
   PopoverArrow,
   Select,
-  ButtonGroup,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
   Button,
   Drawer,
   DrawerOverlay,
@@ -31,8 +26,6 @@ import {
   Tab,
   TabPanel,
   IconButton,
-  InputGroup,
-  InputLeftElement,
   Textarea,
   Text,
 } from '@chakra-ui/react'
@@ -44,7 +37,9 @@ import {
   isSamePin,
   ITrail,
   IPinProperty,
+  ITrailProperty, 
   makeIPinProperty,
+  makeITrailProperty,
 } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
 import { DeleteIcon } from '@chakra-ui/icons'
@@ -60,6 +55,7 @@ import {
   routeDrawerOpenState,
   tabIndexState,
   specificTrailState,
+  confirmationOpenState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import TitleIcon from '@mui/icons-material/Title'
@@ -70,6 +66,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { selectedPinState } from '../../../global/Atoms'
 import { DropResult, DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { EditableText } from '../../EditableText'
 
 interface IRouteDrawerProps {
   isOpen: boolean
@@ -103,6 +100,9 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [dbTrails, setDbTrails] = useState<ITrail[] | null>([])
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
+
+  const [confirmationOpen, setConfirmationOpen] = useRecoilState(confirmationOpenState)
+
   const setAlertIsOpen = useSetRecoilState(alertOpenState)
   const setAlertTitle = useSetRecoilState(alertTitleState)
   const setAlertMessage = useSetRecoilState(alertMessageState)
@@ -187,13 +187,10 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
-  const handleRemoveTempPin = async (event: any) => {
-    const el = document.getElementById('route-drawer-pin-title')
-    const value = el?.getAttribute('data-value')
-    console.log(value) // pinId
+  const handleRemoveTempPin = async (pinId: string) => {
     let pin: IPin
-    if (value) {
-      const getPinIdResponse = await FrontendPinGateway.getPin(value)
+    if (pinId) {
+      const getPinIdResponse = await FrontendPinGateway.getPin(pinId)
 
       if (getPinIdResponse.success && getPinIdResponse.payload) {
         pin = getPinIdResponse.payload
@@ -216,9 +213,44 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
+  const handleRemovePinFromTrail = async (pin: IPin) => {
+      let trailPinList = specificTrail?.pinList.slice()
+      if (trailPinList && specificTrail) {
+        for (let i = 0; i < trailPinList.length; i++) {
+          if (isSamePin(trailPinList[i], pin)) {
+            trailPinList.splice(i, 1)
+          }
+        }
+        const trailProperty: ITrailProperty = makeITrailProperty('pinList', trailPinList)
+        const updateTrailResp = await FrontendTrailGateway.updateTrail(specificTrail.trailId, 
+          [trailProperty, ])
+          if (!updateTrailResp.success) {
+            setAlertIsOpen(true)
+            setAlertTitle('Trail update failed')
+            setAlertMessage(updateTrailResp.message)
+          }
+          setConfirmationOpen(false)
+      }
+}
+      
+
+  
+
+
+  const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
+  const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
+
   const [error, setError] = useState<string>('')
-  const [title, setTitle] = useState('')
-  const [explainer, setExplainer] = useState('')
+  const [explainer, setExplainer] = useState(specificTrail ? specificTrail.explainer : '' )
+  useEffect(() => {
+    if (specificTrail) setExplainer(specificTrail.explainer)
+  }, [specificTrail] )
+
+
+  const [title, setTitle] = useState(specificTrail ? specificTrail.title : '')
+  useEffect(() => {
+    if (specificTrail) setTitle(specificTrail.title)
+  }, [specificTrail] )
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (error.length > 0 && event.target.value.length > 0) setError('')
@@ -241,7 +273,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const handleCreateTrail = async () => {
-    if (title.length === 0) {
+    if (!title || title.length === 0) {
       setError('Error: No title')
       return
     }
@@ -329,8 +361,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     ...draggableStyle,
   })
 
-  const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
-  const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index)
@@ -340,8 +370,104 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     setTabIndex(0)
   }
 
+  const [editingTitle, setEditingTitle] = useState<boolean>(false)
+  const [editingExplainer, setEditingExplainer] = useState<boolean>(false)
+
+  //
+  const handleUpdateTitle = async (title: string) => {
+    if (specificTrail) {
+      setTitle(title)
+      const trailProperty: ITrailProperty = makeITrailProperty('title', title)
+      const updateResp = await FrontendTrailGateway.updateTrail(specificTrail.trailId, [
+        trailProperty,
+      ])
+      if (!updateResp.success) {
+        setAlertIsOpen(true)
+        setAlertTitle('Title update failed')
+        setAlertMessage(updateResp.message)
+      }
+      // setRefresh(!refresh)
+      // setRefreshLinkList(!refreshLinkList)
+    }
+  }
+
+  const handleUpdateExplainer = async (explainer: string) => {
+    if (specificTrail) {
+      setExplainer(explainer)
+      const trailProperty: ITrailProperty = makeITrailProperty('explainer', explainer)
+      const updateResp = await FrontendTrailGateway.updateTrail(specificTrail.trailId, [
+        trailProperty,
+      ])
+      if (!updateResp.success) {
+        setAlertIsOpen(true)
+        setAlertTitle('Explainer update failed')
+        setAlertMessage(updateResp.message)
+      }
+      // setRefresh(!refresh)
+      // setRefreshLinkList(!refreshLinkList)
+    }
+  }
+
+  const cancelConfirmationRef = React.useRef(null)
+
+  const [confirmationType, setConfirmationType] = useState('')
+  const [pinToDelete, setPinToDelete] = useState<IPin | null>(null)
+
+  const handleOpenConfirmationAlert = (pin: IPin) => {
+    setConfirmationType('deletePinFromTrail')
+    setConfirmationOpen(true)
+    setPinToDelete(pin)
+  }
+
+  const ConfirmationAlert = () => {
+    return (
+      <AlertDialog
+      isOpen={confirmationOpen}
+      leastDestructiveRef={cancelConfirmationRef}
+      onClose={()=>setConfirmationOpen(false)}
+      >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+            {confirmationType === 'deletePinFromTrail' &&
+              <>
+                Delete Pin from Trail
+              </>
+            }
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            {confirmationType === 'deletePinFromTrail' && specificTrail && 
+              <>
+              Are you sure you want to delete <b>{pinToDelete!.title}</b> from <b style={{color: 'green'}}>{specificTrail.title}</b>?
+              </>
+            }
+
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <Button onClick={()=>setConfirmationOpen(false)}>
+              Cancel
+            </Button>
+            <div >
+              <Button ref={cancelConfirmationRef} colorScheme='red' onClick={()=>handleRemovePinFromTrail(pinToDelete!)} ml={3}>
+                Delete
+              </Button>
+            </div>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+    )
+  }
+
+console.log(confirmationOpen)
   return (
     <>
+      {confirmationOpen &&
+        <ConfirmationAlert/>
+      }
+
       <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
@@ -467,8 +593,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             >
                               {(provided, snapshot) => (
                                 <div
-                                  key={pin.pinId}
-                                  className="pins-added-list-wrapper"
+                                  
+                                  className="pins-list-wrapper"
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
@@ -481,6 +607,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                     <div>{index + 1}. </div>
                                     <div
                                       id="route-drawer-pin-title"
+                                      key={pin.pinId}
                                       data-value={pin.pinId}
                                     >
                                       <b>{pin.title}</b>
@@ -495,7 +622,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                     }}
                                   >
                                     <IconButton
-                                      onClick={(e) => handleRemoveTempPin(e)}
+                                      onClick={(e)=>handleRemoveTempPin(pin.pinId)}
                                       className="delete-icon"
                                       style={{ marginLeft: '10px' }}
                                       size="s"
@@ -526,20 +653,119 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                 </TabPanel>
                 <TabPanel>
                   {specificTrail ? (
-                    <div className="specific-trail-wrapper">
-                      <div className="specific-trail-title">{specificTrail.title}</div>
-                      <div className="specific-trail-explainer">
-                        {specificTrail.explainer}
-                      </div>
-                      <div className="specific-trail-pins">
-                        {specificTrail.pinList.map((pin, index) => (
-                          <div className="specific-trail-pin-title" key={index}>
-                            {index + 1}. {pin.title}{' '}
+                    <div>                       
+                         <div className="specific-trail-wrapper">
+                          <div >
+                            <h2
+                              className="specific-trail-title"
+                              onDoubleClick={(e) => setEditingTitle(true)}
+                            >
+                              <EditableText
+                                text={title ?? ''}
+                                editing={editingTitle}
+                                setEditing={setEditingTitle}
+                                onEdit={handleUpdateTitle}
+                              />
+                            </h2>
+                            <div
+                              className="specific-trail-explainer"
+                              style={{marginLeft: '10px'}}
+                              onDoubleClick={(e) => setEditingExplainer(true)}
+                            >
+                              <EditableText
+                                text={explainer ?? ''}
+                                editing={editingExplainer}
+                                setEditing={setEditingExplainer}
+                                onEdit={handleUpdateExplainer}
+                              />
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                      Going to format this tomorrow morning—Zaul
+                          <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="trailPins" direction="horizontal">
+                              {(provided) => (
+                                <div
+                                  className="trailPins"
+                                  {...provided.droppableProps}
+                                  ref={provided.innerRef}
+                                  style={{
+                                    marginTop: '15px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap',
+                                    gap: '1em',
+                                    marginLeft: '20px',
+                                  }}
+                                >
+                                  {specificTrail.pinList.map((pin, index) => (
+                                    <Draggable
+                                      key={pin.pinId}
+                                      draggableId={pin.pinId}
+                                      index={index}
+                                    >
+                                      {(provided, snapshot) => (
+                                        <div
+                                          // key={pin.pinId}
+                                          className="pins-list-wrapper specific-trail-pins"
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}
+                                          style={getPinItemStyle(
+                                            snapshot.isDragging,
+                                            provided.draggableProps.style
+                                          )}
+                                        >
+                                          <div>
+                                            <div>{index + 1}. </div>
+                                            <div
+                                              id="route-drawer-specific-pin-title"
+                                              key={pin.pinId}
+                                              data-value={pin.pinId}
+                                            >
+                                              <b>{pin.title}</b>
+                                            </div>
+                                          </div>
+
+                                          <div
+                                            style={{
+                                              display: 'flex',
+                                              justifyContent: 'center',
+                                              alignItems: 'center',
+                                            }}
+                                          >
+                                            <IconButton
+                                              onClick={()=>handleOpenConfirmationAlert(pin)}
+                                              className="delete-icon"
+                                              style={{ marginLeft: '10px' }}
+                                              size="s"
+                                              aria-label="Search database"
+                                              icon={<DeleteIcon />}
+                                            />
+                                          </div>
+                                        </div>
+                                      )}
+                                    </Draggable>
+                                  ))}
+                                  {provided.placeholder}
+                                </div>
+                              )}
+                            </Droppable>
+                          </DragDropContext>
+                          {/* <div className="specific-trail-pins" style={{display: 'flex', flexWrap: 'wrap', gap: '1em',}}>
+                            {specificTrail.pinList.map((pin, index) => (
+                              <div className="specific-trail-pin-title" key={index}>
+                                {index + 1}. {pin.title}{' '}
+                              </div>
+                            ))}
+                          </div> */}
+                        </div>
+                        <Button
+                          onClick={()=>  setSpecificTrail(null)} 
+                          style={{ backgroundColor: 'rgb(241,241,241)', fontSize: '14px', marginTop: '15px' }}
+                        >
+                            See all routes
+                          </Button>
                     </div>
+                   
                   ) : (
                     <>
                       <h2 style={{ fontWeight: 'bold', marginBottom: '5px' }}>
@@ -551,7 +777,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             <>
                               <Popover size="xs" trigger="hover" placement="bottom">
                                 <PopoverTrigger>
-                                  <div className="trail-card-container">
+                                  <div className="trail-card-container" onClick={()=>setSpecificTrail(trail)}>
                                     <div className="trail-card-title">{trail.title}</div>
                                     <div className="trail-card-explainer">
                                       {trail.explainer}

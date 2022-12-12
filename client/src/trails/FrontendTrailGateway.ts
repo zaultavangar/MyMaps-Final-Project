@@ -1,6 +1,6 @@
 import { failureServiceResponse, IServiceResponse } from '../types'
-import { ITrail } from '../types/ITrail'
-import { endpoint, get, post, remove } from '../global'
+import { ITrail, ITrailProperty } from '../types'
+import { endpoint, get, post, remove, put } from '../global'
 
 /** In development mode (locally) the server is at localhost:5000*/
 const baseEndpoint = endpoint
@@ -84,6 +84,19 @@ export const FrontendTrailGateway = {
       )
     } catch (exception) {
       return failureServiceResponse('[getTrailsByPinId] Unable to access backend')
+    }
+  },
+
+  updateTrail: async (
+    trailId: string,
+    properties: ITrailProperty[]
+  ): Promise<IServiceResponse<ITrail>> => {
+    try {
+      return await put<IServiceResponse<ITrail>>(baseEndpoint + servicePath + trailId, {
+        data: properties,
+      })
+    } catch (exception) {
+      return failureServiceResponse('[updateTrail] Unable to access backend')
     }
   },
 

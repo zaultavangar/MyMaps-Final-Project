@@ -1,7 +1,8 @@
 import express, { Request, Response, Router } from 'express'
 import { MongoClient } from 'mongodb'
-import { IServiceResponse, isITrail, ITrail } from '../types'
+import { IServiceResponse, isITrail, ITrail, ITrailProperty } from '../types'
 import { BackendTrailGateway } from './BackendTrailGateway'
+const bodyJsonParser = require('body-parser').json()
 
 // eslint-disable-next-line new-cap
 export const TrailExpressRouter = express.Router()
@@ -129,6 +130,28 @@ export class TrailRouter {
         }
       }
     )
+
+
+      /**
+     * Request to update the pin with the given pinId
+     *
+     * @param req request object coming from client
+     * @param res response object to send to client
+     */
+      TrailExpressRouter.put(
+        '/:trailId',
+        bodyJsonParser,
+        async (req: Request, res: Response) => {
+          try {
+            const trailId = req.params.trailId
+            const toUpdate: ITrailProperty[] = req.body.data
+            const response = await this.BackendTrailGateway.updateTrail(trailId, toUpdate)
+            res.status(200).send(response)
+          } catch (e) {
+            res.status(500).send(e.message)
+          }
+        }
+      )
   }
 
   /**

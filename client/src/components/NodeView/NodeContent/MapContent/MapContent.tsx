@@ -412,6 +412,8 @@ export const MapContent = (props: IMapContentProps) => {
     if (selection.current) {
       selection.current.style.display = 'none'
     }
+    setTitle('')
+    setExplainer('')
     setCreatePinPopoverOpen(false)
   }
 

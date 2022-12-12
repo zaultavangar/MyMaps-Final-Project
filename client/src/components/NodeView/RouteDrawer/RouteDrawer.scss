@@ -5,14 +5,18 @@
   gap: 5px;
 }
 
-.pins-added-list-wrapper {
+.pins-list-wrapper {
   display: 'flex';
   justify-content: 'center';
   align-items: 'center';
   border: '1px solid grey';
   border-radius: '5px';
   padding: '10px 10px';
+
+
 }
+
+
 
 .delete-icon {
   position: absolute;
@@ -102,4 +106,15 @@
 .trail-card-explainer {
   font-size: 15px;
   font-weight: lighter;
+}
+
+.specific-trail-title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.specific-trail-explainer {
+  font-size: 16px;
+  font-weight: lighter;
+  margin-bottom: 10px;
 }

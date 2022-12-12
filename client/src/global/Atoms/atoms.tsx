@@ -107,11 +107,18 @@ export const selectedExtentState = atom<Extent | null | undefined>({
   default: null,
 })
 
+export const confirmationOpenState = atom<boolean>({
+  key: 'confirmationOpenState',
+  default: false,
+})
+
 // whether alert is open
 export const alertOpenState = atom<boolean>({
   key: 'alertOpenState',
   default: false,
 })
+
+
 
 // alert title
 export const alertTitleState = atom<string>({

@@ -185,4 +185,25 @@ export class TrailCollectionConnection {
       })
     return successfulServiceResponse(foundTrails)
   }
+
+  async updateTrail(
+    trailId: string,
+    updatedProperties: Object
+  ): Promise<IServiceResponse<ITrail>> {
+    const updateResponse = await this.client
+      .db()
+      .collection(this.collectionName)
+      .findOneAndUpdate(
+        { trailId: trailId },
+        { $set: updatedProperties },
+        { returnDocument: 'after' }
+      )
+    if (updateResponse.ok && updateResponse.lastErrorObject.n) {
+      return successfulServiceResponse(updateResponse.value)
+    }
+    return failureServiceResponse(
+      'Failed to update trail, lastErrorObject: ' +
+        updateResponse.lastErrorObject.toString()
+    )
+  }
 }

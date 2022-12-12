@@ -4,7 +4,9 @@ import {
   IServiceResponse,
   ITrail,
   isITrail,
+  ITrailProperty,
   isExtent,
+  isITrailProperty,
 } from '../types'
 import { TrailCollectionConnection } from './TrailCollectionConnection'
 
@@ -123,6 +125,27 @@ export class BackendTrailGateway {
    */
    async getTrailsByPinId(pinId: string): Promise<IServiceResponse<ITrail[]>> {
     return this.trailCollectionConnection.findTrailsByPinId(pinId)
+  }
+
+  async updateTrail(
+    trailId: string,
+    toUpdate: ITrailProperty[]
+  ): Promise<IServiceResponse<ITrail>> {
+    const properties: any = {}
+    for (let i = 0; i < toUpdate.length; i++) {
+      console.log(toUpdate[i])
+      if (!isITrailProperty(toUpdate[i])) {
+        return failureServiceResponse('toUpdate parameters invalid')
+      }
+      const fieldName = toUpdate[i].fieldName
+      const value = toUpdate[i].value
+      properties[fieldName] = value
+    }
+    const trailResponse = await this.trailCollectionConnection.updateTrail(trailId, properties)
+    if (!trailResponse.success) {
+      return failureServiceResponse('This trail does not exist in the database!')
+    }
+    return trailResponse
   }
 
 }

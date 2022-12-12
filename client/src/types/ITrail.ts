@@ -9,6 +9,8 @@ export interface ITrail {
   explainer: string
 }
 
+export type TrailFields = keyof ITrail
+
 export function isITrail(object: any): object is ITrail {
   const propsDefined: boolean =
     typeof (object as ITrail).trailId !== 'undefined' &&
