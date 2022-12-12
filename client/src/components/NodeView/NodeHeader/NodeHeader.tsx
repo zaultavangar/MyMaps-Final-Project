@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import * as bi from 'react-icons/bi'
 import * as ri from 'react-icons/ri'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { generateObjectId } from '../../../global'
 import {
   alertMessageState,
   alertOpenState,
@@ -230,7 +229,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
             {map && (
               <Button
                 text="Route Menu"
-                icon={<ri.RiMapPinLine />}
+                icon={<ri.RiRouteLine />}
                 onClick={onRouteMenuClick}
               />
             )}

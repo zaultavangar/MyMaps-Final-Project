@@ -20,11 +20,11 @@
     }
 
     &.true {
-      background-color: rgb(121,185,121);
+      background-color: rgb(121, 185, 121);
       //$selected-color;
 
       &:hover {
-        background-color: darken(rgb(121,185,121), 10);
+        background-color: darken(rgb(121, 185, 121), 10);
       }
     }
 

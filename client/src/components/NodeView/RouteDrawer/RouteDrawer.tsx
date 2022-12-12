@@ -185,7 +185,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
               routePinsCopy.splice(i, 1)
             }
           }
-          setRouteDrawerPins(routePinsCopy) 
+          setRouteDrawerPins(routePinsCopy)
         }
       } else {
         console.log('fail')
@@ -473,7 +473,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     font: '20',
   }
 
-  
   const [selectedTrail, setSelectedTrail] = useRecoilState(specificTrailState)
   const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
   const onDeleteButtonClick = async () => {
@@ -564,7 +563,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             <div>
                               <Button
                                 colorScheme="whatsapp"
-                                backgroundColor='rgb(0,125,0)'
+                                backgroundColor="rgb(0,125,0)"
                                 onClick={handleAddPinsToTrail}
                                 style={{ padding: '10px 10px' }}
                               >
@@ -801,13 +800,17 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                           </div> */}
                       </div>
                       <div className="trail-card-delete">
-                            <Button
-                              style={{backgroundColor: 'rgb(241,241,241)',
-                              fontSize: '14px',
-                              marginTop: '15px',}}
-                              onClick={() => onDeleteButtonClick()}
-                            ><RiDeleteBin6Fill />  Delete Trail</Button>
-                          </div>
+                        <Button
+                          style={{
+                            backgroundColor: 'rgb(241,241,241)',
+                            fontSize: '14px',
+                            marginTop: '15px',
+                          }}
+                          onClick={() => onDeleteButtonClick()}
+                        >
+                          <RiDeleteBin6Fill /> Delete Trail
+                        </Button>
+                      </div>
                     </div>
                   ) : (
                     <>

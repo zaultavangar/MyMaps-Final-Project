@@ -14,7 +14,12 @@ export const LoadingScreen = ({ hasTimeout }: { hasTimeout: boolean }) => {
 
   return (
     <div className="loading">
-      <Spinner color="green.500" size="xl" thickness="6px" emptyColor="rgb(121,185,121)" />
+      <Spinner
+        color="green.500"
+        size="xl"
+        thickness="6px"
+        emptyColor="rgb(121,185,121)"
+      />
       {hasTimeout && showMessage && (
         <div className="loading-message">
           Hmmm, it should have loaded by now. The backend is probably not properly

@@ -22,8 +22,6 @@ export const TreeView = (props: ITreeViewProps) => {
     selectedPin,
     pins,
   } = props
-  console.log('roots', roots)
-  console.log('------------------pins-------------', pins)
   return (
     <div className="treeView-wrapper">
       {roots.map((tree: RecursiveNodeTree) => (

@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { RiArrowRightSLine, RiFolderOpenLine, RiMapPinLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
 import { nodeTypeIcon, pathToString } from '../../../global'
+import { selectedPinState } from '../../../global/Atoms'
 import { INode, NodeType, IPin } from '../../../types'
 import { RecursiveNodeTree } from '../../../types/RecursiveNodeTree'
 import './TreeViewItem.scss'
@@ -29,8 +31,10 @@ export const TreeViewItem = ({
   selectedPin,
   relevantPins,
 }: ITreeViewProps) => {
-  console.log('********current node', node)
-  console.log('********relevantPins', relevantPins)
+  console.log('current node', node)
+  console.log('relevantPins', relevantPins)
+
+  const [selectedMapPin, setSelectedMapPin] = useRecoilState(selectedPinState)
 
   let childrenItems: JSX.Element[] = []
   // glr: why does this not work?
@@ -56,17 +60,19 @@ export const TreeViewItem = ({
       childrenItems = relevantPins.map((pin: IPin) => {
         const pinChildren = pinToChildNode[pin.pinId]
         return (
-          <TreeViewItem
-            node={node}
-            parentNode={parentNode}
-            setParentNode={setParentNode}
-            key={pin.pinId}
-            type={'pin'}
-            title={pin.title}
-            childNodes={pinChildren ? pinChildren : []}
-            changeUrlOnClick={changeUrlOnClick}
-            selectedPin={pin}
-          />
+          <div onClick={() => setSelectedMapPin(pin)} key={pin.pinId}>
+            <TreeViewItem
+              node={node}
+              parentNode={parentNode}
+              setParentNode={setParentNode}
+              key={pin.pinId}
+              type={'pin'}
+              title={pin.title}
+              childNodes={pinChildren ? pinChildren : []}
+              changeUrlOnClick={changeUrlOnClick}
+              selectedPin={pin}
+            />
+          </div>
         )
       })
     } else {

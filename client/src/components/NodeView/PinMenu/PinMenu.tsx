@@ -11,7 +11,14 @@ import {
   ITrail,
 } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
-import { List, ListItem, ListIcon, OrderedList, UnorderedList, Divider } from '@chakra-ui/react'
+import {
+  List,
+  ListItem,
+  ListIcon,
+  OrderedList,
+  UnorderedList,
+  Divider,
+} from '@chakra-ui/react'
 import { Button } from '../../Button'
 import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
@@ -73,7 +80,7 @@ export const PinMenu = (props: IPinMenuProps) => {
     height: 25,
     width: 30,
     backgroundColor: 'rgb(241, 241, 241)',
-    color: 'black'
+    color: 'black',
   }
 
   /**
@@ -224,17 +231,22 @@ export const PinMenu = (props: IPinMenuProps) => {
               style={{ backgroundColor: 'white', fontSize: '14px' }}
             />
           </div>
-          <div style={{backgroundColor: 'rgb(121, 185, 121)', color: 'black', padding: '5px 5px'}}>
+          <div
+            style={{
+              backgroundColor: 'rgb(121, 185, 121)',
+              color: 'black',
+              padding: '5px 5px',
+            }}
+          >
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-
               }}
             >
-              <div style={{display: 'flex', alignItems: 'center'}}>
-                <PlaceIcon/>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <PlaceIcon />
                 <h2
                   className="pin-title pin-selected"
                   onDoubleClick={(e) => setEditingTitle(true)}
@@ -247,7 +259,7 @@ export const PinMenu = (props: IPinMenuProps) => {
                   />
                 </h2>
               </div>
-             
+
               <div>
                 <div
                   className="pin-menu-delete-pin-wrapper"
@@ -255,7 +267,7 @@ export const PinMenu = (props: IPinMenuProps) => {
                 >
                   <Button
                     style={smallCustomButtonStyle}
-                    icon={<RiDeleteBin6Fill/>}
+                    icon={<RiDeleteBin6Fill />}
                     // text="Delete Pin"
                     onClick={() => onDeleteButtonClick()}
                   />
@@ -275,7 +287,7 @@ export const PinMenu = (props: IPinMenuProps) => {
               />
             </div>
           </div>
-       
+
           <div
             style={{
               display: 'flex',
@@ -341,39 +353,46 @@ export const PinMenu = (props: IPinMenuProps) => {
             Routes containing &quot;{selectedPin.title}&quot;
           </h4>
           <div className="routes-containing-wrapper">
-            {trails.map((trail, index) => 
+            {trails.map((trail, index) => (
               <>
-              {(index < 5 || seeMoreTrails) &&
-                <>
-                <div
-                key={index}
-                className="pin-menu-trail-card-wrapper"
-                onClick={(e) => handleGoToTrail(e, trail)}
-              >
-                <div className="pin-menu-trail-card-title">{trail.title}</div>
-                <div
-                  className="pin-menu-trail-card-explainer"
-                  style={{ marginLeft: '10px' }}
-                >
-                  {trail.explainer}
-                </div>
-              </div>
-               
-               </>
-              }
+                {(index < 5 || seeMoreTrails) && (
+                  <>
+                    <div
+                      key={index}
+                      className="pin-menu-trail-card-wrapper"
+                      onClick={(e) => handleGoToTrail(e, trail)}
+                    >
+                      <div className="pin-menu-trail-card-title">{trail.title}</div>
+                      <div
+                        className="pin-menu-trail-card-explainer"
+                        style={{ marginLeft: '10px' }}
+                      >
+                        {trail.explainer}
+                      </div>
+                    </div>
+                  </>
+                )}
               </>
+            ))}
+          </div>
+          <div
+            className="see-more-routes-wrapper"
+            style={{
+              display: 'flex',
+              marginTop: '15px',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {trails.length > 5 && (
+              <Button
+                text={seeMoreTrails ? 'See Less' : 'See More'}
+                icon={seeMoreTrails ? <ai.AiFillCaretUp /> : <ai.AiFillCaretDown />}
+                onClick={() => setSeeMoreTrails(!seeMoreTrails)}
+              />
             )}
           </div>
-          <div className='see-more-routes-wrapper' style={{display:'flex', marginTop: '15px', justifyContent: 'center', alignItems: 'center'}}>
-            {trails.length> 5 &&
-              <Button 
-              text={seeMoreTrails ? 'See Less' : 'See More'}
-              icon = {seeMoreTrails ? <ai.AiFillCaretUp/> : <ai.AiFillCaretDown/>}
-              onClick = {() => setSeeMoreTrails(!seeMoreTrails)}/>
-            }
-           </div>
         </div>
-
       )}
     </div>
   )

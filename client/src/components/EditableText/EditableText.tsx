@@ -22,7 +22,7 @@ export const EditableText = (props: IEditableTextProps) => {
       onChange={handleOnChange}
       onBlur={() => setEditing(false)}
       defaultValue={text}
-      style={{color: 'black'}}
+      style={{ color: 'black' }}
     ></input>
   ) : (
     <div className="displayText">{text}</div>
