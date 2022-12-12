@@ -70,7 +70,7 @@ export const PinMenu = (props: IPinMenuProps) => {
   const smallCustomButtonStyle = {
     height: 25,
     width: 30,
-    backgroundColor: 'rgb(241, 241, 241)'
+    backgroundColor: 'rgb(241, 241, 241)',
   }
 
   /**
@@ -146,14 +146,12 @@ export const PinMenu = (props: IPinMenuProps) => {
 
   const [trails, setTrails] = useState<ITrail[]>([])
   const trailItems = trails.map((trail: ITrail, index: number) => (
-      <div className="pin-menu-trail-card-wrapper">
-      
-        <div className="pin-menu-trail-card-title">{trail.title}</div>
-        <div className="pin-menu-trail-card-explainer" style={{marginLeft: '10px'}}>
+    <div className="pin-menu-trail-card-wrapper" key={trail.trailId}>
+      <div className="pin-menu-trail-card-title">{trail.title}</div>
+      <div className="pin-menu-trail-card-explainer" style={{ marginLeft: '10px' }}>
         {trail.explainer}
-        </div>
       </div>
-
+    </div>
   ))
 
   const getPinTrails = async (): Promise<void> => {
@@ -179,7 +177,6 @@ export const PinMenu = (props: IPinMenuProps) => {
     setRouteDrawerOpen(true)
     setTabIndex(1)
     setSpecificTrail(trail)
-
   }
 
   return (
@@ -224,7 +221,13 @@ export const PinMenu = (props: IPinMenuProps) => {
           </div>
           <hr style={{ marginBottom: '10px' }}></hr>
           <div>
-            <div style={{display: 'flex', justifyContent:'space-between', alignItems:'center'}}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
               <h2
                 className="pin-title pin-selected"
                 onDoubleClick={(e) => setEditingTitle(true)}
@@ -238,18 +241,17 @@ export const PinMenu = (props: IPinMenuProps) => {
               </h2>
               <div>
                 <div
-                className="pin-menu-delete-pin-wrapper"
-                style={{ marginRight: '20px', fontSize: '0.8em' }}
-              >
-                <Button
-                  icon={<ri.RiDeleteBin6Line />}
-                  text="Delete Pin"
-                  onClick={() => onDeleteButtonClick()}
-                />
-              </div>
+                  className="pin-menu-delete-pin-wrapper"
+                  style={{ marginRight: '20px', fontSize: '0.8em' }}
+                >
+                  <Button
+                    icon={<ri.RiDeleteBin6Line />}
+                    text="Delete Pin"
+                    onClick={() => onDeleteButtonClick()}
+                  />
+                </div>
               </div>
             </div>
-            
 
             <div
               className="pin-explainer pin-selected"
@@ -264,8 +266,16 @@ export const PinMenu = (props: IPinMenuProps) => {
             </div>
           </div>
           <hr style={{ width: '70%', margin: '0 auto' }}></hr>
-          <div style={{display: 'flex', justifyContent:'center', alignItems: 'center', gap: '1em', margin: '10px 0px'}}>
-            <div className="pin-documents" style={{fontWeight: '500' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '1em',
+              margin: '10px 0px',
+            }}
+          >
+            <div className="pin-documents" style={{ fontWeight: '500' }}>
               Pin Documents
             </div>
             <Button
@@ -294,10 +304,16 @@ export const PinMenu = (props: IPinMenuProps) => {
                 </div>
               ))}
           </List>
-          <div className='pin-menu-buttons-wrapper' style={{margin: '10px 0px', display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center'}}>
-          
-
-        
+          <div
+            className="pin-menu-buttons-wrapper"
+            style={{
+              margin: '10px 0px',
+              display: 'flex',
+              justifyContent: 'space-evenly',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+            }}
+          >
             <Button
               text="Add to Route"
               style={customButtonStyle}
@@ -305,19 +321,29 @@ export const PinMenu = (props: IPinMenuProps) => {
               onClick={onCreateNodeButtonClick}
             />
           </div>
-          <h4 className="pin-menu-routes-containing-header" style={{ marginTop: '10px', fontWeight: '500' }}>
+          <h4
+            className="pin-menu-routes-containing-header"
+            style={{ marginTop: '10px', fontWeight: '500' }}
+          >
             Routes containing &quot;{selectedPin.title}&quot;
           </h4>
-          <div className='routes-containing-wrapper'>
-            {trails.map((trail, index) => 
-            <div className="pin-menu-trail-card-wrapper" onClick={(e)=>handleGoToTrail(e, trail)}>
-              <div className="pin-menu-trail-card-title">{trail.title}</div>
-              <div className="pin-menu-trail-card-explainer" style={{marginLeft: '10px'}}>
-              {trail.explainer}
+          <div className="routes-containing-wrapper">
+            {trails.map((trail, index) => (
+              <div
+                key={index}
+                className="pin-menu-trail-card-wrapper"
+                onClick={(e) => handleGoToTrail(e, trail)}
+              >
+                <div className="pin-menu-trail-card-title">{trail.title}</div>
+                <div
+                  className="pin-menu-trail-card-explainer"
+                  style={{ marginLeft: '10px' }}
+                >
+                  {trail.explainer}
+                </div>
               </div>
-           </div>
-            )}
-            </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

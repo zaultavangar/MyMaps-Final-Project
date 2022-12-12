@@ -479,11 +479,14 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                 >
                                   <div>
                                     <div>{index + 1}. </div>
-                                    <div id="route-drawer-pin-title" data-value={pin.pinId}>
+                                    <div
+                                      id="route-drawer-pin-title"
+                                      data-value={pin.pinId}
+                                    >
                                       <b>{pin.title}</b>
                                     </div>
                                   </div>
-                                 
+
                                   <div
                                     style={{
                                       display: 'flex',
@@ -509,90 +512,105 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       )}
                     </Droppable>
                   </DragDropContext>
-                  <div style={{marginTop: '15px', marginLeft: '10px', fontSize:'0.8em', fontWeight:'250'}}>
-                      Drag and drop your added pins to change the pin order within your route.
+                  <div
+                    style={{
+                      marginTop: '15px',
+                      marginLeft: '10px',
+                      fontSize: '0.8em',
+                      fontWeight: '250',
+                    }}
+                  >
+                    Drag and drop your added pins to change the pin order within your
+                    route.
                   </div>
                 </TabPanel>
                 <TabPanel>
-                  {specificTrail ? 
-                    <div className='specific-trail-wrapper'>
-                      <div className='specific-trail-title'>{specificTrail.title}</div>
-                      <div className='specific-trail-explainer'>{specificTrail.explainer}</div>
-                      <div className='specific-trail-pins'>
-                        {specificTrail.pinList.map((pin, index) => 
-                          <div className='specific-trail-pin-title'>{index+1}. {pin.title} </div>
-                        )}
+                  {specificTrail ? (
+                    <div className="specific-trail-wrapper">
+                      <div className="specific-trail-title">{specificTrail.title}</div>
+                      <div className="specific-trail-explainer">
+                        {specificTrail.explainer}
+                      </div>
+                      <div className="specific-trail-pins">
+                        {specificTrail.pinList.map((pin, index) => (
+                          <div className="specific-trail-pin-title" key={index}>
+                            {index + 1}. {pin.title}{' '}
+                          </div>
+                        ))}
                       </div>
                       Going to format this tomorrow morning—Zaul
                     </div>
-                  :
+                  ) : (
                     <>
-                     <h2 style={{ fontWeight: 'bold', marginBottom: '5px' }}>My Routes</h2>
-                    {trails.length > 0 ? (
-                    <div className="trail-card-wrapper">
-                      {trails.map((trail) => (
-                        <>
-                          <Popover size="xs" trigger="hover" placement="bottom">
-                            <PopoverTrigger>
-                              <div className="trail-card-container">
-                                <div className="trail-card-title">{trail.title}</div>
-                                <div className="trail-card-explainer">
-                                  {trail.explainer}
-                                </div>
-                                <hr></hr>
-                              </div>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <PopoverArrow />
-                              <PopoverHeader>
-                              </PopoverHeader>
-                              <PopoverBody>
-                                <div
-                                  style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '1em',
-                                  }}
-                                >
-                                  {trail.pinList.map((pin) => (
+                      <h2 style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+                        My Routes
+                      </h2>
+                      {trails.length > 0 ? (
+                        <div className="trail-card-wrapper">
+                          {trails.map((trail) => (
+                            <>
+                              <Popover size="xs" trigger="hover" placement="bottom">
+                                <PopoverTrigger>
+                                  <div className="trail-card-container">
+                                    <div className="trail-card-title">{trail.title}</div>
+                                    <div className="trail-card-explainer">
+                                      {trail.explainer}
+                                    </div>
+                                    <hr></hr>
+                                  </div>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <PopoverArrow />
+                                  <PopoverHeader></PopoverHeader>
+                                  <PopoverBody>
                                     <div
-                                      key={pin.pinId}
-                                      id={pin.pinId}
-                                      onClick={(e) =>
-                                        handlePinFromTrailClick(e, pin.pinId)
-                                      }
-                                      data-value={pin.pinId}
-                                      className='trail-view-pin-list-item-wrapper'
                                       style={{
-                                        padding: '10px 5px',
                                         display: 'flex',
-                                        flexDirection: 'row',
-                                        cursor: 'pointer',
+                                        flexDirection: 'column',
+                                        gap: '1em',
                                       }}
                                     >
-                                      <PlaceIcon />
-                                      {pin.title}
+                                      {trail.pinList.map((pin) => (
+                                        <div
+                                          key={pin.pinId}
+                                          id={pin.pinId}
+                                          onClick={(e) =>
+                                            handlePinFromTrailClick(e, pin.pinId)
+                                          }
+                                          data-value={pin.pinId}
+                                          className="trail-view-pin-list-item-wrapper"
+                                          style={{
+                                            padding: '10px 5px',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            cursor: 'pointer',
+                                          }}
+                                        >
+                                          <PlaceIcon />
+                                          {pin.title}
+                                        </div>
+                                      ))}
                                     </div>
-                                  ))}
-                                </div>
-                              </PopoverBody>
-                            </PopoverContent>
-                          </Popover>
-                        </>
-                      ))}
-                    </div>
-                  ) : (
-                    <div>
-                      No routes have been add for this map. Want to
-                      <span onClick={handleCreateTabClick} className="add-a-route-link">
-                        {' '}
-                        <u>add a route?</u>
-                      </span>
-                    </div>
-                  )}
+                                  </PopoverBody>
+                                </PopoverContent>
+                              </Popover>
+                            </>
+                          ))}
+                        </div>
+                      ) : (
+                        <div>
+                          No routes have been add for this map. Want to
+                          <span
+                            onClick={handleCreateTabClick}
+                            className="add-a-route-link"
+                          >
+                            {' '}
+                            <u>add a route?</u>
+                          </span>
+                        </div>
+                      )}
                     </>
-                  }
-                  
+                  )}
                 </TabPanel>
                 <TabPanel>
                   {trails.length > 0 ? (
@@ -633,9 +651,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
             </Tabs>
           </DrawerBody>
 
-          <DrawerFooter>
-           
-          </DrawerFooter>
+          <DrawerFooter></DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>

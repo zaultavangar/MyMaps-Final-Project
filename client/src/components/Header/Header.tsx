@@ -82,7 +82,7 @@ export const Header = (props: IHeaderProps) => {
           }}
         />
       </div>
-      {(isLinking && startAnchor)  ? (
+      {isLinking && startAnchor ? (
         <>
           {isLinking && startAnchor && (
             <div className="right-bar">

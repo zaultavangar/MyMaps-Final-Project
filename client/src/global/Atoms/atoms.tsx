@@ -85,7 +85,6 @@ export const selectedAnchorsState = atom<IAnchor[]>({
   default: [],
 })
 
-
 // selected pin
 export const selectedPinState = atom<IPin | null>({
   key: 'selectedPinState',

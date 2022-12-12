@@ -167,7 +167,10 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   const [trailToNavigate, setTrailToNavigate] = useRecoilState(trailToNavigateState)
 
   return (
-    <div className='nodeHeader' style={{backgroundColor: isNavigating ? "green" : "white"}}>
+    <div
+      className="nodeHeader"
+      style={{ backgroundColor: isNavigating ? 'green' : 'white' }}
+    >
       <div
         className="nodeHeader-title"
         onDoubleClick={(e) => setEditingTitle(true)}
@@ -180,8 +183,17 @@ export const NodeHeader = (props: INodeHeaderProps) => {
           onEdit={handleUpdateTitle}
         />
       </div>
-      <div className="nodeHeader-buttonBar-wrapper" 
-        style={{width: '100%', display: 'flex', gap: '10px', justifyContent: 'space-between', alignItems: 'center', marginRight: '10px'}}>
+      <div
+        className="nodeHeader-buttonBar-wrapper"
+        style={{
+          width: '100%',
+          display: 'flex',
+          gap: '10px',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginRight: '10px',
+        }}
+      >
         {notRoot && (
           <div className="nodeHeader-buttonBar">
             <Button
@@ -221,7 +233,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
                 icon={<ri.RiMapPinLine />}
                 onClick={onRouteMenuClick}
               />
-            )}         
+            )}
             {folder && (
               <div className="select">
                 <Select
@@ -237,11 +249,11 @@ export const NodeHeader = (props: INodeHeaderProps) => {
             )}
           </div>
         )}
-        {trailToNavigate && 
-          <div className="navigating-from" style={{color: 'white'}}>
+        {trailToNavigate && (
+          <div className="navigating-from" style={{ color: 'white' }}>
             Navigating from <b>{trailToNavigate.title}</b>
           </div>
-        }
+        )}
       </div>
     </div>
   )

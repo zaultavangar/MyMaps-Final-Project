@@ -1,7 +1,5 @@
 @import '../../../global/globalCssVariables';
 
-
-
 .nodeHeader {
   display: flex;
   gap: 10px;
@@ -41,7 +39,7 @@
   }
 }
 .nodeHeader-navigating {
-  background-color: "green";
+  background-color: 'green';
 }
 
 .navigating-from {

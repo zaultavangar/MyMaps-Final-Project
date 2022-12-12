@@ -72,11 +72,11 @@ export const NodeContent = (props: INodeContentProps) => {
           <div className="map-content-container">
             <MapContent selectedMapViewMode={selectedMapViewMode} />
           </div>
-          {!isNavigating &&
+          {!isNavigating && (
             <div className="comment-content-container">
               <CommentContent />
-          </div>
-          }
+            </div>
+          )}
         </>
       )
     case 'googleMap':
@@ -119,11 +119,11 @@ export const NodeContent = (props: INodeContentProps) => {
           <div className="map-content-container">
             <MapContent selectedMapViewMode={selectedMapViewMode} />
           </div>
-          {!isNavigating &&
+          {!isNavigating && (
             <div className="comment-content-container">
               <CommentContent />
-          </div>
-          }
+            </div>
+          )}
         </>
       )
     case 'dashboard':

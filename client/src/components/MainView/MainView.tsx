@@ -220,8 +220,7 @@ export const MainView = React.memo(function MainView() {
       {!isAppLoaded ? (
         <LoadingScreen hasTimeout={true} />
       ) : (
-        <div className="main-container"
-        >
+        <div className="main-container">
           <Alert></Alert>
           <Header
             onHomeClick={handleHomeClick}
@@ -267,8 +266,7 @@ export const MainView = React.memo(function MainView() {
             </div>
           )}
           <div className="content">
-            <div className="treeView-container" ref={treeView} style=
-            {{ width: 280 }}>
+            <div className="treeView-container" ref={treeView} style={{ width: 280 }}>
               <div className="search-container"></div>
               <TreeView
                 roots={rootNodes}

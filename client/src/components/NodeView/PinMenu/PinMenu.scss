@@ -47,11 +47,9 @@
   background-color: rgb(241, 241, 241);
 }
 
-.pin-documents-item-wrapper:hover{
+.pin-documents-item-wrapper:hover {
   background-color: darken(rgb(241, 241, 241), 10);
 }
-
-
 
 .pin-menu-delete-pin-wrapper {
   display: flex;
@@ -62,16 +60,13 @@
   padding: 5px 10px;
   background-color: rgb(241, 241, 241);
   border-bottom: 1px solid green;
-
 }
-
 
 .pin-menu-trail-card-wrapper:hover {
   background-color: green;
   color: white;
   transition-duration: 400ms;
   cursor: pointer;
-
 }
 
 .routes-containing-wrapper {
@@ -81,24 +76,21 @@
   border-radius: 8px;
 }
 
-.pin-menu-trail-card-wrapper:first-child{
+.pin-menu-trail-card-wrapper:first-child {
   border-radius: 7px 7px 0px 0px;
 }
 
-.pin-menu-trail-card-wrapper:last-child{
+.pin-menu-trail-card-wrapper:last-child {
   border-radius: 0px 0px 7px 7px;
 }
 
-
-.pin-menu-trail-card-explainer{
+.pin-menu-trail-card-explainer {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 15px;
   font-weight: lighter;
 }
-
-
 
 .pin-menu-routes-containing-header {
   font-size: 1.1em;
