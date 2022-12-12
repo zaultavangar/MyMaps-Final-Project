@@ -26,7 +26,7 @@ export const TreeView = (props: ITreeViewProps) => {
     <div className="treeView-wrapper">
       {roots.map((tree: RecursiveNodeTree) => (
         <div key={tree.node.nodeId}>
-          {(tree.node.type === 'map' || tree.node.type === 'googleMap') && (
+          {((tree.node.type === 'map' || tree.node.type === 'googleMap') && pins && (
             <TreeViewItem
               node={tree.node}
               selectedPin={selectedPin}
@@ -37,9 +37,22 @@ export const TreeView = (props: ITreeViewProps) => {
               title={tree.node.title}
               childNodes={tree.children}
               changeUrlOnClick={changeUrlOnClick}
-              relevantPins={pins!.filter((pin) => pin.nodeId === tree.node.nodeId)}
+              relevantPins={pins.filter((pin) => pin.nodeId === tree.node.nodeId) || []}
             />
-          )}
+          )) ||
+            ((tree.node.type === 'map' || tree.node.type === 'googleMap') && (
+              <TreeViewItem
+                node={tree.node}
+                selectedPin={selectedPin}
+                parentNode={parentNode}
+                setParentNode={setParentNode}
+                key={tree.node.nodeId}
+                type={tree.node.type}
+                title={tree.node.title}
+                childNodes={tree.children}
+                changeUrlOnClick={changeUrlOnClick}
+              />
+            ))}
         </div>
       ))}
     </div>
