@@ -33,7 +33,6 @@ import {
   specificTrailState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
-import { autocompleteClasses } from '@mui/material'
 
 interface IPinMenuProps {
   setParentNode: (node: INode) => void
