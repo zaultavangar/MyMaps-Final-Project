@@ -57,6 +57,9 @@ import {
   alertOpenState,
   alertTitleState,
   alertMessageState,
+  routeDrawerOpenState,
+  tabIndexState,
+  specificTrailState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import TitleIcon from '@mui/icons-material/Title'
@@ -77,7 +80,6 @@ interface IRouteDrawerProps {
   trails: ITrail[]
   setTrails: (trail: ITrail[]) => void
   setPins: (pin: IPin[]) => void
-  setRouteDrawerOpen: (b: boolean) => void
   setIsNavigating: (b: boolean) => void
   startNavigation: (s: string) => void
 }
@@ -91,10 +93,11 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     currentNode,
     trails,
     setTrails,
-    setRouteDrawerOpen,
     setIsNavigating,
     startNavigation,
   } = props
+
+  const setRouteDrawerOpen = useSetRecoilState(routeDrawerOpenState)
 
   const [routeDrawerPins, setRouteDrawerPins] = useState<IPin[] | null>([])
   const [dbTrails, setDbTrails] = useState<ITrail[] | null>([])
@@ -316,16 +319,19 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     background: isDragging ? 'black' : 'white',
     color: isDragging ? 'white' : 'black',
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     border: '1px solid grey',
     borderRadius: '5px',
     padding: '10px 10px',
+    width: '200px',
 
     ...draggableStyle,
   })
 
-  const [tabIndex, setTabIndex] = useState<number>(0)
+  const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
+  const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
+
   const handleTabsChange = (index: number) => {
     setTabIndex(index)
   }
@@ -424,7 +430,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                           onClick={handleCreateTrail}
                           style={{ padding: '10px 10px' }}
                         >
-                          Create Trail
+                          Create Route
                         </Button>
                       </div>
                     )}
@@ -471,11 +477,13 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                     provided.draggableProps.style
                                   )}
                                 >
-                                  <div>{index + 1}. </div>
-
-                                  <div id="route-drawer-pin-title" data-value={pin.pinId}>
-                                    {pin.title}
+                                  <div>
+                                    <div>{index + 1}. </div>
+                                    <div id="route-drawer-pin-title" data-value={pin.pinId}>
+                                      <b>{pin.title}</b>
+                                    </div>
                                   </div>
+                                 
                                   <div
                                     style={{
                                       display: 'flex',
@@ -501,10 +509,26 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       )}
                     </Droppable>
                   </DragDropContext>
+                  <div style={{marginTop: '15px', marginLeft: '10px', fontSize:'0.8em', fontWeight:'250'}}>
+                      Drag and drop your added pins to change the pin order within your route.
+                  </div>
                 </TabPanel>
                 <TabPanel>
-                  <h2 style={{ fontWeight: 'bold', marginBottom: '5px' }}>My Routes</h2>
-                  {trails.length > 0 ? (
+                  {specificTrail ? 
+                    <div className='specific-trail-wrapper'>
+                      <div className='specific-trail-title'>{specificTrail.title}</div>
+                      <div className='specific-trail-explainer'>{specificTrail.explainer}</div>
+                      <div className='specific-trail-pins'>
+                        {specificTrail.pinList.map((pin, index) => 
+                          <div className='specific-trail-pin-title'>{index+1}. {pin.title} </div>
+                        )}
+                      </div>
+                      Going to format this tomorrow morning—Zaul
+                    </div>
+                  :
+                    <>
+                     <h2 style={{ fontWeight: 'bold', marginBottom: '5px' }}>My Routes</h2>
+                    {trails.length > 0 ? (
                     <div className="trail-card-wrapper">
                       {trails.map((trail) => (
                         <>
@@ -521,9 +545,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             <PopoverContent>
                               <PopoverArrow />
                               <PopoverHeader>
-                                <div style={{ fontWeight: 'lighter' }}>
-                                  Drag and drop pins to change order
-                                </div>
                               </PopoverHeader>
                               <PopoverBody>
                                 <div
@@ -541,10 +562,11 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                         handlePinFromTrailClick(e, pin.pinId)
                                       }
                                       data-value={pin.pinId}
+                                      className='trail-view-pin-list-item-wrapper'
                                       style={{
+                                        padding: '10px 5px',
                                         display: 'flex',
                                         flexDirection: 'row',
-                                        gap: '1em',
                                         cursor: 'pointer',
                                       }}
                                     >
@@ -568,6 +590,9 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       </span>
                     </div>
                   )}
+                    </>
+                  }
+                  
                 </TabPanel>
                 <TabPanel>
                   {trails.length > 0 ? (
@@ -609,10 +634,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue">Save</Button>
+           
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

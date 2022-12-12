@@ -10,9 +10,11 @@ import {
   alertTitleState,
   currentNodeState,
   isLinkingState,
+  isNavigatingState,
   refreshLinkListState,
   refreshState,
   selectedNodeState,
+  trailToNavigateState,
 } from '../../../global/Atoms'
 import { FrontendNodeGateway } from '../../../nodes'
 import { FrontendTrailGateway } from '../../../trails'
@@ -160,8 +162,12 @@ export const NodeHeader = (props: INodeHeaderProps) => {
 
   const routeMenuButtonRef = React.useRef()
 
+  const isNavigating = useRecoilValue(isNavigatingState)
+
+  const [trailToNavigate, setTrailToNavigate] = useRecoilState(trailToNavigateState)
+
   return (
-    <div className="nodeHeader">
+    <div className='nodeHeader' style={{backgroundColor: isNavigating ? "green" : "white"}}>
       <div
         className="nodeHeader-title"
         onDoubleClick={(e) => setEditingTitle(true)}
@@ -174,9 +180,10 @@ export const NodeHeader = (props: INodeHeaderProps) => {
           onEdit={handleUpdateTitle}
         />
       </div>
-      <div className="nodeHeader-buttonBar">
+      <div className="nodeHeader-buttonBar-wrapper" 
+        style={{width: '100%', display: 'flex', gap: '10px', justifyContent: 'space-between', alignItems: 'center', marginRight: '10px'}}>
         {notRoot && (
-          <>
+          <div className="nodeHeader-buttonBar">
             <Button
               icon={<ri.RiDeleteBin6Line />}
               text="Delete"
@@ -214,7 +221,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
                 icon={<ri.RiMapPinLine />}
                 onClick={onRouteMenuClick}
               />
-            )}
+            )}         
             {folder && (
               <div className="select">
                 <Select
@@ -228,8 +235,13 @@ export const NodeHeader = (props: INodeHeaderProps) => {
                 </Select>
               </div>
             )}
-          </>
+          </div>
         )}
+        {trailToNavigate && 
+          <div className="navigating-from" style={{color: 'white'}}>
+            Navigating from <b>{trailToNavigate.title}</b>
+          </div>
+        }
       </div>
     </div>
   )

@@ -1,13 +1,13 @@
 .navigation-window-hidden {
   background-color: green;
   color: white;
-  padding: 8px 4px;
+  padding: 10px 8px;
   border: 2px solid white;
   border-radius: 5px;
   z-index: 99;
   top: 0;
   right: 0;
-  width: 13%;
+  width: fit-content;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -15,7 +15,6 @@
 }
 
 .navigation-window {
-  margin-top: 10px;
   border: 2px solid white;
   background-color: green;
   color: white;
@@ -24,8 +23,9 @@
   top: 0;
   right: 0;
   padding: 10px 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   z-index: 99;
+
 
   .navigation-window-options {
     padding-bottom: 5px;

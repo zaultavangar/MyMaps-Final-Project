@@ -55,7 +55,7 @@ export const Header = (props: IHeaderProps) => {
   }, [])
 
   return (
-    <div className={isLinking || isNavigating ? 'header-linking' : 'header'}>
+    <div className={isLinking ? 'header-linking' : 'header'}>
       <div className="left-bar">
         <Link to={'/'}>
           <div className="name" onClick={onHomeClick}>
@@ -82,7 +82,7 @@ export const Header = (props: IHeaderProps) => {
           }}
         />
       </div>
-      {(isLinking && startAnchor) || (isNavigating && trailToNavigate) ? (
+      {(isLinking && startAnchor)  ? (
         <>
           {isLinking && startAnchor && (
             <div className="right-bar">
@@ -91,31 +91,6 @@ export const Header = (props: IHeaderProps) => {
               </div>
               <Button
                 onClick={handleCancelLink}
-                isWhite
-                text="Cancel"
-                style={{ fontWeight: 600, height: 30, marginLeft: 20 }}
-                icon={<ri.RiCloseLine />}
-              />
-              <Button
-                icon={<ri.RiSearchEyeLine />}
-                text="Search"
-                onClick={() => handleSearchClick()}
-                isWhite
-                style={{
-                  width: 'fit-content',
-                  height: 30,
-                  fontWeight: 600,
-                }}
-              />
-            </div>
-          )}
-          {isNavigating && trailToNavigate && (
-            <div className="right-bar">
-              <div className="linking-from">
-                Navigating <b>{trailToNavigate.title}</b>
-              </div>
-              <Button
-                onClick={handleCancelNavigation}
                 isWhite
                 text="Cancel"
                 style={{ fontWeight: 600, height: 30, marginLeft: 20 }}

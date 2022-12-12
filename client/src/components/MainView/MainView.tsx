@@ -10,6 +10,8 @@ import {
   alertTitleState,
   alertMessageState,
   selectedPinState,
+  isNavigatingState,
+  routeDrawerOpenState,
 } from '../../global/Atoms'
 import { useLocation } from 'react-router-dom'
 import { FrontendNodeGateway } from '../../nodes'
@@ -58,7 +60,7 @@ export const MainView = React.memo(function MainView() {
   const setAlertTitle = useSetRecoilState(alertTitleState)
   const setAlertMessage = useSetRecoilState(alertMessageState)
 
-  const [routeDrawerOpen, setRouteDrawerOpen] = useState(false)
+  const [routeDrawerOpen, setRouteDrawerOpen] = useRecoilState(routeDrawerOpenState)
 
   /** update our frontend root nodes from the database */
   const loadRootsFromDB = useCallback(async () => {
@@ -211,12 +213,15 @@ export const MainView = React.memo(function MainView() {
 
   const treeView = useRef<HTMLHeadingElement>(null)
 
+  const isNavigating = useRecoilValue(isNavigatingState)
+
   return (
     <ChakraProvider>
       {!isAppLoaded ? (
         <LoadingScreen hasTimeout={true} />
       ) : (
-        <div className="main-container">
+        <div className="main-container"
+        >
           <Alert></Alert>
           <Header
             onHomeClick={handleHomeClick}
@@ -262,7 +267,8 @@ export const MainView = React.memo(function MainView() {
             </div>
           )}
           <div className="content">
-            <div className="treeView-container" ref={treeView} style={{ width: 280 }}>
+            <div className="treeView-container" ref={treeView} style=
+            {{ width: 280 }}>
               <div className="search-container"></div>
               <TreeView
                 roots={rootNodes}

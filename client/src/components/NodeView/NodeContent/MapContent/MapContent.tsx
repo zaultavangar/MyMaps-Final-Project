@@ -303,7 +303,7 @@ export const MapContent = (props: IMapContentProps) => {
         container: 'map', // container ID
         style: mapStyle, // style URL
         center: [-74.5, 40], // starting position [lng, lat]
-        zoom: 5, // starting zoom
+      zoom: 5, // starting zoom
       })
 
       map.on('click', (e: mapboxgl.MapMouseEvent) => {

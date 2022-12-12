@@ -29,6 +29,21 @@ export const isNavigatingState = atom<boolean>({
   default: false,
 })
 
+export const routeDrawerOpenState = atom<boolean>({
+  key: 'routeDrawerOpenState',
+  default: false,
+})
+
+export const tabIndexState = atom<number>({
+  key: 'tabIndexState',
+  default: 0,
+})
+
+export const specificTrailState = atom<ITrail | null>({
+  key: 'specificTrailState',
+  default: null,
+})
+
 // signal to refresh webpage
 export const refreshState = atom<boolean>({
   key: 'refreshState',
@@ -69,6 +84,7 @@ export const selectedAnchorsState = atom<IAnchor[]>({
   key: 'selectedAnchorsState',
   default: [],
 })
+
 
 // selected pin
 export const selectedPinState = atom<IPin | null>({

@@ -28,6 +28,9 @@ import {
   refreshState,
   mapPinsState,
   selectedPinState,
+  routeDrawerOpenState,
+  tabIndexState,
+  specificTrailState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 
@@ -42,6 +45,9 @@ export const PinMenu = (props: IPinMenuProps) => {
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
   const icon = nodeTypeIcon('map') // icon based on type
   const [mapPins, setMapPins] = useRecoilState(mapPinsState)
+
+  const setRouteDrawerOpen = useSetRecoilState(routeDrawerOpenState)
+  const setSpecificTrail = useSetRecoilState(specificTrailState)
 
   // Formats a date, could be global method ***
   const formatDate = (date: any) => {
@@ -61,6 +67,12 @@ export const PinMenu = (props: IPinMenuProps) => {
     paddingBottom: '10px',
   }
 
+  const smallCustomButtonStyle = {
+    height: 25,
+    width: 30,
+    backgroundColor: 'rgb(241, 241, 241)'
+  }
+
   /**
    * Added in these from NodeHeader to make the pin title and explainer editable! :D
    */
@@ -69,6 +81,7 @@ export const PinMenu = (props: IPinMenuProps) => {
   const setAlertMessage = useSetRecoilState(alertMessageState)
   const [refresh, setRefresh] = useRecoilState(refreshState)
   const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
+  const setTabIndex = useSetRecoilState(tabIndexState)
 
   // State variable for current pin title
   const [title, setTitle] = useState(selectedPin?.title)
@@ -132,14 +145,15 @@ export const PinMenu = (props: IPinMenuProps) => {
   }
 
   const [trails, setTrails] = useState<ITrail[]>([])
-  const trailItems = trails.map((trail: ITrail) => (
-    <ListItem key={trail.trailId}>
-      <div className="trail-card-container">
-        <div className="trail-card-title">{trail.title}</div>
-        <div className="trail-card-explainer">{trail.explainer}</div>
-        <hr></hr>
+  const trailItems = trails.map((trail: ITrail, index: number) => (
+      <div className="pin-menu-trail-card-wrapper">
+      
+        <div className="pin-menu-trail-card-title">{trail.title}</div>
+        <div className="pin-menu-trail-card-explainer" style={{marginLeft: '10px'}}>
+        {trail.explainer}
+        </div>
       </div>
-    </ListItem>
+
   ))
 
   const getPinTrails = async (): Promise<void> => {
@@ -159,6 +173,14 @@ export const PinMenu = (props: IPinMenuProps) => {
   useEffect(() => {
     getPinTrails()
   }, [selectedPin])
+
+  const handleGoToTrail = (e: any, trail: ITrail) => {
+    setSelectedPin(null)
+    setRouteDrawerOpen(true)
+    setTabIndex(1)
+    setSpecificTrail(trail)
+
+  }
 
   return (
     <div className="pin-menu-container">
@@ -199,30 +221,35 @@ export const PinMenu = (props: IPinMenuProps) => {
               text="Show all pins"
               style={{ backgroundColor: 'white', fontSize: '14px' }}
             />
-            <div
-              className="pin-menu-delete-pin-wrapper"
-              style={{ marginRight: '20px', fontSize: '0.8em' }}
-            >
-              <Button
-                icon={<ri.RiDeleteBin6Line />}
-                text="Delete Pin"
-                onClick={() => onDeleteButtonClick()}
-              />
-            </div>
           </div>
           <hr style={{ marginBottom: '10px' }}></hr>
           <div>
-            <h2
-              className="pin-title pin-selected"
-              onDoubleClick={(e) => setEditingTitle(true)}
-            >
-              <EditableText
-                text={title ?? ''}
-                editing={editingTitle}
-                setEditing={setEditingTitle}
-                onEdit={handleUpdateTitle}
-              />
-            </h2>
+            <div style={{display: 'flex', justifyContent:'space-between', alignItems:'center'}}>
+              <h2
+                className="pin-title pin-selected"
+                onDoubleClick={(e) => setEditingTitle(true)}
+              >
+                <EditableText
+                  text={title ?? ''}
+                  editing={editingTitle}
+                  setEditing={setEditingTitle}
+                  onEdit={handleUpdateTitle}
+                />
+              </h2>
+              <div>
+                <div
+                className="pin-menu-delete-pin-wrapper"
+                style={{ marginRight: '20px', fontSize: '0.8em' }}
+              >
+                <Button
+                  icon={<ri.RiDeleteBin6Line />}
+                  text="Delete Pin"
+                  onClick={() => onDeleteButtonClick()}
+                />
+              </div>
+              </div>
+            </div>
+            
 
             <div
               className="pin-explainer pin-selected"
@@ -237,9 +264,16 @@ export const PinMenu = (props: IPinMenuProps) => {
             </div>
           </div>
           <hr style={{ width: '70%', margin: '0 auto' }}></hr>
-          <h4 className="pin-documents" style={{ marginTop: '10px', fontWeight: '500' }}>
-            Pin Documents
-          </h4>
+          <div style={{display: 'flex', justifyContent:'center', alignItems: 'center', gap: '1em', margin: '10px 0px'}}>
+            <div className="pin-documents" style={{fontWeight: '500' }}>
+              Pin Documents
+            </div>
+            <Button
+              style={smallCustomButtonStyle}
+              icon={<ai.AiOutlineFileAdd />}
+              onClick={onCreateNodeButtonClick}
+            />
+          </div>
           <List>
             {selectedPin &&
               selectedPin.childNodes.map((node) => (
@@ -260,26 +294,30 @@ export const PinMenu = (props: IPinMenuProps) => {
                 </div>
               ))}
           </List>
-          <div className="create-node-button-wrapper">
+          <div className='pin-menu-buttons-wrapper' style={{margin: '10px 0px', display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap', alignItems: 'center'}}>
+          
+
+        
             <Button
-              text="Create Node"
-              style={customButtonStyle}
-              icon={<ai.AiOutlineFileAdd />}
-              onClick={onCreateNodeButtonClick}
-            />
-          </div>
-          <div className="add-to-trail-button-wrapper">
-            <Button
-              text="Add to Trail"
+              text="Add to Route"
               style={customButtonStyle}
               icon={<ri.RiRouteLine />}
               onClick={onCreateNodeButtonClick}
             />
           </div>
-          <h4 className="pin-documents">
-            Trails containing &quot;{selectedPin.title}&quot;
+          <h4 className="pin-menu-routes-containing-header" style={{ marginTop: '10px', fontWeight: '500' }}>
+            Routes containing &quot;{selectedPin.title}&quot;
           </h4>
-          <List>{trailItems}</List>
+          <div className='routes-containing-wrapper'>
+            {trails.map((trail, index) => 
+            <div className="pin-menu-trail-card-wrapper" onClick={(e)=>handleGoToTrail(e, trail)}>
+              <div className="pin-menu-trail-card-title">{trail.title}</div>
+              <div className="pin-menu-trail-card-explainer" style={{marginLeft: '10px'}}>
+              {trail.explainer}
+              </div>
+           </div>
+            )}
+            </div>
         </div>
       )}
     </div>

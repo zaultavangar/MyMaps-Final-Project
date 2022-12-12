@@ -81,6 +81,20 @@
   transition-duration: 1s;
 }
 
+.trail-view-pin-list-item-wrapper {
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.trail-view-pin-list-item-wrapper:hover{
+  transition-duration: 380ms;
+  background: rgb(16, 16, 16);
+  color: white;
+}
+
 .trail-card-title {
   font-size: 17px;
 }

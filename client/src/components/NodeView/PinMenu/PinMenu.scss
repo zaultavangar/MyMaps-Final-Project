@@ -33,12 +33,12 @@
   margin-bottom: 10px;
   font-weight: bold;
   font-size: 1.2em;
+  margin-left: 5px;
 }
 
 .pin-documents {
   font-size: 1.1em;
   text-align: center;
-  margin-bottom: 15px;
 }
 
 .pin-documents-item-wrapper {
@@ -47,20 +47,61 @@
   background-color: rgb(241, 241, 241);
 }
 
-.create-node-button-wrapper {
-  width: fit-content;
-  margin: 0 auto;
-  margin-top: 20px;
+.pin-documents-item-wrapper:hover{
+  background-color: darken(rgb(241, 241, 241), 10);
 }
 
-.add-to-trail-button-wrapper {
-  width: fit-content;
-  margin: 0 auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
+
 
 .pin-menu-delete-pin-wrapper {
   display: flex;
   justify-content: center;
+}
+
+.pin-menu-trail-card-wrapper {
+  padding: 5px 10px;
+  background-color: rgb(241, 241, 241);
+  border-bottom: 1px solid green;
+
+}
+
+
+.pin-menu-trail-card-wrapper:hover {
+  background-color: green;
+  color: white;
+  transition-duration: 400ms;
+  cursor: pointer;
+
+}
+
+.routes-containing-wrapper {
+  margin: 0 auto;
+  width: 90%;
+  border: 1px solid green;
+  border-radius: 8px;
+}
+
+.pin-menu-trail-card-wrapper:first-child{
+  border-radius: 7px 7px 0px 0px;
+}
+
+.pin-menu-trail-card-wrapper:last-child{
+  border-radius: 0px 0px 7px 7px;
+}
+
+
+.pin-menu-trail-card-explainer{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 15px;
+  font-weight: lighter;
+}
+
+
+
+.pin-menu-routes-containing-header {
+  font-size: 1.1em;
+  text-align: center;
+  margin-bottom: 10px;
 }

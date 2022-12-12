@@ -33,6 +33,7 @@ import {
   refreshLinkListState,
   mapPinsState,
   selectedPinState,
+  routeDrawerOpenState,
 } from '../../global/Atoms'
 import './NodeView.scss'
 import NodeInfo from '../Modals/GraphViewModal/Flow/NodeInfo'
@@ -367,12 +368,12 @@ export const NodeView = (props: INodeViewProps) => {
     [setGraphViewModalOpen, setNodes, setEdges, currentNode, refreshLinkList]
   )
 
-  const [routeDrawerOpen, setRouteDrawerOpen] = useState(false)
+  const [routeDrawerOpen, setRouteDrawerOpen] = useRecoilState(routeDrawerOpenState)
 
   const hasBreadcrumb: boolean = path.length > 1
 
   let resizableWidth: number = hasAnchors ? 200 : 0
-  if (hasPins) resizableWidth = 250
+  if (hasPins) resizableWidth = 400
   const nodeViewWidth: string = `calc(100% - ${resizableWidth}px)`
 
   const resizablePinMenu = useRef<HTMLHeadingElement>(null)
@@ -552,7 +553,6 @@ export const NodeView = (props: INodeViewProps) => {
           trails={trails}
           setTrails={setTrails}
           setPins={setPins}
-          setRouteDrawerOpen={setRouteDrawerOpen}
           setIsNavigating={setIsNavigating}
           startNavigation={startNavigation}
         />
