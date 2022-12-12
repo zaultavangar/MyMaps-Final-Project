@@ -14,6 +14,7 @@ const bodyJsonParser = require('body-parser').json()
 // eslint-disable-next-line new-cap
 
 // New router object to handle requests
+// eslint-disable-next-line new-cap
 export const NodeExpressRouter = express.Router()
 
 /**
@@ -72,7 +73,7 @@ export class NodeRouter {
       }
     })
 
-     /**
+    /**
      * Request to search by string
      *
      * @param req request object coming from client
@@ -82,11 +83,14 @@ export class NodeRouter {
       try {
         const input = req.params.input // get the search input
         const dateFilter = req.query.dateFilter // get whether dateCreated filter is on
-        let typeFilter: any
         // set the type filter
-        typeFilter = (req.query && req.query.types[0]==='' ? undefined : req.query.types)
-        const response: IServiceResponse<string[]> =
-          await this.BackendNodeGateway.search(input, typeFilter, dateFilter === 'true')
+        const typeFilter: any =
+          req.query && req.query.types[0] === '' ? undefined : req.query.types
+        const response: IServiceResponse<string[]> = await this.BackendNodeGateway.search(
+          input,
+          typeFilter,
+          dateFilter === 'true'
+        )
         res.status(200).send(response)
       } catch (e) {
         res.status(500).send(e.message)

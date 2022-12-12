@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import {
-  Popover, PopoverTrigger, PopoverHeader, PopoverBody, PopoverContent,
+  Popover,
+  PopoverTrigger,
+  PopoverHeader,
+  PopoverBody,
+  PopoverContent,
   PopoverFooter,
   PopoverCloseButton,
   PopoverArrow,
@@ -37,7 +41,7 @@ import {
   isSamePin,
   ITrail,
   IPinProperty,
-  ITrailProperty, 
+  ITrailProperty,
   makeIPinProperty,
   makeITrailProperty,
 } from '../../../types'
@@ -56,6 +60,7 @@ import {
   tabIndexState,
   specificTrailState,
   confirmationOpenState,
+  refreshLinkListState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import TitleIcon from '@mui/icons-material/Title'
@@ -67,6 +72,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { selectedPinState } from '../../../global/Atoms'
 import { DropResult, DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { EditableText } from '../../EditableText'
+import { RiDeleteBin6Fill } from 'react-icons/ri'
 
 interface IRouteDrawerProps {
   isOpen: boolean
@@ -214,43 +220,40 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const handleRemovePinFromTrail = async (pin: IPin) => {
-      let trailPinList = specificTrail?.pinList.slice()
-      if (trailPinList && specificTrail) {
-        for (let i = 0; i < trailPinList.length; i++) {
-          if (isSamePin(trailPinList[i], pin)) {
-            trailPinList.splice(i, 1)
-          }
+    const trailPinList = specificTrail?.pinList.slice()
+    if (trailPinList && specificTrail) {
+      for (let i = 0; i < trailPinList.length; i++) {
+        if (isSamePin(trailPinList[i], pin)) {
+          trailPinList.splice(i, 1)
         }
-        const trailProperty: ITrailProperty = makeITrailProperty('pinList', trailPinList)
-        const updateTrailResp = await FrontendTrailGateway.updateTrail(specificTrail.trailId, 
-          [trailProperty, ])
-          if (!updateTrailResp.success) {
-            setAlertIsOpen(true)
-            setAlertTitle('Trail update failed')
-            setAlertMessage(updateTrailResp.message)
-          }
-          setConfirmationOpen(false)
       }
-}
-      
-
-  
-
+      const trailProperty: ITrailProperty = makeITrailProperty('pinList', trailPinList)
+      const updateTrailResp = await FrontendTrailGateway.updateTrail(
+        specificTrail.trailId,
+        [trailProperty]
+      )
+      if (!updateTrailResp.success) {
+        setAlertIsOpen(true)
+        setAlertTitle('Trail update failed')
+        setAlertMessage(updateTrailResp.message)
+      }
+      setConfirmationOpen(false)
+    }
+  }
 
   const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
   const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
 
   const [error, setError] = useState<string>('')
-  const [explainer, setExplainer] = useState(specificTrail ? specificTrail.explainer : '' )
+  const [explainer, setExplainer] = useState(specificTrail ? specificTrail.explainer : '')
   useEffect(() => {
     if (specificTrail) setExplainer(specificTrail.explainer)
-  }, [specificTrail] )
-
+  }, [specificTrail])
 
   const [title, setTitle] = useState(specificTrail ? specificTrail.title : '')
   useEffect(() => {
     if (specificTrail) setTitle(specificTrail.title)
-  }, [specificTrail] )
+  }, [specificTrail])
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (error.length > 0 && event.target.value.length > 0) setError('')
@@ -307,6 +310,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       }
     }
     setCreateTrailPopoverOpen(false)
+    setTabIndex(1)
   }
 
   const handlePinFromTrailClick = async (e: any, pinId: string) => {
@@ -326,7 +330,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       setRouteDrawerOpen(false)
       setIsNavigating(true)
     }
-
   }
 
   // useEffect(() => {
@@ -363,7 +366,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
     ...draggableStyle,
   })
-
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index)
@@ -425,51 +427,71 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const ConfirmationAlert = () => {
     return (
       <AlertDialog
-      isOpen={confirmationOpen}
-      leastDestructiveRef={cancelConfirmationRef}
-      onClose={()=>setConfirmationOpen(false)}
+        isOpen={confirmationOpen}
+        leastDestructiveRef={cancelConfirmationRef}
+        onClose={() => setConfirmationOpen(false)}
       >
-      <AlertDialogOverlay>
-        <AlertDialogContent>
-          <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-            {confirmationType === 'deletePinFromTrail' &&
-              <>
-                Delete Pin from Trail
-              </>
-            }
-          </AlertDialogHeader>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {confirmationType === 'deletePinFromTrail' && <>Delete Pin from Trail</>}
+            </AlertDialogHeader>
 
-          <AlertDialogBody>
-            {confirmationType === 'deletePinFromTrail' && specificTrail && 
-              <>
-              Are you sure you want to delete <b>{pinToDelete!.title}</b> from <b style={{color: 'green'}}>{specificTrail.title}</b>?
-              </>
-            }
+            <AlertDialogBody>
+              {confirmationType === 'deletePinFromTrail' && specificTrail && (
+                <>
+                  Are you sure you want to delete <b>{pinToDelete!.title}</b> from{' '}
+                  <b style={{ color: 'green' }}>{specificTrail.title}</b>?
+                </>
+              )}
+            </AlertDialogBody>
 
-          </AlertDialogBody>
-
-          <AlertDialogFooter>
-            <Button onClick={()=>setConfirmationOpen(false)}>
-              Cancel
-            </Button>
-            <div >
-              <Button ref={cancelConfirmationRef} colorScheme='red' onClick={()=>handleRemovePinFromTrail(pinToDelete!)} ml={3}>
-                Delete
-              </Button>
-            </div>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialogOverlay>
-    </AlertDialog>
+            <AlertDialogFooter>
+              <Button onClick={() => setConfirmationOpen(false)}>Cancel</Button>
+              <div>
+                <Button
+                  ref={cancelConfirmationRef}
+                  colorScheme="red"
+                  onClick={() => handleRemovePinFromTrail(pinToDelete!)}
+                  ml={3}
+                >
+                  Delete
+                </Button>
+              </div>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     )
   }
 
-console.log(confirmationOpen)
+  const smallCustomButtonStyle = {
+    height: 25,
+    width: 30,
+    backgroundColor: 'rgb(241, 241, 241)',
+    color: 'black',
+    font: '20',
+  }
+
+  const [selectedTrail, setSelectedTrail] = useRecoilState(specificTrailState)
+  const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
+  const onDeleteButtonClick = async () => {
+    if (selectedTrail) {
+      const deleteResp = await FrontendTrailGateway.deleteTrail(selectedTrail.trailId)
+      if (!deleteResp.success) {
+        setAlertIsOpen(true)
+        setAlertTitle('Failed to delete trail')
+        setAlertMessage(deleteResp.message)
+      }
+      setRefreshLinkList(!refreshLinkList)
+      setSelectedTrail(null)
+    }
+  }
+
+  console.log(confirmationOpen)
   return (
     <>
-      {confirmationOpen &&
-        <ConfirmationAlert/>
-      }
+      {confirmationOpen && <ConfirmationAlert />}
 
       <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
         <DrawerOverlay />
@@ -541,6 +563,7 @@ console.log(confirmationOpen)
                             <div>
                               <Button
                                 colorScheme="whatsapp"
+                                backgroundColor="rgb(0,125,0)"
                                 onClick={handleAddPinsToTrail}
                                 style={{ padding: '10px 10px' }}
                               >
@@ -557,7 +580,10 @@ console.log(confirmationOpen)
                         <Button
                           colorScheme="whatsapp"
                           onClick={handleCreateTrail}
-                          style={{ padding: '10px 10px' }}
+                          style={{
+                            padding: '10px 10px',
+                            backgroundColor: 'rgb(0, 125, 0)',
+                          }}
                         >
                           Create Route
                         </Button>
@@ -596,7 +622,6 @@ console.log(confirmationOpen)
                             >
                               {(provided, snapshot) => (
                                 <div
-                                  
                                   className="pins-list-wrapper"
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
@@ -625,7 +650,7 @@ console.log(confirmationOpen)
                                     }}
                                   >
                                     <IconButton
-                                      onClick={(e)=>handleRemoveTempPin(pin.pinId)}
+                                      onClick={(e) => handleRemoveTempPin(pin.pinId)}
                                       className="delete-icon"
                                       style={{ marginLeft: '10px' }}
                                       size="s"
@@ -656,119 +681,137 @@ console.log(confirmationOpen)
                 </TabPanel>
                 <TabPanel>
                   {specificTrail ? (
-                    <div>                       
-                         <div className="specific-trail-wrapper">
-                          <div >
-                            <h2
-                              className="specific-trail-title"
-                              onDoubleClick={(e) => setEditingTitle(true)}
-                            >
-                              <EditableText
-                                text={title ?? ''}
-                                editing={editingTitle}
-                                setEditing={setEditingTitle}
-                                onEdit={handleUpdateTitle}
-                              />
-                            </h2>
-                            <div
-                              className="specific-trail-explainer"
-                              style={{marginLeft: '10px'}}
-                              onDoubleClick={(e) => setEditingExplainer(true)}
-                            >
-                              <EditableText
-                                text={explainer ?? ''}
-                                editing={editingExplainer}
-                                setEditing={setEditingExplainer}
-                                onEdit={handleUpdateExplainer}
-                              />
-                            </div>
+                    <div>
+                      <Button
+                        onClick={() => setSpecificTrail(null)}
+                        style={{
+                          backgroundColor: 'rgb(241,241,241)',
+                          fontSize: '14px',
+                          marginTop: '15px',
+                          marginBottom: '15px',
+                        }}
+                      >
+                        See all routes
+                      </Button>
+                      <div className="specific-trail-wrapper">
+                        <div>
+                          <h2
+                            className="specific-trail-title"
+                            onDoubleClick={(e) => setEditingTitle(true)}
+                          >
+                            <EditableText
+                              text={title ?? ''}
+                              editing={editingTitle}
+                              setEditing={setEditingTitle}
+                              onEdit={handleUpdateTitle}
+                            />
+                          </h2>
+                          <div
+                            className="specific-trail-explainer"
+                            style={{ marginLeft: '10px' }}
+                            onDoubleClick={(e) => setEditingExplainer(true)}
+                          >
+                            <EditableText
+                              text={explainer ?? ''}
+                              editing={editingExplainer}
+                              setEditing={setEditingExplainer}
+                              onEdit={handleUpdateExplainer}
+                            />
                           </div>
-                          <DragDropContext onDragEnd={onDragEnd}>
-                            <Droppable droppableId="trailPins" direction="horizontal">
-                              {(provided) => (
-                                <div
-                                  className="trailPins"
-                                  {...provided.droppableProps}
-                                  ref={provided.innerRef}
-                                  style={{
-                                    marginTop: '15px',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    flexWrap: 'wrap',
-                                    gap: '1em',
-                                    marginLeft: '20px',
-                                  }}
-                                >
-                                  {specificTrail.pinList.map((pin, index) => (
-                                    <Draggable
-                                      key={pin.pinId}
-                                      draggableId={pin.pinId}
-                                      index={index}
-                                    >
-                                      {(provided, snapshot) => (
-                                        <div
-                                          // key={pin.pinId}
-                                          className="pins-list-wrapper specific-trail-pins"
-                                          ref={provided.innerRef}
-                                          {...provided.draggableProps}
-                                          {...provided.dragHandleProps}
-                                          style={getPinItemStyle(
-                                            snapshot.isDragging,
-                                            provided.draggableProps.style
-                                          )}
-                                        >
-                                          <div>
-                                            <div>{index + 1}. </div>
-                                            <div
-                                              id="route-drawer-specific-pin-title"
-                                              key={pin.pinId}
-                                              data-value={pin.pinId}
-                                            >
-                                              <b>{pin.title}</b>
-                                            </div>
-                                          </div>
-
+                        </div>
+                        <DragDropContext onDragEnd={onDragEnd}>
+                          <Droppable droppableId="trailPins" direction="horizontal">
+                            {(provided) => (
+                              <div
+                                className="trailPins"
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                style={{
+                                  marginTop: '15px',
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  flexWrap: 'wrap',
+                                  gap: '1em',
+                                  marginLeft: '20px',
+                                }}
+                              >
+                                {specificTrail.pinList.map((pin, index) => (
+                                  <Draggable
+                                    key={pin.pinId}
+                                    draggableId={pin.pinId}
+                                    index={index}
+                                  >
+                                    {(provided, snapshot) => (
+                                      <div
+                                        // key={pin.pinId}
+                                        className="pins-list-wrapper specific-trail-pins"
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        style={getPinItemStyle(
+                                          snapshot.isDragging,
+                                          provided.draggableProps.style
+                                        )}
+                                      >
+                                        <div>
+                                          <div>{index + 1}. </div>
                                           <div
-                                            style={{
-                                              display: 'flex',
-                                              justifyContent: 'center',
-                                              alignItems: 'center',
-                                            }}
+                                            id="route-drawer-specific-pin-title"
+                                            key={pin.pinId}
+                                            data-value={pin.pinId}
                                           >
-                                            <IconButton
-                                              onClick={()=>handleOpenConfirmationAlert(pin)}
-                                              className="delete-icon"
-                                              style={{ marginLeft: '10px' }}
-                                              size="s"
-                                              aria-label="Search database"
-                                              icon={<DeleteIcon />}
-                                            />
+                                            <b>{pin.title}</b>
                                           </div>
                                         </div>
-                                      )}
-                                    </Draggable>
-                                  ))}
-                                  {provided.placeholder}
-                                </div>
-                              )}
-                            </Droppable>
-                          </DragDropContext>
-                          {/* <div className="specific-trail-pins" style={{display: 'flex', flexWrap: 'wrap', gap: '1em',}}>
+
+                                        <div
+                                          style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                          }}
+                                        >
+                                          <IconButton
+                                            onClick={() =>
+                                              handleOpenConfirmationAlert(pin)
+                                            }
+                                            className="delete-icon"
+                                            style={{ marginLeft: '10px' }}
+                                            size="s"
+                                            aria-label="Search database"
+                                            icon={<DeleteIcon />}
+                                          />
+                                        </div>
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
+                              </div>
+                            )}
+                          </Droppable>
+                        </DragDropContext>
+                        {/* <div className="specific-trail-pins" style={{display: 'flex', flexWrap: 'wrap', gap: '1em',}}>
                             {specificTrail.pinList.map((pin, index) => (
                               <div className="specific-trail-pin-title" key={index}>
                                 {index + 1}. {pin.title}{' '}
                               </div>
                             ))}
                           </div> */}
-                        </div>
+                      </div>
+                      <div className="trail-card-delete">
                         <Button
-                          onClick={()=>  setSpecificTrail(null)} 
-                          style={{ backgroundColor: 'rgb(241,241,241)', fontSize: '14px', marginTop: '15px' }}
+                          style={{
+                            backgroundColor: 'rgb(241,241,241)',
+                            fontSize: '14px',
+                            marginTop: '15px',
+                          }}
+                          onClick={() => onDeleteButtonClick()}
                         >
-                            See all routes
-                          </Button>
+                          <RiDeleteBin6Fill /> Delete Trail
+                        </Button>
+                      </div>
                     </div>
-                   
                   ) : (
                     <>
                       <h2 style={{ fontWeight: 'bold', marginBottom: '5px' }}>
@@ -780,12 +823,14 @@ console.log(confirmationOpen)
                             <>
                               <Popover size="xs" trigger="hover" placement="bottom">
                                 <PopoverTrigger>
-                                  <div className="trail-card-container" onClick={()=>setSpecificTrail(trail)}>
+                                  <div
+                                    className="trail-card-container"
+                                    onClick={() => setSpecificTrail(trail)}
+                                  >
                                     <div className="trail-card-title">{trail.title}</div>
                                     <div className="trail-card-explainer">
                                       {trail.explainer}
                                     </div>
-                                    <hr></hr>
                                   </div>
                                 </PopoverTrigger>
                                 <PopoverContent>
@@ -854,18 +899,22 @@ console.log(confirmationOpen)
                           id="select-navigate-trail"
                           onChange={handleTrailNavigateSelectChange}
                         >
-                          {trails && trails.map((trail) => 
+                          {trails &&
+                            trails.map((trail) => (
                               <>
-                              {trail.pinList.length> 0 &&
-                                <option key={trail.trailId} value={trail.trailId}>
-                                  {trail.title}
-                                </option>
-                              }
+                                {trail.pinList.length > 0 && (
+                                  <option key={trail.trailId} value={trail.trailId}>
+                                    {trail.title}
+                                  </option>
+                                )}
                               </>
-
-                            )}
+                            ))}
                         </Select>
-                        <Button onClick={handleStartNavigationClick} colorScheme="green">
+                        <Button
+                          onClick={handleStartNavigationClick}
+                          colorScheme="green"
+                          style={{ backgroundColor: 'rgb(0,125,0)' }}
+                        >
                           Navigate
                         </Button>
                       </div>

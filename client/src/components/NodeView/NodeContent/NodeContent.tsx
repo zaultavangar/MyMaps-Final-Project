@@ -21,6 +21,7 @@ import { NavigationWindow } from './NavigationWindow'
 export interface INodeContentProps {
   childNodes?: INode[]
   onCreateNodeButtonClick: () => void
+  onCreateMapButtonClick: () => void
   isNavigating: boolean
   trailToNavigate: ITrail | null
 }
@@ -41,7 +42,13 @@ const viewModes = [
  * @returns Content that any type of node renders
  */
 export const NodeContent = (props: INodeContentProps) => {
-  const { onCreateNodeButtonClick, childNodes, isNavigating, trailToNavigate } = props
+  const {
+    onCreateNodeButtonClick,
+    onCreateMapButtonClick,
+    childNodes,
+    isNavigating,
+    trailToNavigate,
+  } = props
   const currentNode = useRecoilValue(currentNodeState)
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
@@ -130,7 +137,7 @@ export const NodeContent = (props: INodeContentProps) => {
       return (
         <FolderContent
           node={currentNode as IFolderNode}
-          onCreateNodeButtonClick={onCreateNodeButtonClick}
+          onCreateNodeButtonClick={onCreateMapButtonClick}
           childNodes={childNodes || []}
         />
       )

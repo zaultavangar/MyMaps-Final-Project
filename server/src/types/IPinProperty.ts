@@ -5,7 +5,6 @@ export interface IPinProperty {
   value: any
 }
 
-
 export function makeIPinProperty(fieldName: PinFields, newValue: any): IPinProperty {
   return {
     fieldName: fieldName,

@@ -5,7 +5,10 @@ export interface ITrailProperty {
   value: any
 }
 
-export function makeITrailProperty(fieldName: TrailFields, newValue: any): ITrailProperty {
+export function makeITrailProperty(
+  fieldName: TrailFields,
+  newValue: any
+): ITrailProperty {
   return {
     fieldName: fieldName,
     value: newValue,

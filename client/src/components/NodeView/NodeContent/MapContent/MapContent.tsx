@@ -15,6 +15,7 @@ import {
   startAnchorState,
   refreshLinkListState,
   mapPinsState,
+  refreshState,
 } from '../../../../global/Atoms'
 import { FrontendAnchorGateway } from '../../../../anchors'
 import { FrontendPinGateway } from '../../../../pins'
@@ -116,6 +117,8 @@ export const MapContent = (props: IMapContentProps) => {
 
   const [selectedPinId, setSelectedPinId] = useState<string | null>('')
 
+  const [refresh, setRefresh] = useRecoilState(refreshState)
+
   /**
    * Method to handle creating a pin on the map image when the user clicks on the image
    * @param event
@@ -150,6 +153,7 @@ export const MapContent = (props: IMapContentProps) => {
       const pins = mapPins.slice()
       pins.push(newPin)
       setMapPins(pins)
+      setRefresh(!refresh)
     }
 
     // add state fxn calls to refresh pin menu and other things that need to be refreshed
@@ -192,7 +196,7 @@ export const MapContent = (props: IMapContentProps) => {
       const pinElement = document.getElementById(selectedPin.pinId)
       if (pinElement) {
         console.log('NOOO')
-        pinElement.style.color = 'blue'
+        pinElement.style.color = 'rgb(0,125,0)'
         pinElement.style.transform = 'scale(1.3)'
         newSelectedPinId = pinElement.id
       }

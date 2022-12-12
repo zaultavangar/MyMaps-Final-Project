@@ -31,11 +31,11 @@ export class PinRouter {
       try {
         const pin = req.body.pin
         if (!isIPin(pin)) {
-          console.log("not ipin")
+          console.log('not ipin')
           res.status(400).send('not IPin!')
         } else {
           const response = await this.BackendPinGateway.createPin(pin)
-          
+
           res.status(200).send(response)
         }
       } catch (e) {
@@ -71,8 +71,9 @@ export class PinRouter {
     PinExpressRouter.get('/:pinId', async (req: Request, res: Response) => {
       try {
         const pinId = req.params.pinId
-        const response: IServiceResponse<IPin> =
-          await this.BackendPinGateway.getPinById(pinId)
+        const response: IServiceResponse<IPin> = await this.BackendPinGateway.getPinById(
+          pinId
+        )
         res.status(200).send(response)
       } catch (e) {
         res.status(500).send(e.message)
@@ -100,13 +101,31 @@ export class PinRouter {
      * @param req request object coming from client
      * @param res response object to send to client
      */
-    PinExpressRouter.get(
-      '/getByNodeId/:nodeId',
+    PinExpressRouter.get('/getByNodeId/:nodeId', async (req: Request, res: Response) => {
+      try {
+        const nodeId = req.params.nodeId
+        const response: IServiceResponse<IPin[]> =
+          await this.BackendPinGateway.getPinsByNodeId(nodeId)
+        res.status(200).send(response)
+      } catch (e) {
+        res.status(500).send(e.message)
+      }
+    })
+
+    /**
+     * Request to update the pin with the given pinId
+     *
+     * @param req request object coming from client
+     * @param res response object to send to client
+     */
+    PinExpressRouter.put(
+      '/:pinId',
+      bodyJsonParser,
       async (req: Request, res: Response) => {
         try {
-          const nodeId = req.params.nodeId
-          const response: IServiceResponse<IPin[]> =
-            await this.BackendPinGateway.getPinsByNodeId(nodeId)
+          const pinId = req.params.pinId
+          const toUpdate: IPinProperty[] = req.body.data
+          const response = await this.BackendPinGateway.updatePin(pinId, toUpdate)
           res.status(200).send(response)
         } catch (e) {
           res.status(500).send(e.message)
@@ -114,34 +133,13 @@ export class PinRouter {
       }
     )
 
-      /**
-     * Request to update the pin with the given pinId
-     *
-     * @param req request object coming from client
-     * @param res response object to send to client
-     */
-      PinExpressRouter.put(
-        '/:pinId',
-        bodyJsonParser,
-        async (req: Request, res: Response) => {
-          try {
-            const pinId = req.params.pinId
-            const toUpdate: IPinProperty[] = req.body.data
-            const response = await this.BackendPinGateway.updatePin(pinId, toUpdate)
-            res.status(200).send(response)
-          } catch (e) {
-            res.status(500).send(e.message)
-          }
-        }
-      )
-
     // New methods
     // PinExpressRouter.get(
     //   '/getTrailsByPinId/:pinId',
     //   async (req: Request, res: Response) => {
     //     try {
     //       const pinId = req.params.pinId
-    //       const response: IServiceResponse<ITrail[]> = 
+    //       const response: IServiceResponse<ITrail[]> =
     //         await this.BackendPinGateway.getTrailsByPinId(pinId)
     //       res.status(200).send(response)
     //     } catch (e) {
@@ -155,7 +153,7 @@ export class PinRouter {
     //   async (req: Request, res: Response) => {
     //     try {
     //       const pinId = req.params.pinId
-    //       const response: IServiceResponse<INode[]> = 
+    //       const response: IServiceResponse<INode[]> =
     //         await this.BackendPinGateway.getChildNodes(pinId)
     //       res.status(200).send(response)
     //     } catch (e) {
@@ -193,7 +191,6 @@ export class PinRouter {
         res.status(500).send(e.message)
       }
     })
-
   }
 
   /**

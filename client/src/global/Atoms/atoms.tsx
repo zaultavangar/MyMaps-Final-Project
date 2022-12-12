@@ -118,8 +118,6 @@ export const alertOpenState = atom<boolean>({
   default: false,
 })
 
-
-
 // alert title
 export const alertTitleState = atom<string>({
   key: 'alertTitleState',

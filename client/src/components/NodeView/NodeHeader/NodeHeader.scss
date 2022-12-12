@@ -17,12 +17,13 @@
 
   .nodeHeader-title {
     font-weight: 600;
-    min-width: fit-content;
   }
 
   .nodeHeader-buttonBar {
     gap: 10px;
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     height: 50px;
     width: fit-content;
     position: relative;

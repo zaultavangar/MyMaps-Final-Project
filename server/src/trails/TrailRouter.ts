@@ -117,41 +117,37 @@ export class TrailRouter {
       }
     )
 
-    TrailExpressRouter.get(
-      '/getByPinId/:pinId',
+    TrailExpressRouter.get('/getByPinId/:pinId', async (req: Request, res: Response) => {
+      try {
+        const pinId = req.params.pinId
+        const response: IServiceResponse<ITrail[]> =
+          await this.BackendTrailGateway.getTrailsByPinId(pinId)
+        res.status(200).send(response)
+      } catch (e) {
+        res.status(500).send(e.message)
+      }
+    })
+
+    /**
+     * Request to update the pin with the given pinId
+     *
+     * @param req request object coming from client
+     * @param res response object to send to client
+     */
+    TrailExpressRouter.put(
+      '/:trailId',
+      bodyJsonParser,
       async (req: Request, res: Response) => {
         try {
-          const pinId = req.params.pinId
-          const response: IServiceResponse<ITrail[]> =
-            await this.BackendTrailGateway.getTrailsByPinId(pinId)
+          const trailId = req.params.trailId
+          const toUpdate: ITrailProperty[] = req.body.data
+          const response = await this.BackendTrailGateway.updateTrail(trailId, toUpdate)
           res.status(200).send(response)
         } catch (e) {
           res.status(500).send(e.message)
         }
       }
     )
-
-
-      /**
-     * Request to update the pin with the given pinId
-     *
-     * @param req request object coming from client
-     * @param res response object to send to client
-     */
-      TrailExpressRouter.put(
-        '/:trailId',
-        bodyJsonParser,
-        async (req: Request, res: Response) => {
-          try {
-            const trailId = req.params.trailId
-            const toUpdate: ITrailProperty[] = req.body.data
-            const response = await this.BackendTrailGateway.updateTrail(trailId, toUpdate)
-            res.status(200).send(response)
-          } catch (e) {
-            res.status(500).send(e.message)
-          }
-        }
-      )
   }
 
   /**

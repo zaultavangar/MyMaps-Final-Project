@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import {MongoMemoryServer } from 'mongodb-memory-server'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
 import { ITrail, makeITrail, isSameTrail } from '../../../../types'
 
@@ -8,13 +8,13 @@ describe('Unit Test: Delete Trails', () => {
   let mongoClient: MongoClient
   let backendTrailGateway: BackendTrailGateway
   let mongoMemoryServer: MongoMemoryServer
-  
+
   beforeAll(async () => {
     mongoMemoryServer = await MongoMemoryServer.create()
     uri = mongoMemoryServer.getUri()
     mongoClient = new MongoClient(uri, {
-      useNewUrlParser: true, 
-      useUnifiedTopology: true, 
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     })
     backendTrailGateway = new BackendTrailGateway(mongoClient)
     mongoClient.connect()
@@ -24,7 +24,7 @@ describe('Unit Test: Delete Trails', () => {
     const response = await backendTrailGateway.deleteAll()
     expect(response.success).toBeTruthy()
   })
-  
+
   afterAll(async () => {
     await mongoClient.close()
     await mongoMemoryServer.stop()
@@ -45,5 +45,4 @@ describe('Unit Test: Delete Trails', () => {
     const getTrailByIdResp = await backendTrailGateway.getTrailById('trail2')
     expect(getTrailByIdResp.success).toBeFalsy()
   })
-
 })

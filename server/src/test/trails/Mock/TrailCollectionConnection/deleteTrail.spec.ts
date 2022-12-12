@@ -43,8 +43,7 @@ describe('Unit Test: deleteTrail', () => {
     const validTrail = makeITrail('trail1', ['anchor1', 'anchor2'], 'node1')
     const createResponse = await trailCollectionConnection.insertTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
-    const deleteInvalidTrailResp = await trailCollectionConnection.deleteTrail("trail2")
+    const deleteInvalidTrailResp = await trailCollectionConnection.deleteTrail('trail2')
     expect(deleteInvalidTrailResp.success).toBeTruthy()
   })
-
 })

@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import {MongoMemoryServer } from 'mongodb-memory-server'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 import { TrailCollectionConnection } from '../../../../trails'
 import { ITrail, makeITrail, isSameTrail } from '../../../../types'
 
@@ -8,13 +8,13 @@ describe('Unit Test: InsertTrail', () => {
   let mongoClient
   let trailCollectionConnection
   let mongoMemoryServer
-  
+
   beforeAll(async () => {
     mongoMemoryServer = await MongoMemoryServer.create()
     uri = mongoMemoryServer.getUri()
     mongoClient = new MongoClient(uri, {
-      useNewUrlParser: true, 
-      useUnifiedTopology: true, 
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     })
     trailCollectionConnection = new TrailCollectionConnection(mongoClient)
     mongoClient.connect()
@@ -32,7 +32,7 @@ describe('Unit Test: InsertTrail', () => {
   })
 
   test('fails to insert invalid document with the wrong shape', async () => {
-    const invalidTrail: any = {id: 'id'}
+    const invalidTrail: any = { id: 'id' }
     const response = await trailCollectionConnection.insertTrail(invalidTrail)
     expect(response.success).toBeFalsy()
   })
@@ -42,5 +42,4 @@ describe('Unit Test: InsertTrail', () => {
     const response = await trailCollectionConnection.insertTrail(invalidTrail)
     expect(response.success).toBeFalsy()
   })
-
 })

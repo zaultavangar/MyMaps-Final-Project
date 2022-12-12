@@ -31,7 +31,7 @@
 
         &.selected {
           z-index: 2;
-          border: 2px blue solid;
+          border: 2px rgb(0, 125, 0) solid;
           position: absolute;
           // background-color: rgba(192, 240, 255, 0.5);
           box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.3);
