@@ -11,7 +11,7 @@ import {
   ITrail,
 } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
-import { List, ListItem, ListIcon, OrderedList, UnorderedList } from '@chakra-ui/react'
+import { List, ListItem, ListIcon, OrderedList, UnorderedList, Divider } from '@chakra-ui/react'
 import { Button } from '../../Button'
 import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
@@ -33,6 +33,7 @@ import {
   specificTrailState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
+import { RiDeleteBin6Fill } from 'react-icons/ri'
 
 interface IPinMenuProps {
   setParentNode: (node: INode) => void
@@ -72,6 +73,7 @@ export const PinMenu = (props: IPinMenuProps) => {
     height: 25,
     width: 30,
     backgroundColor: 'rgb(241, 241, 241)',
+    color: 'black'
   }
 
   /**
@@ -222,26 +224,30 @@ export const PinMenu = (props: IPinMenuProps) => {
               style={{ backgroundColor: 'white', fontSize: '14px' }}
             />
           </div>
-          <hr style={{ marginBottom: '10px' }}></hr>
-          <div>
+          <div style={{backgroundColor: 'rgb(16, 16, 16)', color: 'white', padding: '5px 5px'}}>
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
+
               }}
             >
-              <h2
-                className="pin-title pin-selected"
-                onDoubleClick={(e) => setEditingTitle(true)}
-              >
-                <EditableText
-                  text={title ?? ''}
-                  editing={editingTitle}
-                  setEditing={setEditingTitle}
-                  onEdit={handleUpdateTitle}
-                />
-              </h2>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <PlaceIcon/>
+                <h2
+                  className="pin-title pin-selected"
+                  onDoubleClick={(e) => setEditingTitle(true)}
+                >
+                  <EditableText
+                    text={title ?? ''}
+                    editing={editingTitle}
+                    setEditing={setEditingTitle}
+                    onEdit={handleUpdateTitle}
+                  />
+                </h2>
+              </div>
+             
               <div>
                 <div
                   className="pin-menu-delete-pin-wrapper"
@@ -249,7 +255,7 @@ export const PinMenu = (props: IPinMenuProps) => {
                 >
                   <Button
                     style={smallCustomButtonStyle}
-                    icon={<ri.RiDeleteBin6Line />}
+                    icon={<RiDeleteBin6Fill/>}
                     // text="Delete Pin"
                     onClick={() => onDeleteButtonClick()}
                   />
@@ -269,7 +275,7 @@ export const PinMenu = (props: IPinMenuProps) => {
               />
             </div>
           </div>
-          <hr style={{ width: '70%', margin: '0 auto' }}></hr>
+       
           <div
             style={{
               display: 'flex',

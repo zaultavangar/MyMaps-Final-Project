@@ -321,9 +321,12 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const handleStartNavigationClick = () => {
-    if (trailIdToNavigate) startNavigation(trailIdToNavigate)
-    setRouteDrawerOpen(false)
-    setIsNavigating(true)
+    if (trailIdToNavigate) {
+      startNavigation(trailIdToNavigate)
+      setRouteDrawerOpen(false)
+      setIsNavigating(true)
+    }
+
   }
 
   // useEffect(() => {
@@ -851,12 +854,16 @@ console.log(confirmationOpen)
                           id="select-navigate-trail"
                           onChange={handleTrailNavigateSelectChange}
                         >
-                          {trails &&
-                            trails.map((trail) => (
-                              <option key={trail.trailId} value={trail.trailId}>
-                                {trail.title}
-                              </option>
-                            ))}
+                          {trails && trails.map((trail) => 
+                              <>
+                              {trail.pinList.length> 0 &&
+                                <option key={trail.trailId} value={trail.trailId}>
+                                  {trail.title}
+                                </option>
+                              }
+                              </>
+
+                            )}
                         </Select>
                         <Button onClick={handleStartNavigationClick} colorScheme="green">
                           Navigate
