@@ -6,6 +6,7 @@ import {
   isIPin,
 } from '../types'
 import { MongoClient } from 'mongodb'
+import { type } from 'os'
 
 /**
  * PinCollectionConnection acts as an in-between communicator between
@@ -192,5 +193,31 @@ export class PinCollectionConnection {
       'Failed to update pin, lastErrorObject: ' +
         updateResponse.lastErrorObject.toString()
     )
+  }
+
+  async search(input: string, typeFilter: string[] | undefined): Promise<IServiceResponse<string[]>> {
+    const modInput = "\\" + "'" + input + "\\" + "'"
+    const foundPins: string[] = []
+    let query: any = { $text: { $search: modInput }} // default query
+    let sort: any = { score: { $meta: 'textScore' }} // default sort
+
+    // Modify query and sort variables based on type and date filter status, respectively
+    if (typeFilter !== undefined) query = { $text: { $search: modInput}, 'type': {$in: typeFilter} }
+    
+    // get relevant properties from the projection
+    const projection = {
+      _id: 0,
+      title: 1,
+      nodeId: 1,
+    }
+    await this.client
+      .db()
+      .collection(this.collectionName)
+      .find(query)
+      .sort(sort)
+      .project(projection).forEach(function(doc) {
+        foundPins.push(doc)
+      })
+    return successfulServiceResponse(foundPins) 
   }
 }

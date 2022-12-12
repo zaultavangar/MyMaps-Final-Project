@@ -43,6 +43,26 @@ export class PinRouter {
       }
     })
 
+         /**
+     * Request to search by string
+     *
+     * @param req request object coming from client
+     * @param res response object to send to client
+     */
+         PinExpressRouter.get('/search/:input/', async (req: Request, res: Response) => {
+          try {
+            const input = req.params.input // get the search input
+            let typeFilter: any
+            // set the type filter
+            typeFilter = (req.query && req.query.types[0]==='' ? undefined : req.query.types)
+            const response: IServiceResponse<string[]> =
+              await this.BackendPinGateway.search(input, typeFilter)
+            res.status(200).send(response)
+          } catch (e) {
+            res.status(500).send(e.message)
+          }
+        })
+
     /**
      * Request to retrieve pin by anchorId
      * @param req request object coming from client

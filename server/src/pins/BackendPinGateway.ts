@@ -139,6 +139,29 @@ export class BackendPinGateway {
     return pinResponse
   }
 
+    /**
+   * Method to search the database by string.
+   *
+   * @param input the search input
+   * @param typeFilter  // string of activated type filters
+   * @param dateFilter  // boolean represented whether the date created filter is on
+   * @returns
+   */
+    async search(
+      input: string,
+      typeFilter: string[] | undefined,
+    ): Promise<IServiceResponse<string[]>> {
+      const queryResponse = await this.pinCollectionConnection.search(
+        input,
+        typeFilter,
+      )
+      if (queryResponse.success) {
+        return queryResponse
+      } else {
+        return failureServiceResponse('Failed to search.')
+      }
+    }
+
   // async getTrailsByPinId(pinId: string): Promise<IServiceResponse<ITrail[]>> {
   //   return this.pinCollectionConnection.getTrailsById(pinId)
   // }

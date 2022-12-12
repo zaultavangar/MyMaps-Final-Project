@@ -117,36 +117,36 @@ export const FrontendNodeGateway = {
     }
   },
 
-  search: async (
-    input: string,
-    typeFilter: string[],
-    dateFilter: boolean
-  ): Promise<IServiceResponse<string[]>> => {
-    try {
-      let query: any
-      if (typeFilter.length < 1) {
-        query = new URLSearchParams('types[]') // empty array for types
-      } else {
-        query = new URLSearchParams()
-        // formats the query for the URL
-        typeFilter.forEach((element) => {
-          query.append('types[]', element)
-        })
-      }
-      const queryString = decodeURIComponent(query.toString()) // the query string
-      const path =
-        baseEndpoint +
-        servicePath +
-        'search/' +
-        `${input}/` +
-        `?dateFilter=${dateFilter}` +
-        `&${queryString}`
-
-      return await get<IServiceResponse<string[]>>(path)
-    } catch (exception) {
-      return failureServiceResponse('[search] Unable to access backend')
+search: async (
+  input: string,
+  typeFilter: string[],
+  dateFilter: boolean
+): Promise<IServiceResponse<string[]>> => {
+  try {
+    let query: any
+    if (typeFilter.length < 1) {
+      query = new URLSearchParams('types[]') // empty array for types
+    } else {
+      query = new URLSearchParams()
+      // formats the query for the URL
+      typeFilter.forEach((element) => {
+        query.append('types[]', element)
+      })
     }
-  },
+    const queryString = decodeURIComponent(query.toString()) // the query string
+    const path =
+      baseEndpoint +
+      servicePath +
+      'search/' +
+      `${input}/` +
+      `?dateFilter=${dateFilter}` +
+      `&${queryString}`
+
+    return await get<IServiceResponse<string[]>>(path)
+  } catch (exception) {
+    return failureServiceResponse('[search] Unable to access backend')
+  }
+},
 
   getRoots: async (): Promise<IServiceResponse<RecursiveNodeTree[]>> => {
     try {
