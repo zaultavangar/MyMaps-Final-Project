@@ -198,7 +198,7 @@ export const PinMenu = (props: IPinMenuProps) => {
                 >
                   <ListIcon
                     as={PlaceIcon}
-                    color={selectedPin == pin ? 'blue' : 'primary'}
+                    color={selectedPin == pin ? 'rgb(0,125,0)' : 'primary'}
                   />
                   {pin.title}
                   <p className="pin-explainer">{pin.explainer}</p>
@@ -224,7 +224,7 @@ export const PinMenu = (props: IPinMenuProps) => {
               style={{ backgroundColor: 'white', fontSize: '14px' }}
             />
           </div>
-          <div style={{backgroundColor: 'rgb(16, 16, 16)', color: 'white', padding: '5px 5px'}}>
+          <div style={{backgroundColor: 'rgb(121, 185, 121)', color: 'black', padding: '5px 5px'}}>
             <div
               style={{
                 display: 'flex',

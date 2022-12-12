@@ -192,7 +192,7 @@ export const MapContent = (props: IMapContentProps) => {
       const pinElement = document.getElementById(selectedPin.pinId)
       if (pinElement) {
         console.log('NOOO')
-        pinElement.style.color = 'blue'
+        pinElement.style.color = 'rgb(0,125,0)'
         pinElement.style.transform = 'scale(1.3)'
         newSelectedPinId = pinElement.id
       }

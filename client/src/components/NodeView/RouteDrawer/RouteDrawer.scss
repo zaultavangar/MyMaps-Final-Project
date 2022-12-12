@@ -17,7 +17,6 @@
 }
 
 
-
 .delete-icon {
   position: absolute;
 }
@@ -53,7 +52,7 @@
 }
 
 .add-a-route-link {
-  color: blue;
+  color: rgb(0,125,0);
   cursor: pointer;
 }
 
@@ -68,16 +67,17 @@
 }
 
 .trail-card-container {
-  color: white;
+  color: black;
   padding: 20px 20px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   border: 2px solid white;
-  background-color: green;
+  background-color: rgb(121,185,121);
   border-radius: 30px;
   cursor: pointer;
+  width: 300px;
 }
 
 .trail-card-container:hover {

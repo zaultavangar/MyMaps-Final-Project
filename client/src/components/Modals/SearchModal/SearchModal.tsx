@@ -186,7 +186,7 @@ export const SearchModal = (props: ISearchModalProps) => {
                 </div>
                 <div className="type">
                   <div className="filter-cat">Type:</div>
-                  <CheckboxGroup colorScheme="blue" defaultValue={[]}>
+                  <CheckboxGroup colorScheme="green" defaultValue={[]}>
                     <Stack>
                       <Checkbox value="map" onChange={handleTypeFilterChange}>
                         <span className="checkbox">Map</span>
