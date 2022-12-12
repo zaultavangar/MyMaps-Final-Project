@@ -15,28 +15,28 @@ describe('E2E Test: Trail CRUD', () => {
     return uniqid('trail.')
   }
 
-  function generateAnchorList(){
-    var anchorList = []
-    for (var i=0; i<3; i++) {
+  function generateAnchorList() {
+    const anchorList = []
+    for (let i = 0; i < 3; i++) {
       anchorList.push(uniqid('anchor.'))
     }
     return anchorList
   }
 
-  function generateNodeId(){
+  function generateNodeId() {
     return uniqid('node.')
   }
 
   const testTrail: ITrail = makeITrail(
-    generateTrailId(), 
-    generateAnchorList(), 
+    generateTrailId(),
+    generateAnchorList(),
     generateNodeId()
   )
 
   beforeAll(async () => {
     uri = process.env.DB_URI
     mongoClient = new MongoClient(uri, {
-      useNewUrlParser: true, 
+      useNewUrlParser: true,
       useUnifiedTopology: true,
     })
     collectionName = 'e2e-test-trails'
@@ -72,7 +72,4 @@ describe('E2E Test: Trail CRUD', () => {
     const getResponse = await backendTrailGateway.getTrailById(testTrail.trailId)
     expect(getResponse.success).toBeFalsy()
   })
-
 })
-  
-

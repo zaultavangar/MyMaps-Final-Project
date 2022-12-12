@@ -44,14 +44,14 @@ export function makeITrail(
   pinList: IPin[],
   nodeId: string,
   title: string,
-  explainer: string,
+  explainer: string
 ): ITrail {
   return {
     trailId: trailId,
     pinList: pinList,
     nodeId: nodeId,
     title: title,
-    explainer: explainer
+    explainer: explainer,
   }
 }
 
@@ -59,7 +59,7 @@ export function isSameTrail(a1: ITrail, a2: ITrail): boolean {
   return (
     a1.trailId === a2.trailId &&
     a1.nodeId === a2.nodeId &&
-    a1.title === a2.title && 
+    a1.title === a2.title &&
     a1.explainer === a2.explainer
     // TODO: && check if the lists are the same?
     // But what if you want two trails that go to the same exact places

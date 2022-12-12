@@ -39,7 +39,13 @@ describe('Unit Test: createAnchor', () => {
   })
 
   test('fails to create invalid document with correct shape', async () => {
-    const invalidAnchor: IAnchor = makeIAnchor(undefined, undefined, undefined, undefined, undefined)
+    const invalidAnchor: IAnchor = makeIAnchor(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    )
     const response = await backendAnchorGateway.createAnchor(invalidAnchor)
     expect(response.success).toBeFalsy()
   })

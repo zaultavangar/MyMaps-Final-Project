@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import {MongoMemoryServer } from 'mongodb-memory-server'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
 import { ITrail, makeITrail, isSameTrail } from '../../../../types'
 
@@ -8,13 +8,13 @@ describe('Unit Test: Delete Trails', () => {
   let mongoClient: MongoClient
   let backendTrailGateway: BackendTrailGateway
   let mongoMemoryServer: MongoMemoryServer
-  
+
   beforeAll(async () => {
     mongoMemoryServer = await MongoMemoryServer.create()
     uri = mongoMemoryServer.getUri()
     mongoClient = new MongoClient(uri, {
-      useNewUrlParser: true, 
-      useUnifiedTopology: true, 
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     })
     backendTrailGateway = new BackendTrailGateway(mongoClient)
     mongoClient.connect()
@@ -24,7 +24,7 @@ describe('Unit Test: Delete Trails', () => {
     const response = await backendTrailGateway.deleteAll()
     expect(response.success).toBeTruthy()
   })
-  
+
   afterAll(async () => {
     await mongoClient.close()
     await mongoMemoryServer.stop()
@@ -56,8 +56,8 @@ describe('Unit Test: Delete Trails', () => {
     expect(getTrailByIdResp.success).toBeTruthy()
     expect(getTrailByIdResp.payload.length).toBe(5)
     const trail1 = getTrailByIdResp.payload.find((trail) => trail.trailId === 'trail1')
-    console.log("trail1: ", trail1)
-    console.log("validtrail1: ", validTrail1)
+    console.log('trail1: ', trail1)
+    console.log('validtrail1: ', validTrail1)
     expect(isSameTrail(trail1, validTrail1)).toBeTruthy()
     const trail2 = getTrailByIdResp.payload.find((trail) => trail.trailId === 'trail2')
     expect(isSameTrail(trail2, validTrail2)).toBeTruthy()
@@ -67,7 +67,6 @@ describe('Unit Test: Delete Trails', () => {
     expect(isSameTrail(trail4, validTrail4)).toBeTruthy()
     const trail5 = getTrailByIdResp.payload.find((trail) => trail.trailId === 'trail5')
     expect(isSameTrail(trail5, validTrail5)).toBeTruthy()
-
   })
 
   test('gets trails when given some valid trailIds', async () => {
@@ -89,7 +88,7 @@ describe('Unit Test: Delete Trails', () => {
     const getTrailByIdResp = await backendTrailGateway.getTrailsById([
       'trail1',
       'trail2',
-      'invalidId'
+      'invalidId',
     ])
     expect(getTrailByIdResp.success).toBeTruthy()
     expect(getTrailByIdResp.payload.length).toBe(2)
@@ -119,5 +118,4 @@ describe('Unit Test: Delete Trails', () => {
     expect(getTrailByIdResp.success).toBeTruthy()
     expect(getTrailByIdResp.payload.length).toBe(0)
   })
-
 })

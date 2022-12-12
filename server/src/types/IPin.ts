@@ -1,4 +1,3 @@
-
 import { INode } from './INode'
 import { ITrail } from './ITrail'
 /**
@@ -8,20 +7,19 @@ export interface IPin {
   pinId: string
   nodeId: string
   trails: ITrail[]
-  childNodes : INode[]
+  childNodes: INode[]
   title: string
   explainer: string
   topJustify: number
   leftJustify: number
 }
 
-export interface IGoogleMapPin extends IPin{
-  lat: number,
-  lng: number,
+export interface IGoogleMapPin extends IPin {
+  lat: number
+  lng: number
 }
 
 export type PinFields = keyof IPin | keyof IGoogleMapPin
-
 
 export const allPinFields: string[] = [
   'pinId',
@@ -33,18 +31,17 @@ export const allPinFields: string[] = [
   'topJustify',
   'leftJustify',
   'lat',
-  'lng'
+  'lng',
 ]
 
 export function isIPin(object: any): object is IPin {
   const propsDefined: boolean =
     typeof (object as IPin).pinId !== 'undefined' &&
     typeof (object as IPin).nodeId !== 'undefined' &&
-    typeof (object as IPin).trails !== 'undefined' && 
-    typeof (object as IPin).childNodes !== 'undefined' && 
-    typeof (object as IPin).title !== 'undefined' && 
-    typeof (object as IPin).explainer !== 'undefined' 
-
+    typeof (object as IPin).trails !== 'undefined' &&
+    typeof (object as IPin).childNodes !== 'undefined' &&
+    typeof (object as IPin).title !== 'undefined' &&
+    typeof (object as IPin).explainer !== 'undefined'
 
   if (!propsDefined) {
     return false
@@ -53,14 +50,22 @@ export function isIPin(object: any): object is IPin {
   // and verify if filePath.path is properly defined
   return (
     typeof (object as IPin).pinId === 'string' &&
-    typeof (object as IPin).nodeId === 'string' && 
+    typeof (object as IPin).nodeId === 'string' &&
     typeof (object as IPin).title === 'string' &&
-    typeof (object as IPin).explainer === 'string' 
+    typeof (object as IPin).explainer === 'string'
   )
 }
 
-export function makeIPin(pinId: string, nodeId: string, trails: [], 
-   childNodes: [], title: string, explainer: string, topJustify: number, leftJustify: number) {
+export function makeIPin(
+  pinId: string,
+  nodeId: string,
+  trails: [],
+  childNodes: [],
+  title: string,
+  explainer: string,
+  topJustify: number,
+  leftJustify: number
+) {
   return {
     pinId: pinId,
     nodeId: nodeId,
@@ -69,19 +74,19 @@ export function makeIPin(pinId: string, nodeId: string, trails: [],
     title: title,
     explainer: explainer,
     topJustify: topJustify,
-    leftJustify: leftJustify
+    leftJustify: leftJustify,
   }
 }
 
 export function makeIGoogleMapPin(
   pinId: string,
   nodeId: string,
-  trails: ITrail [],
-  childNodes: INode [],
+  trails: ITrail[],
+  childNodes: INode[],
   title: string,
   explainer: string,
   lat: number,
-  lng: number,
+  lng: number
 ) {
   return {
     pinId: pinId,
@@ -109,6 +114,6 @@ export function isSamePin(a1: IPin | null, a2: IPin | null): boolean {
     a1.pinId === a2.pinId &&
     a1.nodeId === a2.nodeId &&
     a1.title === a2.title &&
-    a1.explainer === a2.explainer 
+    a1.explainer === a2.explainer
   )
 }

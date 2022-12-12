@@ -9,26 +9,25 @@ import { LinkRouter } from './links'
 import { TrailRouter } from './trails'
 import { PinRouter } from './pins'
 
-/* dotenv is a zero-dependency module that laods environment variables from a 
+/* dotenv is a zero-dependency module that laods environment variables from a
 .env file into process .env */
 dotenv.config()
 const PORT = process.env.PORT
 
 const app = express()
 
-
 // start the express web server listening on 5000
 app.listen(PORT, () => {
   console.log('Server started on port', PORT)
 })
 
-/* CORS is a browser security feature that restrticts cross-origin HTTP 
+/* CORS is a browser security feature that restrticts cross-origin HTTP
 requests with other servers and specifies which domains access your resources.
 CORS relaxes the security applied to an API */
 app.use(cors())
 // serve images, CSS files, and Javascript files in a directory called dist
-app.use(express.static('dist')) 
-app.use(express.json()) // allows us to parse json 
+app.use(express.static('dist'))
+app.use(express.json()) // allows us to parse json
 
 const uri = process.env.DB_URI
 const mongoClient = new MongoClient(uri, {

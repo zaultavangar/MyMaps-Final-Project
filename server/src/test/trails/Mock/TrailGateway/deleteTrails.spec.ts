@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import {MongoMemoryServer } from 'mongodb-memory-server'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
 import { ITrail, makeITrail, isSameTrail } from '../../../../types'
 
@@ -8,13 +8,13 @@ describe('Unit Test: Delete Trails', () => {
   let mongoClient: MongoClient
   let backendTrailGateway: BackendTrailGateway
   let mongoMemoryServer: MongoMemoryServer
-  
+
   beforeAll(async () => {
     mongoMemoryServer = await MongoMemoryServer.create()
     uri = mongoMemoryServer.getUri()
     mongoClient = new MongoClient(uri, {
-      useNewUrlParser: true, 
-      useUnifiedTopology: true, 
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     })
     backendTrailGateway = new BackendTrailGateway(mongoClient)
     mongoClient.connect()
@@ -24,7 +24,7 @@ describe('Unit Test: Delete Trails', () => {
     const response = await backendTrailGateway.deleteAll()
     expect(response.success).toBeTruthy()
   })
-  
+
   afterAll(async () => {
     await mongoClient.close()
     await mongoMemoryServer.stop()
@@ -46,7 +46,7 @@ describe('Unit Test: Delete Trails', () => {
   })
 
   test('success when some trailIds do not exist', async () => {
-    const validTrail : ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail: ITrail = makeITrail('trail1', [], 'node1')
     const createResponse = await backendTrailGateway.createTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const deleteResp = await backendTrailGateway.deleteTrails(['invalidId', 'trail1'])
@@ -60,6 +60,4 @@ describe('Unit Test: Delete Trails', () => {
     const deleteResp = await backendTrailGateway.deleteTrails(['invalidId'])
     expect(deleteResp.success).toBeTruthy()
   })
-  
-
 })

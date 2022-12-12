@@ -28,7 +28,7 @@ describe('E2E Test: Anchor CRUD', () => {
     generateAnchorId(),
     generateNodeId('text'),
     makeITextExtent('hi', 9, 11),
-    undefined, 
+    undefined,
     []
   )
 

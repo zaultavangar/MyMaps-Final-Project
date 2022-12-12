@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import {MongoMemoryServer } from 'mongodb-memory-server'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 import { TrailCollectionConnection } from '../../../../trails'
 import { ITrail, makeITrail } from '../../../../types'
 
@@ -8,13 +8,13 @@ describe('Unit Test: findTrailsById', () => {
   let mongoClient
   let trailCollectionConnection
   let mongoMemoryServer
-  
+
   beforeAll(async () => {
     mongoMemoryServer = await MongoMemoryServer.create()
     uri = mongoMemoryServer.getUri()
     mongoClient = new MongoClient(uri, {
-      useNewUrlParser: true, 
-      useUnifiedTopology: true, 
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     })
     trailCollectionConnection = new TrailCollectionConnection(mongoClient)
     mongoClient.connect()
@@ -24,7 +24,7 @@ describe('Unit Test: findTrailsById', () => {
     const response = await trailCollectionConnection.clearTrailCollection()
     expect(response.success).toBeTruthy()
   })
-  
+
   afterAll(async () => {
     await mongoClient.close()
     await mongoMemoryServer.stop()
@@ -65,5 +65,4 @@ describe('Unit Test: findTrailsById', () => {
     expect(findTrailsByIdResp.success).toBeTruthy()
     expect(findTrailsByIdResp.payload.length).toBe(0)
   })
-
 })

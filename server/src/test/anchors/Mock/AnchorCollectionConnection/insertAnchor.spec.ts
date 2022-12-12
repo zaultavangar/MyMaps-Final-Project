@@ -39,7 +39,13 @@ describe('Unit Test: InsertAnchor', () => {
   })
 
   test('fails to insert invalid document with correct shape', async () => {
-    const invalidAnchor: IAnchor = makeIAnchor(undefined, undefined, undefined, undefined, undefined)
+    const invalidAnchor: IAnchor = makeIAnchor(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    )
     const response = await anchorCollectionConnection.insertAnchor(invalidAnchor)
     expect(response.success).toBeFalsy()
   })

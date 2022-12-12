@@ -123,7 +123,7 @@ export class BackendTrailGateway {
    * @param pinId the pinId of the node to get trails for
    * @returns Promise<IServiceResponse<ITrail[]>>
    */
-   async getTrailsByPinId(pinId: string): Promise<IServiceResponse<ITrail[]>> {
+  async getTrailsByPinId(pinId: string): Promise<IServiceResponse<ITrail[]>> {
     return this.trailCollectionConnection.findTrailsByPinId(pinId)
   }
 
@@ -141,11 +141,13 @@ export class BackendTrailGateway {
       const value = toUpdate[i].value
       properties[fieldName] = value
     }
-    const trailResponse = await this.trailCollectionConnection.updateTrail(trailId, properties)
+    const trailResponse = await this.trailCollectionConnection.updateTrail(
+      trailId,
+      properties
+    )
     if (!trailResponse.success) {
       return failureServiceResponse('This trail does not exist in the database!')
     }
     return trailResponse
   }
-
 }

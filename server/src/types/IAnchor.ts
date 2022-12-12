@@ -13,14 +13,14 @@ export interface IAnchor {
   nodeId: string
   // New properties (new tests needed)
   trailIds?: string[]
-  childNodeIds?: string[] 
+  childNodeIds?: string[]
 }
 
 export function isIAnchor(object: any): object is IAnchor {
   const propsDefined: boolean =
     typeof (object as IAnchor).anchorId !== 'undefined' &&
     typeof (object as IAnchor).nodeId !== 'undefined' &&
-    typeof (object as IAnchor).extent !== 'undefined' 
+    typeof (object as IAnchor).extent !== 'undefined'
   if (!propsDefined) {
     return false
   }
@@ -35,14 +35,19 @@ export function isIAnchor(object: any): object is IAnchor {
   )
 }
 
-export function makeIAnchor(anchorId: string, nodeId: string, extent: Extent, 
-    trailIds: string[] | undefined, childNodeIds: string[]) {
+export function makeIAnchor(
+  anchorId: string,
+  nodeId: string,
+  extent: Extent,
+  trailIds: string[] | undefined,
+  childNodeIds: string[]
+) {
   return {
     anchorId: anchorId,
     extent: extent,
     nodeId: nodeId,
     trailIds: trailIds,
-    childNodeIds: childNodeIds
+    childNodeIds: childNodeIds,
   }
 }
 

@@ -8,7 +8,6 @@ import {
   isINodePath,
 } from '../types'
 import { MongoClient } from 'mongodb'
-import e from 'express'
 
 /**
  * NodeCollectionConnection acts as an in-between communicator between
@@ -33,16 +32,22 @@ export class NodeCollectionConnection {
     this.collectionName = collectionName ?? 'nodes'
   }
 
-  async search(input: string, typeFilter: string[] | undefined, dateFilter: boolean): Promise<IServiceResponse<string[]>> {
-    const modInput = "\\" + "'" + input + "\\" + "'"
+  async search(
+    input: string,
+    typeFilter: string[] | undefined,
+    dateFilter: boolean
+  ): Promise<IServiceResponse<string[]>> {
+    const modInput = '\\' + '\'' + input + '\\' + '\''
     const foundNodes: string[] = []
-    let query: any = { $text: { $search: modInput }} // default query
-    let sort: any = { score: { $meta: 'textScore' }} // default sort
+    let query: any = { $text: { $search: modInput } } // default query
+    let sort: any = { score: { $meta: 'textScore' } } // default sort
 
     // Modify query and sort variables based on type and date filter status, respectively
-    if (typeFilter !== undefined) query = { $text: { $search: modInput}, 'type': {$in: typeFilter} }
+    if (typeFilter !== undefined) {
+      query = { $text: { $search: modInput }, type: { $in: typeFilter } }
+    }
     if (dateFilter === true) sort = { dateCreated: -1 }
-    
+
     // get relevant properties from the projection
     const projection = {
       _id: 0,
@@ -56,10 +61,11 @@ export class NodeCollectionConnection {
       .collection(this.collectionName)
       .find(query)
       .sort(sort)
-      .project(projection).forEach(function(doc) {
+      .project(projection)
+      .forEach(function(doc) {
         foundNodes.push(doc)
       })
-    return successfulServiceResponse(foundNodes) 
+    return successfulServiceResponse(foundNodes)
   }
 
   /**
