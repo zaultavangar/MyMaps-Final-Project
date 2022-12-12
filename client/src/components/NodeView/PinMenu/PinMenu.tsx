@@ -62,7 +62,7 @@ export const PinMenu = (props: IPinMenuProps) => {
   const customButtonStyle = {
     height: 40,
     width: 150,
-    fontSize: '16px',
+    fontSize: '15px',
     backgroundColor: 'gainsboro',
     paddingTop: '10px',
     paddingBottom: '10px',
@@ -243,8 +243,9 @@ export const PinMenu = (props: IPinMenuProps) => {
                 style={{ marginRight: '20px', fontSize: '0.8em' }}
               >
                 <Button
+                  style={smallCustomButtonStyle}
                   icon={<ri.RiDeleteBin6Line />}
-                  text="Delete Pin"
+                  //text="Delete Pin"
                   onClick={() => onDeleteButtonClick()}
                 />
               </div>
@@ -265,15 +266,17 @@ export const PinMenu = (props: IPinMenuProps) => {
             </div>
           </div>
           <hr style={{ width: '70%', margin: '0 auto' }}></hr>
-          <div style={{display: 'flex', justifyContent:'center', alignItems: 'center', gap: '1em', margin: '10px 0px'}}>
-            <div className="pin-documents" style={{fontWeight: '500' }}>
+          <div style={{display: 'flex', justifyContent:'space-between', margin: '10px 0px'}}>
+            <div className="pin-documents" style={{fontWeight: '500', marginLeft: '10px' }}>
               Pin Documents
             </div>
+            <div style={{ marginRight: '20px' }}>
             <Button
               style={smallCustomButtonStyle}
               icon={<ai.AiOutlineFileAdd />}
               onClick={onCreateNodeButtonClick}
             />
+            </div>
           </div>
           <List>
             {selectedPin &&
