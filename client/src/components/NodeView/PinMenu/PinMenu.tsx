@@ -320,7 +320,7 @@ export const PinMenu = (props: IPinMenuProps) => {
                   <Link to={pathToString(node.filePath)}>
                     <ListItem>
                       <div className="icon-date-wrapper">
-                        <div className="search-list-icon">{icon}</div>
+                        <div className="search-list-icon">{nodeTypeIcon(node.type)}</div>
                         <div className="date-created">{formatDate(node.dateCreated)}</div>
                       </div>
                       {node.title}
