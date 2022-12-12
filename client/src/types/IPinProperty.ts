@@ -1,7 +1,7 @@
 import { PinFields } from '.'
 
 export interface IPinProperty {
-fieldName: PinFields
+  fieldName: PinFields
   value: any
 }
 

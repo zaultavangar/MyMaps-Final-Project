@@ -117,7 +117,7 @@ export const FrontendPinGateway = {
 
   search: async (
     input: string,
-    typeFilter: string[],
+    typeFilter: string[]
   ): Promise<IServiceResponse<string[]>> => {
     try {
       let query: any
@@ -132,11 +132,7 @@ export const FrontendPinGateway = {
       }
       const queryString = decodeURIComponent(query.toString()) // the query string
       const path =
-        baseEndpoint +
-        servicePath +
-        'search/' +
-        `${input}/` +
-        `&${queryString}`
+        baseEndpoint + servicePath + 'search/' + `${input}/` + `&${queryString}`
 
       return await get<IServiceResponse<string[]>>(path)
     } catch (exception) {

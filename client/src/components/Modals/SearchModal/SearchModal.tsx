@@ -12,8 +12,8 @@ import {
   Checkbox,
   CheckboxGroup,
   RadioGroup,
-  Radio, 
-  Stack
+  Radio,
+  Stack,
 } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
@@ -59,13 +59,10 @@ export const SearchModal = (props: ISearchModalProps) => {
     if (searchResponse.success) {
       return searchResponse?.payload
     }
-    const pinSearchResponse = await FrontendPinGateway.search(
-      searchValue,
-      typeFilter,
-    )
+    const pinSearchResponse = await FrontendPinGateway.search(searchValue, typeFilter)
     if (pinSearchResponse.success) {
       return pinSearchResponse?.payload
-    } 
+    }
   }
 
   // Update search results on input and filter change
@@ -162,50 +159,50 @@ export const SearchModal = (props: ISearchModalProps) => {
   }
 
   const [checkedItems, setCheckedItems] = useState<string[]>(['', '', ''])
-  const allChecked = checkedItems.every(el => el.length>0)
-  const isIndeterminate= checkedItems.some(el => el.length>0) && !allChecked
+  const allChecked = checkedItems.every((el) => el.length > 0)
+  const isIndeterminate = checkedItems.some((el) => el.length > 0) && !allChecked
   const [radioValue, getRadioValue] = useState('')
 
   useEffect(() => {
-      let checked = checkedItems
+    const checked = checkedItems
 
-      const newTypeFilter = typeFilter.slice() 
-      checked.map((type => {
-        if (!newTypeFilter.includes(type)) {
-          newTypeFilter.push(type)
-        } else {
-          newTypeFilter.splice(typeFilter.indexOf(type), 1)
-        }
-      })) 
-      setTypeFilter(newTypeFilter) // update the type filter array
+    const newTypeFilter = typeFilter.slice()
+    checked.map((type) => {
+      if (!newTypeFilter.includes(type)) {
+        newTypeFilter.push(type)
+      } else {
+        newTypeFilter.splice(typeFilter.indexOf(type), 1)
+      }
+    })
+    setTypeFilter(newTypeFilter) // update the type filter array
   }, [checkedItems])
 
   const onSubFilterChange = (e: any, index: number) => {
-    let val 
+    let val
     let checkedList
     switch (index) {
       case 0:
         val = e.target.checked ? 'text' : ''
         checkedList = [val, checkedItems[1], checkedItems[2]]
-        break;
+        break
       case 1:
         val = e.target.checked ? 'image' : ''
         checkedList = [checkedItems[0], val, checkedItems[2]]
-        break;
+        break
       case 2:
         val = e.target.checked ? 'folder' : ''
         checkedList = [checkedItems[0], checkedItems[1], val]
-        break;
-      default: 
-        break;
+        break
+      default:
+        break
     }
     if (checkedList) setCheckedItems(checkedList)
   }
 
   const onDocumentFilterChange = (e: any) => {
-    let val: boolean = e.target.checked
+    const val: boolean = e.target.checked
     if (val) setCheckedItems(['text', 'image', 'folder'])
-    else setCheckedItems( ['','',''])
+    else setCheckedItems(['', '', ''])
   }
 
   return (
@@ -244,35 +241,39 @@ export const SearchModal = (props: ISearchModalProps) => {
                 <div className="type">
                   <div className="filter-cat">Type:</div>
                   <CheckboxGroup colorScheme="green" defaultValue={[]}>
-                    <Stack direction='column'>
-                      <Checkbox><span className="checkbox">Map</span></Checkbox>
-                      <Checkbox ><span className="checkbox">Pin</span></Checkbox>
-                      <Checkbox 
-                        value='document'
+                    <Stack direction="column">
+                      <Checkbox>
+                        <span className="checkbox">Map</span>
+                      </Checkbox>
+                      <Checkbox>
+                        <span className="checkbox">Pin</span>
+                      </Checkbox>
+                      <Checkbox
+                        value="document"
                         isChecked={allChecked}
                         isIndeterminate={isIndeterminate}
                         onChange={(e) => onDocumentFilterChange(e)}
-                          >
+                      >
                         <span className="checkbox">Document</span>
                       </Checkbox>
                       <Stack pl={6} mt={1} spacing={1}>
                         <Checkbox
-                          isChecked={checkedItems[0].length>0}
+                          isChecked={checkedItems[0].length > 0}
                           onChange={(e) => onSubFilterChange(e, 0)}
                         >
-                           <span className="checkbox">Text</span>
+                          <span className="checkbox">Text</span>
                         </Checkbox>
                         <Checkbox
-                          isChecked={checkedItems[1].length>0}
+                          isChecked={checkedItems[1].length > 0}
                           onChange={(e) => onSubFilterChange(e, 1)}
                         >
-                           <span className="checkbox">Image</span>
+                          <span className="checkbox">Image</span>
                         </Checkbox>
                         <Checkbox
-                          isChecked={checkedItems[2].length>0}
+                          isChecked={checkedItems[2].length > 0}
                           onChange={(e) => onSubFilterChange(e, 2)}
                         >
-                           <span className="checkbox">Folder</span>
+                          <span className="checkbox">Folder</span>
                         </Checkbox>
                       </Stack>
                     </Stack>
