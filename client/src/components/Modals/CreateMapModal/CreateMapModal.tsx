@@ -45,13 +45,7 @@ export interface ICreateMapModalProps {
  */
 export const CreateMapModal = (props: ICreateMapModalProps) => {
   // deconstruct props variables
-  const {
-    isOpen,
-    onClose,
-    roots,
-    nodeIdsToNodesMap,
-    onSubmit,
-  } = props
+  const { isOpen, onClose, roots, nodeIdsToNodesMap, onSubmit } = props
 
   // state variables
   const setSelectedNode = useSetRecoilState(selectedNodeState)

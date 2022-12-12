@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil'
 import {
   prevNavigationPinState,
   currentNavigationPinState,
-  selectedPinState
+  selectedPinState,
 } from '../../../../global/Atoms'
 import { IconButton } from '@mui/material'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
@@ -21,7 +21,6 @@ export interface INavigationWindowProps {
 
 export const NavigationWindow = (props: INavigationWindowProps) => {
   const { trailToNavigate, isNavigating } = props
-
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
