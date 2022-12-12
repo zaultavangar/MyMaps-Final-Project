@@ -62,7 +62,10 @@ interface IMapContentProps {
   selectedMapViewMode: string
 }
 
-/** The content of a map node, including any pins */
+/**
+ *  The content of a map node, including any pins.
+ * */
+
 export const MapContent = (props: IMapContentProps) => {
   const { selectedMapViewMode } = props
   let map: mapboxgl.Map
@@ -135,7 +138,8 @@ export const MapContent = (props: IMapContentProps) => {
       const lat = newMarker.getLngLat().lat
       const lng = newMarker.getLngLat().lng
       newPin = makeIMapboxPin(pinId, nodeId, [], [], title, explainer, lat, lng)
-    } else {
+    }
+    else {
       newPin = makeIPin(pinId, nodeId, [], [], title, explainer, yLast, xLast)
     }
 
@@ -145,14 +149,9 @@ export const MapContent = (props: IMapContentProps) => {
       setError('Error: Failed to create pin')
       return
     } else {
-      setSelectedPin(null)
-      setCreatePinPopoverOpen(false)
-      const pins = mapPins.slice()
-      pins.push(newPin)
-      setMapPins(pins)
+    }
     }
 
-    // add state fxn calls to refresh pin menu and other things that need to be refreshed
   }
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

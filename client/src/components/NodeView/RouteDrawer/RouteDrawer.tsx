@@ -326,8 +326,17 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     padding: '10px 10px',
     width: '200px',
 
-    ...draggableStyle,
-  })
+      background: isDragging ? 'black' : 'white',
+      color: isDragging ? 'white' : 'black',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      border: '1px solid grey',
+      borderRadius: '5px',
+      padding: '10px 10px',
+      ...draggableStyle,
+    }
+  )
 
   const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
   const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
@@ -439,11 +448,17 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                         className="modal-error modal-error-create-trail"
                         style={{ marginLeft: '-5px' }}
                       >
+                        Create Trail
+                      </Button>
+                    </div>
+                  }
+                  {error.length > 0 &&
+                    <div className="modal-error modal-error-create-trail" style={{ marginLeft: '-5px' }}>
                         {error}
-                      </div>
-                    )}
+                    </div>
+                    }
                   </div>
-                  <DragDropContext onDragEnd={onDragEnd}>
+                   <DragDropContext onDragEnd = {onDragEnd}>
                     <Droppable droppableId="pinsAdded" direction="horizontal">
                       {(provided) => (
                         <div
@@ -472,10 +487,19 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  style={getPinItemStyle(
-                                    snapshot.isDragging,
-                                    provided.draggableProps.style
-                                  )}
+                                  style={getPinItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                                >
+                                <div>{index + 1}. </div>
+
+                                <div id="route-drawer-pin-title" data-value={pin.pinId}>
+                                  {pin.title}
+                                </div>
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                  }}
                                 >
                                   <div>
                                     <div>{index + 1}. </div>
@@ -619,15 +643,13 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                         </Button>
                       </div>
                     </div>
-                  ) : (
-                    <div>
-                      This map has no routes through which to navigate. Want to
-                      <span onClick={handleCreateTabClick} className="add-a-route-link">
-                        {' '}
-                        <u>add a route?</u>
-                      </span>
-                    </div>
-                  )}
+                  </div>
+                  :
+                  <div >
+                  This map has no routes through which to navigate. Want to
+                  <span onClick={handleCreateTabClick} className="add-a-route-link"> <u>add a route?</u></span>
+                </div>
+                  }
                 </TabPanel>
               </TabPanels>
             </Tabs>

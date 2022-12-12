@@ -33,6 +33,7 @@ import {
   specificTrailState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
+import { autocompleteClasses } from '@mui/material'
 
 interface IPinMenuProps {
   setParentNode: (node: INode) => void
@@ -62,7 +63,8 @@ export const PinMenu = (props: IPinMenuProps) => {
   const customButtonStyle = {
     height: 40,
     width: 150,
-    fontSize: '15px',
+    fontSize: '16px',
+    backgroundColor: 'gainsboro',
     paddingTop: '10px',
     paddingBottom: '10px',
   }

@@ -450,6 +450,7 @@ export const NodeView = (props: INodeViewProps) => {
   console.log(hasPins)
   console.log('pinIdsToPinsMap', pinIdsToPinsMap)
   // width: `calc(100% - ${resizableWidth}px)`
+  //  width: `calc(100% - ${resizableWidth}px)`
   return (
     <div className="node">
       <div className="nodeView">
