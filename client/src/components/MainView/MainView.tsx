@@ -32,7 +32,6 @@ import { SearchModal } from '../Modals/SearchModal'
 import './MainView.scss'
 import { createNodeIdsToNodesMap, emptyNode, makeRootWrapper } from './mainViewUtils'
 import { RouteDrawer } from '../NodeView/RouteDrawer'
-import { FaLessThanEqual } from 'react-icons/fa'
 import { FrontendPinGateway } from '../../pins'
 
 export const MainView = React.memo(function MainView() {
@@ -316,6 +315,7 @@ export const MainView = React.memo(function MainView() {
                 onMoveButtonClick={handleMoveNodeButtonClick}
                 onCompleteLinkClick={handleCompleteLinkClick}
                 onCreateNodeButtonClick={handleCreateNodeButtonClick}
+                onCreateMapButtonClick={handleCreateMapButtonClick}
                 nodeIdsToNodesMap={nodeIdsToNodesMap}
                 setParentNode={setSelectedNode}
                 onRouteMenuClick={handleRouteMenuButtonClick}

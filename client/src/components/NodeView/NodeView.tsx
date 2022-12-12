@@ -61,6 +61,8 @@ export interface INodeViewProps {
   onCompleteLinkClick: () => void
   // handler for opening create node modal
   onCreateNodeButtonClick: () => void
+  // handler for opening create map modal
+  onCreateMapButtonClick: () => void
   // handler for deleting currentNode
   onDeleteButtonClick: (node: INode) => void
   // handler for opening move node modal
@@ -93,6 +95,7 @@ export const NodeView = (props: INodeViewProps) => {
     nodeIdsToNodesMap,
     onCompleteLinkClick,
     onCreateNodeButtonClick,
+    onCreateMapButtonClick,
     onDeleteButtonClick,
     onMoveButtonClick,
     childNodes,
@@ -486,6 +489,7 @@ export const NodeView = (props: INodeViewProps) => {
             <NodeContent
               childNodes={childNodes}
               onCreateNodeButtonClick={onCreateNodeButtonClick}
+              onCreateMapButtonClick={onCreateMapButtonClick}
               isNavigating={isNavigating}
               trailToNavigate={trailToNavigate}
             />
