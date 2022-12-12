@@ -185,7 +185,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
               routePinsCopy.splice(i, 1)
             }
           }
-          setRouteDrawerPins(routePinsCopy)
+          setRouteDrawerPins(routePinsCopy) 
         }
       } else {
         console.log('fail')
@@ -310,6 +310,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       }
     }
     setCreateTrailPopoverOpen(false)
+    setTabIndex(1)
   }
 
   const handlePinFromTrailClick = async (e: any, pinId: string) => {
@@ -563,6 +564,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             <div>
                               <Button
                                 colorScheme="whatsapp"
+                                backgroundColor='rgb(0,125,0)'
                                 onClick={handleAddPinsToTrail}
                                 style={{ padding: '10px 10px' }}
                               >
