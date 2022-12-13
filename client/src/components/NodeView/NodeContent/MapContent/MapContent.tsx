@@ -36,11 +36,9 @@ import {
   Textarea,
 } from '@chakra-ui/react'
 import { generateObjectId } from '../../../../global'
-
 import FocusLock from 'react-focus-lock'
-import { GoogleMapContent } from './GoogleMapContent'
-// @ts-ignore
-import mapboxgl, { Marker, Popup } from '!mapbox-gl'
+
+
 
 interface IMapContentProps {
   selectedMapViewMode: string
@@ -120,13 +118,8 @@ export const MapContent = (props: IMapContentProps) => {
     const pinId = generateObjectId('pin')
     const nodeId = currentNode.nodeId
 
-    if (currentNode.type == 'googleMap') {
-      const lat = newMarker.getLngLat().lat
-      const lng = newMarker.getLngLat().lng
-      newPin = makeIMapboxPin(pinId, nodeId, [], [], title, explainer, lat, lng)
-    } else {
-      newPin = makeIPin(pinId, nodeId, [], [], title, explainer, yLast, xLast)
-    }
+
+    newPin = makeIPin(pinId, nodeId, [], [], title, explainer, yLast, xLast)
 
     const pinResponse = await FrontendPinGateway.createPin(newPin)
     if (!pinResponse.success) {
@@ -253,46 +246,9 @@ export const MapContent = (props: IMapContentProps) => {
     }
   }, [currentNode])
 
-  const markerRef = useRef<HTMLDivElement | null>(null)
 
-  const onMapClick = (e: mapboxgl.MapMouseEvent) => {
-    e.preventDefault()
+  
 
-    const lngLat = { lng: e.lngLat.lng, lat: e.lngLat.lat }
-    if (!createPinPopoverOpen) {
-      const marker = new mapboxgl.Marker({ color: 'black' }).setLngLat(lngLat).addTo(map)
-
-      const markerEl = marker.getElement()
-      markerRef.current = markerEl
-
-      // (markerRef.current)
-
-      // setCreatePinPopoverOpen(true)
-      setLngLast(lngLat.lng)
-      setLatLast(lngLat.lat)
-      setNewMarker(marker)
-    }
-  }
-
-  const mapStyle = 'mapbox://styles/mapbox/' + selectedMapViewMode
-
-  useEffect(() => {
-    if (currentNode.type == 'googleMap') {
-      mapboxgl.accessToken =
-        // eslint-disable-next-line max-len
-        'pk.eyJ1IjoiemF1bHQiLCJhIjoiY2xiZjkwcHM5MDN2bzNybWUxbjViZGg5MyJ9.TNLPyVnYb7KKHUfm_XGw5A'
-      map = new mapboxgl.Map({
-        container: 'map', // container ID
-        style: mapStyle, // style URL
-        center: [-74.5, 40], // starting position [lng, lat]
-        zoom: 5, // starting zoom
-      })
-
-      map.on('click', (e: mapboxgl.MapMouseEvent) => {
-        onMapClick(e)
-      })
-    }
-  }, [currentNode, selectedMapViewMode])
 
   /**
    * onPointerDown initializes the creation of a new pin on the map image
@@ -314,12 +270,9 @@ export const MapContent = (props: IMapContentProps) => {
       // calculate the x and y location of the pointer relative to the image
 
       const xPosLast = x + 10 - imageLeft!
-      let yPosLast
-
-      if (currentNode.type === 'googleMap') yPosLast = y + 68 - imageTop!
-      else yPosLast = y - 2 - imageTop!
+      let yPosLast = y - 2 - imageTop!
       // Set the initial x and y location of the selection
-      const ref = currentNode.type === 'map' ? selection.current : markerRef.current
+      const ref = selection.current
       if (ref) {
         if (currentNode.type === 'map') {
           ref.style.display = 'unset'
@@ -376,17 +329,14 @@ export const MapContent = (props: IMapContentProps) => {
     }
   }, [currentNode, startAnchor])
 
+
   /**
    * This method displays the existing anchors. We are fetching them from
    * the data with a call to FrontendAnchorGateway.getAnchorsByNodeId
    * which returns a list of IAnchors that are on currentNode
    */
 
-  const handleCreatePinPopoverClose = () => {
-    if (currentNode.type === 'googleMap') {
-      newMarker.remove()
-      setNewMarker(null)
-    }
+  const handleCreatePinPopoverClose = (e: any) => {
 
     if (selection.current) {
       selection.current.style.display = 'none'
@@ -405,37 +355,30 @@ export const MapContent = (props: IMapContentProps) => {
         id="map-image-content-wrapper"
         style={{ width: updatedWidth, height: updatedHeight }}
       >
-        {currentNode.type === 'map' ? (
+        {currentNode.type === 'map' &&
           <div>
             {startAnchorVisualization}
             {mapPinsElements}
           </div>
-        ) : (
-          <div>
-            <GoogleMapContent onMapClick={onMapClick} />
-          </div>
-        )}
+        }
         <div>
           <Popover
             returnFocusOnClose={false}
             isOpen={createPinPopoverOpen}
-            onClose={handleCreatePinPopoverClose}
+            onClose={() =>handleCreatePinPopoverClose}
             placement={`${currentNode.type === 'map' ? 'right' : 'right-end'}`}
             closeOnBlur={false}
           >
             <PopoverAnchor>
-              {currentNode.type === 'map' ? (
+              {currentNode.type === 'map' && 
                 <div className="selection" ref={selection}>
                   <PlaceIcon style={{ color: 'black' }} />
                 </div>
-              ) : (
-                <div className="mapbox-marker" ref={markerRef}></div>
-              )}
+              }
             </PopoverAnchor>
             <PopoverContent>
               <PopoverHeader fontWeight="semibold">Create a Pin</PopoverHeader>
               <PopoverArrow />
-              <PopoverCloseButton />
               <PopoverBody>
                 <FocusLock returnFocus persistentFocus={false}>
                   <InputGroup sx={{ marginBottom: '10px' }}>
@@ -470,8 +413,5 @@ export const MapContent = (props: IMapContentProps) => {
         <img src={content} />
       </div>
     </div>
-    // <div className="textWrapper">
-
-    // </div>
   )
 }

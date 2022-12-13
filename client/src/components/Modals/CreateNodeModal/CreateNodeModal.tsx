@@ -105,15 +105,14 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
 
     const node: INode | null = await createNodeFromModal(attributes)
 
-    const pinChildNodes = selectedPin?.childNodes
-    const childNodesCopy = Object.assign([], pinChildNodes)
-    if (node !== null && childNodesCopy !== undefined) childNodesCopy.push(node)
-
-    if (node !== null && selectedPin) {
-      const pinProperty: IPinProperty = makeIPinProperty('childNodes', childNodesCopy)
+    const pinChildNodes = selectedPin?.childNodes.slice()
+    if (node !== null && selectedPin && pinChildNodes !== undefined) {
+      pinChildNodes.push(node)
+      const pinProperty: IPinProperty = makeIPinProperty('childNodes', pinChildNodes)
       await FrontendPinGateway.updatePin(selectedPin.pinId, [pinProperty])
       node && setSelectedNode(node)
     }
+
 
     if (selectedPin) {
       const selectedPinResp = await FrontendPinGateway.getPin(selectedPin.pinId)

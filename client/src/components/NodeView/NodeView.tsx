@@ -139,6 +139,10 @@ export const NodeView = (props: INodeViewProps) => {
   })
 
   useEffect(() => {
+    if (currentNode.type === 'map') {
+      setSelectedPin(null)
+    }
+
     setIsNavigating(false)
   }, [currentNode])
 

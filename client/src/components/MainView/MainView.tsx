@@ -12,6 +12,7 @@ import {
   selectedPinState,
   isNavigatingState,
   routeDrawerOpenState,
+  refreshPinsState,
 } from '../../global/Atoms'
 import { useLocation } from 'react-router-dom'
 import { FrontendNodeGateway } from '../../nodes'
@@ -43,6 +44,8 @@ import { FrontendPinGateway } from '../../pins'
 export const MainView = React.memo(function MainView() {
   // app states
   const [isAppLoaded, setIsAppLoaded] = useState(false)
+
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
@@ -218,6 +221,7 @@ export const MainView = React.memo(function MainView() {
             return
           }
         }
+        setRefreshPins(!refreshPins)
         setSelectedNode(null)
         loadRootsFromDB()
       }

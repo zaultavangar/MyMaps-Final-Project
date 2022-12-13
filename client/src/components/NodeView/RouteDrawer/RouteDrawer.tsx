@@ -153,8 +153,12 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [explainer, setExplainer] = useState(specificTrail ? specificTrail.explainer : '')
 
   useEffect(() => {
+    if (tabIndex == 2){
+      settrailIdToNavigate(trails[0].trailId)
+    }
     setExplainer('')
     setTitle('')
+    setPinsAdded([])
   }, [isOpen, tabIndex])
 
   useEffect(() => {
@@ -167,11 +171,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
 
 
-  
-
-  useEffect(() => {
-    setShowTrailCreatedAlert(true)
-  }, [dbTrails])
+ 
 
   const handleAlertClose = (event: any, reason: any) => {
     if (reason === 'clickaway') return
@@ -401,13 +401,11 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const handleTabsChange = (index: number) => {
     if (index == 2) {
       setSpecificTrail(null)
-      if (trails.length >=0 ) {
-        settrailIdToNavigate(trails[0].trailId)
-      }
     }
     else if (index==0) {
       setSpecificTrail(null)
     }
+    console.log(index)
     setTabIndex(index)
   }
 
@@ -616,7 +614,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                         <PopoverFooter></PopoverFooter>
                       </PopoverContent>
                     </Popover>
-                    {pinsAdded.length > 0 && (
+                    {pins.length > 0 && (
                       <div className="create-trail-button-wrapper">
                         <Button
                           colorScheme="whatsapp"
@@ -639,10 +637,10 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       </div>
                     )}
                   </div>
-                  <div className='pins-added-sortable-wrapper'>
-                    <ul id="sortList" className="moveable">
+                  <div className='pins-added-sortable-wrapper' style={{marginTop: '10px'}}>
+                    <ul id="sortList">
                       {pinsAdded.map((pin, index) => 
-                        <li draggable="true">{pin.title}</li>
+                        <li>{pin.title}</li>
                       )}
                     </ul>
                   </div>
@@ -946,6 +944,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                           value={trailIdToNavigate}
                           id="select-navigate-trail"
                           onChange={handleTrailNavigateSelectChange}
+                          defaultValue={trails[0].pinList[0].title}
                         >
                           {trails &&
                             trails.map((trail) => (
