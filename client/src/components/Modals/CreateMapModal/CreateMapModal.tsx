@@ -21,7 +21,6 @@ import {
   nodeTypes,
   RecursiveNodeTree,
 } from '../../../types'
-import { Wrapper } from '@googlemaps/react-wrapper'
 import { Button } from '../../Button'
 import { TreeView } from '../../TreeView'
 import './CreateMapModal.scss'
@@ -150,16 +149,6 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
                 value={selectedType}
               >
                 <Stack direction="column">
-                  <Radio key="googleMap" value="googleMap">
-                    <div className="radio-option use-google-maps">
-                      <img
-                        alt="google maps image"
-                        src="https://www.adster.ca/wp-content/uploads/2013/04/google-maps.jpg"
-                        width="140px"
-                        height="60px"
-                      ></img>
-                    </div>
-                  </Radio>
                   <Radio key="map" value="map">
                     <div className="radio-option upload-image">
                       <FileUploadRoundedIcon fontSize="large" />
