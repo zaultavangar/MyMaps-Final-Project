@@ -34,6 +34,9 @@ import {
   mapPinsState,
   selectedPinState,
   routeDrawerOpenState,
+  trailPinsState,
+  refreshTrailsState,
+  refreshPinsState
 } from '../../global/Atoms'
 import './NodeView.scss'
 import NodeInfo from '../Modals/GraphViewModal/Flow/NodeInfo'
@@ -112,11 +115,15 @@ export const NodeView = (props: INodeViewProps) => {
   const selectedExtent = useRecoilValue(selectedExtentState)
   const refresh = useRecoilValue(refreshState)
   const refreshLinkList = useRecoilValue(refreshLinkListState)
+  const refreshTrails = useRecoilValue(refreshTrailsState)
+  const refreshPins = useRecoilValue(refreshPinsState)
   const [anchors, setAnchors] = useState<IAnchor[]>([])
   const setAlertIsOpen = useSetRecoilState(alertOpenState)
   const setAlertTitle = useSetRecoilState(alertTitleState)
   const setAlertMessage = useSetRecoilState(alertMessageState)
   const [currNode, setCurrentNode] = useRecoilState(currentNodeState)
+
+  const [trailPins, setTrailPins] = useRecoilState(trailPinsState)
 
   const {
     filePath: { path },
@@ -185,7 +192,7 @@ export const NodeView = (props: INodeViewProps) => {
       setTrails(trailsFromNode.payload)
     }
     hasTrails = trails.length > 0
-  }, [currentNode])
+  }, [currentNode, trailPins])
 
   // Update the pinIdsToPinsMap
   useEffect(() => {
@@ -269,6 +276,8 @@ export const NodeView = (props: INodeViewProps) => {
     loadAnchorsFromNodeId,
     currentNode,
     refreshLinkList,
+    refreshTrails,
+    refreshPins,
     setSelectedAnchors,
     loadPinsFromNodeId,
     loadTrailsFromNodeId,
@@ -433,6 +442,7 @@ export const NodeView = (props: INodeViewProps) => {
   }
 
   const handleRouteMenuButtonClick = useCallback(() => {
+    setIsNavigating(false)
     setRouteDrawerOpen(true)
   }, [])
 

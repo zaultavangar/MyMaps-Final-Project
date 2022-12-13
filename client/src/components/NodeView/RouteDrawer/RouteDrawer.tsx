@@ -60,8 +60,13 @@ import {
   tabIndexState,
   specificTrailState,
   confirmationOpenState,
+  confirmationTypeState,
   refreshLinkListState,
+  trailPinsState,
+  refreshTrailsState,
+  refreshPinsState
 } from '../../../global/Atoms'
+import { ConfirmationAlert } from '../../ConfirmationAlert'
 import { FrontendTrailGateway } from '../../../trails'
 import TitleIcon from '@mui/icons-material/Title'
 import Snackbar from '@mui/material/Snackbar'
@@ -107,7 +112,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
-  const [confirmationOpen, setConfirmationOpen] = useRecoilState(confirmationOpenState)
+  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
+  const [confirmationType, setConfirmationType] = useState<string>('')
 
   const setAlertIsOpen = useSetRecoilState(alertOpenState)
   const setAlertTitle = useSetRecoilState(alertTitleState)
@@ -123,7 +129,12 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     if (routeDrawerPins && routeDrawerPins.length > 0) {
       setPinIdToAdd(routeDrawerPins[0].pinId)
       if (trails && trails.length > 0) {
-        settrailIdToNavigate(trails[0].trailId)
+        for (let i=0; i<trails.length; i++) {
+          if (trails[i].pinList.length > 0) {
+            settrailIdToNavigate(trails[0].trailId)
+            break
+          }
+        }
       }
     }
   }, [routeDrawerPins])
@@ -131,6 +142,9 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const getPinsForMap = async () => {}
 
   const [pinsAdded, setPinsAdded] = useState<IPin[]>([])
+
+  const [trailPins, setTrailPins] = useRecoilState(trailPinsState)
+
   const [pinIdToAdd, setPinIdToAdd] = useState<string>('')
   const [trailIdToNavigate, settrailIdToNavigate] = useState<string>('')
 
@@ -227,6 +241,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
           trailPinList.splice(i, 1)
         }
       }
+      console.log(trailPinList)
       const trailProperty: ITrailProperty = makeITrailProperty('pinList', trailPinList)
       const updateTrailResp = await FrontendTrailGateway.updateTrail(
         specificTrail.trailId,
@@ -237,9 +252,18 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAlertTitle('Trail update failed')
         setAlertMessage(updateTrailResp.message)
       }
+      const trailsCpy = trails.slice()
       setConfirmationOpen(false)
+      setRefreshTrails(!refreshTrails)
+      setRefreshPins(!refreshPins)
+      // setTrails(trailsCpy)
+      setTrailPins(trailPinList)
     }
   }
+
+  useEffect(() => {
+
+  })
 
   const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
   const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
@@ -262,12 +286,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const handleExplainerChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setExplainer(event.target.value)
-  }
-
-  const handleNumberInputChange = (vString: string, vNumber: number) => {
-    console.log(pinsAdded.length)
-    console.log(vNumber)
-    setAddIndex(vNumber)
   }
 
   const onCreateTrailPopoverClick = () => {
@@ -311,6 +329,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
     setCreateTrailPopoverOpen(false)
     setTabIndex(1)
+    setSpecificTrail(newTrail)
   }
 
   const handlePinFromTrailClick = async (e: any, pinId: string) => {
@@ -324,21 +343,21 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
+  console.log(trailIdToNavigate)
+
   const handleStartNavigationClick = () => {
-    if (trailIdToNavigate) {
+    console.log(trailIdToNavigate)
+    if (trailIdToNavigate.length>0) {
       startNavigation(trailIdToNavigate)
       setRouteDrawerOpen(false)
       setIsNavigating(true)
     }
   }
 
-  // useEffect(() => {
-  //   setDbTrails(trails)
-  // }, [handleCreateTrail])
-
   const val: number = pinsAdded.slice().length + 1
 
-  const onDragEnd = (result: DropResult) => {
+
+  const onCreateDragEnd = (result: DropResult) => {
     console.log(result)
     const { source, destination } = result
     if (!destination) return
@@ -348,6 +367,20 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     items.splice(destination.index, 0, newOrder)
 
     setPinsAdded(items)
+  }
+
+  const onViewDragEnd = (result: DropResult) => {
+    console.log(result)
+    const { source, destination } = result
+    if (!destination) return
+    
+    if (trailPins) {
+      const items = Array.from(trailPins)
+      const [newOrder] = items.splice(source.index, 1)
+      items.splice(destination.index, 0, newOrder)
+  
+      setTrailPins(items)
+    }
   }
 
   const createTrailClass =
@@ -391,8 +424,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAlertTitle('Title update failed')
         setAlertMessage(updateResp.message)
       }
-      // setRefresh(!refresh)
-      setRefreshLinkList(!refreshLinkList)
+      setRefreshPins(!refreshPins)
+      setRefreshTrails(!refreshTrails)
     }
   }
 
@@ -413,57 +446,45 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
+  useEffect(() => {
+    let trail = specificTrail
+    if (trail) setTrailPins(trail.pinList)
+  }, [specificTrail])
+
   const cancelConfirmationRef = React.useRef(null)
 
-  const [confirmationType, setConfirmationType] = useState('')
+  
   const [pinToDelete, setPinToDelete] = useState<IPin | null>(null)
+  const [trailToDelete, setTrailToDelete] = useState<ITrail | null>(null)
 
-  const handleOpenConfirmationAlert = (pin: IPin) => {
+  const handlePinOpenConfirmationAlert = (pin: IPin ) => {
     setConfirmationType('deletePinFromTrail')
     setConfirmationOpen(true)
     setPinToDelete(pin)
   }
 
-  const ConfirmationAlert = () => {
-    return (
-      <AlertDialog
-        isOpen={confirmationOpen}
-        leastDestructiveRef={cancelConfirmationRef}
-        onClose={() => setConfirmationOpen(false)}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {confirmationType === 'deletePinFromTrail' && <>Delete Pin from Trail</>}
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              {confirmationType === 'deletePinFromTrail' && specificTrail && (
-                <>
-                  Are you sure you want to delete <b>{pinToDelete!.title}</b> from{' '}
-                  <b style={{ color: 'green' }}>{specificTrail.title}</b>?
-                </>
-              )}
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button onClick={() => setConfirmationOpen(false)}>Cancel</Button>
-              <div>
-                <Button
-                  ref={cancelConfirmationRef}
-                  colorScheme="red"
-                  onClick={() => handleRemovePinFromTrail(pinToDelete!)}
-                  ml={3}
-                >
-                  Delete
-                </Button>
-              </div>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    )
+  const handleTrailOpenConfirmationAlert = () => {
+    setConfirmationType('deleteTrail')
+    setConfirmationOpen(true)
   }
+
+  const onDeleteTrailButtonClick = async () => {
+    if (specificTrail) {
+      const deleteResp = await FrontendTrailGateway.deleteTrail(specificTrail.trailId)
+      if (!deleteResp.success) {
+        setAlertIsOpen(true)
+        setAlertTitle('Failed to delete trail')
+        setAlertMessage(deleteResp.message)
+      }
+      setConfirmationOpen(false)
+      // setRefreshLinkList(!refreshLinkList)
+      setSpecificTrail(null)
+      setRefreshTrails(!refreshTrails)
+      setRefreshPins(!refreshPins)
+    }
+  }
+
+  
 
   const smallCustomButtonStyle = {
     height: 25,
@@ -475,23 +496,30 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const [selectedTrail, setSelectedTrail] = useRecoilState(specificTrailState)
   const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
-  const onDeleteButtonClick = async () => {
-    if (selectedTrail) {
-      const deleteResp = await FrontendTrailGateway.deleteTrail(selectedTrail.trailId)
-      if (!deleteResp.success) {
-        setAlertIsOpen(true)
-        setAlertTitle('Failed to delete trail')
-        setAlertMessage(deleteResp.message)
-      }
-      setRefreshLinkList(!refreshLinkList)
-      setSelectedTrail(null)
-    }
+  const [refreshTrails, setRefreshTrails] = useRecoilState(refreshTrailsState)
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
+
+
+
+  const handleSpecificTrailClick = (trail: ITrail) => {
+    setSpecificTrail(trail) 
   }
+
+
 
   console.log(confirmationOpen)
   return (
     <>
-      {confirmationOpen && <ConfirmationAlert />}
+      {confirmationOpen && 
+      <ConfirmationAlert 
+        isOpen={confirmationOpen}
+        setOpen={setConfirmationOpen}
+        confirmationType={confirmationType}
+        specificTrail={specificTrail}
+        pinToDelete={pinToDelete}
+        handleRemovePinFromTrail={handleRemovePinFromTrail}
+        onDeleteTrailButtonClick={onDeleteTrailButtonClick}
+      />}
 
       <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
         <DrawerOverlay />
@@ -598,7 +626,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       </div>
                     )}
                   </div>
-                  <DragDropContext onDragEnd={onDragEnd}>
+                  <DragDropContext onDragEnd={onCreateDragEnd}>
                     <Droppable droppableId="pinsAdded" direction="horizontal">
                       {(provided) => (
                         <div
@@ -616,7 +644,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                         >
                           {pinsAdded.map((pin, index) => (
                             <Draggable
-                              key={pin.pinId}
                               draggableId={pin.pinId}
                               index={index}
                             >
@@ -635,7 +662,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                     <div>{index + 1}. </div>
                                     <div
                                       id="route-drawer-pin-title"
-                                      key={pin.pinId}
                                       data-value={pin.pinId}
                                     >
                                       <b>{pin.title}</b>
@@ -719,7 +745,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             />
                           </div>
                         </div>
-                        <DragDropContext onDragEnd={onDragEnd}>
+                        <DragDropContext onDragEnd={onViewDragEnd}>
                           <Droppable droppableId="trailPins" direction="horizontal">
                             {(provided) => (
                               <div
@@ -735,15 +761,14 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                   marginLeft: '20px',
                                 }}
                               >
-                                {specificTrail.pinList.map((pin, index) => (
+                                {trailPins && trailPins.map((pin, index) => (
                                   <Draggable
-                                    key={pin.pinId}
                                     draggableId={pin.pinId}
                                     index={index}
                                   >
                                     {(provided, snapshot) => (
                                       <div
-                                        // key={pin.pinId}
+                                        key={pin.pinId}
                                         className="pins-list-wrapper specific-trail-pins"
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
@@ -757,7 +782,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                           <div>{index + 1}. </div>
                                           <div
                                             id="route-drawer-specific-pin-title"
-                                            key={pin.pinId}
                                             data-value={pin.pinId}
                                           >
                                             <b>{pin.title}</b>
@@ -773,7 +797,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                         >
                                           <IconButton
                                             onClick={() =>
-                                              handleOpenConfirmationAlert(pin)
+                                              handlePinOpenConfirmationAlert(pin)
                                             }
                                             className="delete-icon"
                                             style={{ marginLeft: '10px' }}
@@ -883,7 +907,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             fontSize: '14px',
                             marginTop: '15px',
                           }}
-                          onClick={() => onDeleteButtonClick()}
+                          onClick={handleTrailOpenConfirmationAlert}
                         >
                           <RiDeleteBin6Fill /> Delete Trail
                         </Button>

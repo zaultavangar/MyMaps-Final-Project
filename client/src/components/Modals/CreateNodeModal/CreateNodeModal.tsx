@@ -29,6 +29,8 @@ import {
   refreshState,
   selectedNodeState,
   selectedPinState,
+  refreshPinsState,
+  refreshTrailsState,
 } from '../../../global/Atoms'
 import { IPin, IPinProperty, makeIPinProperty } from '../../../types'
 
@@ -77,6 +79,8 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
 
   const [refresh, setRefresh] = useRecoilState(refreshState)
   const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
+  const [refreshTrails, setRefreshTrails] = useRecoilState(refreshTrailsState)
 
   // called when the "Create" button is clicked
   const handleSubmit = async () => {
@@ -112,6 +116,8 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
       node && setSelectedNode(node)
     }
 
+    setRefreshPins(!refreshPins)
+    setRefreshTrails(!refreshTrails)
     onSubmit()
     handleClose()
   }

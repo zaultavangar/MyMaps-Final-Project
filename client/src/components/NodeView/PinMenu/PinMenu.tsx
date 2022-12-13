@@ -32,6 +32,8 @@ import {
   alertOpenState,
   alertTitleState,
   refreshLinkListState,
+  refreshTrailsState,
+  refreshPinsState,
   refreshState,
   mapPinsState,
   selectedPinState,
@@ -39,9 +41,12 @@ import {
   tabIndexState,
   specificTrailState,
   addToRouteModalOpenState,
+  confirmationOpenState,
+  confirmationTypeState
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
+import { ConfirmationAlert } from '../../ConfirmationAlert'
 
 interface IPinMenuProps {
   setParentNode: (node: INode) => void
@@ -49,6 +54,9 @@ interface IPinMenuProps {
 }
 
 export const PinMenu = (props: IPinMenuProps) => {
+  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
+  const [confirmationType, setConfirmationType] = useState<string>('')
+
   const { setParentNode, onCreateNodeButtonClick } = props
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
@@ -93,6 +101,8 @@ export const PinMenu = (props: IPinMenuProps) => {
   const setAlertMessage = useSetRecoilState(alertMessageState)
   const [refresh, setRefresh] = useRecoilState(refreshState)
   const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
+  const [refreshTrails, setRefreshTrails] = useRecoilState(refreshTrailsState)
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
   const setTabIndex = useSetRecoilState(tabIndexState)
 
   // State variable for current pin title
@@ -115,8 +125,7 @@ export const PinMenu = (props: IPinMenuProps) => {
         setAlertTitle('Title update failed')
         setAlertMessage(updateResp.message)
       }
-      setRefresh(!refresh)
-      setRefreshLinkList(!refreshLinkList)
+      setRefreshPins(!refreshPins)
     }
   }
 
@@ -140,10 +149,19 @@ export const PinMenu = (props: IPinMenuProps) => {
       }
       setRefresh(!refresh)
       setRefreshLinkList(!refreshLinkList)
+      setRefreshPins(!refreshPins)
+      setRefreshTrails(!refreshTrails)
     }
+  }
+  
+  const handleOpenConfirmationAlert = () => {
+    console.log(selectedPin)
+    setConfirmationType('deletePin')
+    setConfirmationOpen(true)
   }
 
   const onDeleteButtonClick = async () => {
+    // update trails
     if (selectedPin) {
       const deleteResp = await FrontendPinGateway.deletePin(selectedPin.pinId)
       if (!deleteResp.success) {
@@ -151,7 +169,8 @@ export const PinMenu = (props: IPinMenuProps) => {
         setAlertTitle('Failed to delete pin')
         setAlertMessage(deleteResp.message)
       }
-      setRefreshLinkList(!refreshLinkList)
+      setRefreshPins(!refreshPins)
+      setRefreshTrails(!refreshTrails)
       setSelectedPin(null)
     }
   }
@@ -202,6 +221,15 @@ export const PinMenu = (props: IPinMenuProps) => {
   const [addToRouteModalOpen, setAddToRouteModalOpen] = useState(false)
 
   return (
+    <>
+    {confirmationOpen && 
+      <ConfirmationAlert 
+        isOpen={confirmationOpen}
+        setOpen={setConfirmationOpen}
+        confirmationType={confirmationType}
+        pinToDelete={selectedPin}
+        onDeletePinButtonClick={onDeleteButtonClick}
+      />}
     <div className="pin-menu-container">
       <AddToRouteModal
         isOpen={addToRouteModalOpen}
@@ -286,7 +314,7 @@ export const PinMenu = (props: IPinMenuProps) => {
                     style={smallCustomButtonStyle}
                     icon={<RiDeleteBin6Fill />}
                     // text="Delete Pin"
-                    onClick={() => onDeleteButtonClick()}
+                    onClick={ handleOpenConfirmationAlert}
                   />
                 </div>
               </div>
@@ -412,5 +440,6 @@ export const PinMenu = (props: IPinMenuProps) => {
         </div>
       )}
     </div>
+    </>
   )
 }
