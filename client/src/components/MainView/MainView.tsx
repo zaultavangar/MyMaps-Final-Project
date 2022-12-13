@@ -15,7 +15,14 @@ import {
 } from '../../global/Atoms'
 import { useLocation } from 'react-router-dom'
 import { FrontendNodeGateway } from '../../nodes'
-import { INode, IPin, NodeIdsToNodesMap, RecursiveNodeTree } from '../../types'
+import {
+  INode,
+  IPin,
+  IPinProperty,
+  makeIPinProperty,
+  NodeIdsToNodesMap,
+  RecursiveNodeTree,
+} from '../../types'
 import { Alert } from '../Alert'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 import { Header } from '../Header'
@@ -167,7 +174,7 @@ export const MainView = React.memo(function MainView() {
         if (!deleteResp.success) {
           setAlertIsOpen(true)
           setAlertTitle('Delete node failed')
-          setAlertMessage('Delete node failed in MainView.tsx:97')
+          setAlertMessage('Delete node failed in MainView.tsx')
           return
         }
         const path: string[] = node.filePath.path
@@ -176,6 +183,43 @@ export const MainView = React.memo(function MainView() {
           const parentResp = await FrontendNodeGateway.getNode(parentId)
           if (parentResp.success) {
             setSelectedNode(parentResp.payload)
+            // Get the map that contains this node (first node in the path)
+            const mapId: string = path[0]
+            console.log('mapId:', mapId)
+            const mapResp = await FrontendNodeGateway.getNode(mapId)
+            if (mapResp.success) {
+              // get all of the pins on this map
+              const pinsResp = await FrontendPinGateway.getPinsByNodeId(mapId)
+              if (pinsResp.success && pinsResp.payload) {
+                console.log('pinsResp.payload:', pinsResp.payload)
+                for (let i = 0; i < pinsResp.payload.length; i++) {
+                  const pin = pinsResp.payload[i]
+                  const childNodes = pin.childNodes
+                  // find the index of the node that has the same id as the deleted node
+                  const index = childNodes.findIndex(
+                    (childNode) => childNode.nodeId === node.nodeId
+                  )
+                  if (index > -1) {
+                    console.log('found node in pin:', pin)
+                    console.log('original childNodes:', childNodes)
+                    const newProperty: IPinProperty = makeIPinProperty(
+                      'childNodes',
+                      childNodes.filter((_, i) => i !== index)
+                    )
+                    console.log('new childNodes:', newProperty.value)
+                    const updateResp = await FrontendPinGateway.updatePin(pin.pinId, [
+                      newProperty,
+                    ])
+                    if (!updateResp.success) {
+                      setAlertIsOpen(true)
+                      setAlertTitle('Delete node failed')
+                      setAlertMessage('Delete node failed in MainView.tsx:97')
+                      return
+                    }
+                  }
+                }
+              }
+            }
             return
           }
         }
