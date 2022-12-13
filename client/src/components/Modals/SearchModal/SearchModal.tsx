@@ -12,8 +12,8 @@ import {
   Checkbox,
   CheckboxGroup,
   RadioGroup,
-  Radio, 
-  Stack
+  Radio,
+  Stack,
 } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import React, { useState, useEffect, useCallback } from 'react'

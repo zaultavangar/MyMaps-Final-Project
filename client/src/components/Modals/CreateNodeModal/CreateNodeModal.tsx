@@ -24,7 +24,12 @@ import { TreeView } from '../../TreeView'
 import './CreateNodeModal.scss'
 import { createNodeFromModal, uploadImage } from './createNodeUtils'
 import { useSetRecoilState, useRecoilState } from 'recoil'
-import { refreshLinkListState, refreshState, selectedNodeState, selectedPinState } from '../../../global/Atoms'
+import {
+  refreshLinkListState,
+  refreshState,
+  selectedNodeState,
+  selectedPinState,
+} from '../../../global/Atoms'
 import { IPin, IPinProperty, makeIPinProperty } from '../../../types'
 
 export interface ICreateNodeModalProps {
@@ -72,7 +77,6 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
 
   const [refresh, setRefresh] = useRecoilState(refreshState)
   const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
-
 
   // called when the "Create" button is clicked
   const handleSubmit = async () => {
