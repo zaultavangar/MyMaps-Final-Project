@@ -120,12 +120,12 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const setAlertMessage = useSetRecoilState(alertMessageState)
 
   useEffect(() => {
-    console.log('hi')
+    // console.log('hi')
     setRouteDrawerPins(pins)
   }, [isOpen])
 
   useEffect(() => {
-    console.log(routeDrawerPins)
+    // console.log(routeDrawerPins)
     if (routeDrawerPins && routeDrawerPins.length > 0) {
       setPinIdToAdd(routeDrawerPins[0].pinId)
       if (trails && trails.length > 0) {
@@ -155,7 +155,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [showTrailCreatedAlert, setShowTrailCreatedAlert] = useState(false)
 
   useEffect(() => {
-    console.log('hi')
+    // console.log('hi')
     setShowTrailCreatedAlert(true)
   }, [dbTrails])
 
@@ -177,32 +177,32 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const handleAddPinsToTrail = async (e: any) => {
-    console.log(pinIdToAdd)
+    // console.log(pinIdToAdd)
     if (pinIdToAdd) {
       const getPinIdResponse = await FrontendPinGateway.getPin(pinIdToAdd)
-      console.log(getPinIdResponse)
+      // console.log(getPinIdResponse)
       let pin: IPin
       if (getPinIdResponse.success && getPinIdResponse.payload) {
         pin = getPinIdResponse.payload
-        console.log(pin)
+        // console.log(pin)
         const newPins = pinsAdded.slice()
         newPins.push(pin)
-        console.log(newPins)
+        // console.log(newPins)
         setPinsAdded(newPins)
         setAddPinPopoverOpen(false)
         const routePinsCopy = routeDrawerPins?.slice()
         if (routePinsCopy !== undefined) {
           for (let i = 0; i < routePinsCopy.length; i++) {
-            console.log(routePinsCopy[i], pin)
+            // console.log(routePinsCopy[i], pin)
             if (isSamePin(routePinsCopy[i], pin)) {
-              console.log('add: is same pin')
+              // console.log('add: is same pin')
               routePinsCopy.splice(i, 1)
             }
           }
           setRouteDrawerPins(routePinsCopy)
         }
       } else {
-        console.log('fail')
+        // console.log('fail')
       }
     }
   }
@@ -214,11 +214,11 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
       if (getPinIdResponse.success && getPinIdResponse.payload) {
         pin = getPinIdResponse.payload
-        console.log(pin)
+        // console.log(pin)
         const newPins = pinsAdded.slice()
         for (let i = 0; i < newPins.length; i++) {
           if (isSamePin(newPins[i], pin)) {
-            console.log('remove: is same pin')
+            // console.log('remove: is same pin')
             newPins.splice(i, 1)
           }
         }
@@ -241,7 +241,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
           trailPinList.splice(i, 1)
         }
       }
-      console.log(trailPinList)
+      // console.log(trailPinList)
       const trailProperty: ITrailProperty = makeITrailProperty('pinList', trailPinList)
       const updateTrailResp = await FrontendTrailGateway.updateTrail(
         specificTrail.trailId,
@@ -287,7 +287,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const onCreateTrailPopoverClick = () => {
-    console.log('hi')
+    // console.log('hi')
     setCreateTrailPopoverOpen(true)
   }
 
@@ -296,7 +296,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       setError('Error: No title')
       return
     }
-    console.log(title)
+    // console.log(title)
 
     const newTrail: ITrail = {
       trailId: generateObjectId('trail'),
@@ -319,7 +319,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         pinProperty,
       ])
       if (!updateResp.success) {
-        console.log('error')
+        // console.log('error')
         setAlertIsOpen(true)
         setAlertTitle('Title update failed')
         setAlertMessage(updateResp.message)
@@ -341,10 +341,10 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
-  console.log(trailIdToNavigate)
+  // console.log(trailIdToNavigate)
 
   const handleStartNavigationClick = () => {
-    console.log(trailIdToNavigate)
+    // console.log(trailIdToNavigate)
     if (trailIdToNavigate.length > 0) {
       startNavigation(trailIdToNavigate)
       setRouteDrawerOpen(false)
@@ -355,7 +355,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const val: number = pinsAdded.slice().length + 1
 
   const onCreateDragEnd = (result: DropResult) => {
-    console.log(result)
+    // console.log(result)
     const { source, destination } = result
     if (!destination) return
 
@@ -367,7 +367,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const onViewDragEnd = (result: DropResult) => {
-    console.log(result)
+    // console.log(result)
     const { source, destination } = result
     if (!destination) return
 
@@ -408,7 +408,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [editingTitle, setEditingTitle] = useState<boolean>(false)
   const [editingExplainer, setEditingExplainer] = useState<boolean>(false)
 
-  //
   const handleUpdateTitle = async (title: string) => {
     if (specificTrail) {
       setTitle(title)
@@ -438,8 +437,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAlertTitle('Explainer update failed')
         setAlertMessage(updateResp.message)
       }
-      // setRefresh(!refresh)
-      // setRefreshLinkList(!refreshLinkList)
     }
   }
 
@@ -473,7 +470,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAlertMessage(deleteResp.message)
       }
       setConfirmationOpen(false)
-      // setRefreshLinkList(!refreshLinkList)
       setSpecificTrail(null)
       setRefreshTrails(!refreshTrails)
       setRefreshPins(!refreshPins)
@@ -497,7 +493,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     setSpecificTrail(trail)
   }
 
-  console.log(confirmationOpen)
+  // console.log(confirmationOpen)
   return (
     <>
       {confirmationOpen && (
@@ -858,17 +854,17 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                         if (pinIdToAdd) {
                                           const getPinIdResponse =
                                             await FrontendPinGateway.getPin(pinIdToAdd)
-                                          console.log(getPinIdResponse)
+                                          // console.log(getPinIdResponse)
                                           let pin: IPin
                                           if (
                                             getPinIdResponse.success &&
                                             getPinIdResponse.payload
                                           ) {
                                             pin = getPinIdResponse.payload
-                                            console.log(pin)
+                                            // console.log(pin)
                                             const newPins = pinsAdded.slice()
                                             newPins.push(pin)
-                                            console.log(newPins)
+                                            // console.log(newPins)
                                             setPinsAdded(newPins)
                                             setAddPinPopoverOpen(false)
                                             const routePinsCopy = routeDrawerPins?.slice()
@@ -878,16 +874,16 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                                 i < routePinsCopy.length;
                                                 i++
                                               ) {
-                                                console.log(routePinsCopy[i], pin)
+                                                // console.log(routePinsCopy[i], pin)
                                                 if (isSamePin(routePinsCopy[i], pin)) {
-                                                  console.log('add: is same pin')
+                                                  // console.log('add: is same pin')
                                                   routePinsCopy.splice(i, 1)
                                                 }
                                               }
                                               setRouteDrawerPins(routePinsCopy)
                                             }
                                           } else {
-                                            console.log('fail')
+                                            // console.log('fail')
                                           }
                                         }
                                       }}

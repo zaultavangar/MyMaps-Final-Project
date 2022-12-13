@@ -50,11 +50,11 @@ describe('Unit Test: Delete Trails', () => {
     const trail1 = getTrailByNodeIdResp.payload.find(
       (trail) => trail.trailId === 'trail1'
     )
-    //
+    /*
     console.log(trail1)
     console.log(validTrail1)
     console.log(getTrailByNodeIdResp.payload)
-    //
+    */
     expect(isSameTrail(trail1, validTrail1)).toBeTruthy()
     const trail3 = getTrailByNodeIdResp.payload.find(
       (trail) => trail.trailId === 'trail3'

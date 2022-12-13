@@ -265,7 +265,7 @@ export const MapContent = (props: IMapContentProps) => {
       const markerEl = marker.getElement()
       markerRef.current = markerEl
 
-      console.log(markerRef.current)
+      // (markerRef.current)
 
       // setCreatePinPopoverOpen(true)
       setLngLast(lngLat.lng)

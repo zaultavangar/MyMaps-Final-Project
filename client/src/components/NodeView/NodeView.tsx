@@ -165,7 +165,7 @@ export const NodeView = (props: INodeViewProps) => {
     }
 
     if (!mapNode || mapNode.type !== 'map') {
-      console.log('No map node found')
+      // console.log('No map node found')
       const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(currentNode.nodeId)
       if (pinsFromNode.success && pinsFromNode.payload) {
         setPins(pinsFromNode.payload)
@@ -420,7 +420,7 @@ export const NodeView = (props: INodeViewProps) => {
         // resizableWidth = width
         xLast = e.screenX
       } else {
-        console.log('bye')
+        // console.log('bye')
       }
     }
   }
@@ -446,7 +446,7 @@ export const NodeView = (props: INodeViewProps) => {
       const getTrailResp = await FrontendTrailGateway.getTrail(trailId)
       if (getTrailResp.success && getTrailResp.payload) {
         const navTrail = getTrailResp.payload
-        console.log(navTrail)
+        // console.log(navTrail)
         setTrailToNavigate(navTrail)
       }
     }

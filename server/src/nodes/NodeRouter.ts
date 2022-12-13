@@ -45,10 +45,10 @@ export class NodeRouter {
         // or JSON object from the client side
         const node = req.body.node
         if (!isINode(node)) {
-          console.log('Not an INode (byeee)')
+          // console.log('Not an INode (byeee)')
           res.status(400).send('not INode!')
         } else {
-          console.log('creating node (hiiii)')
+          // console.log('creating node (hiiii)')
           const response = await this.BackendNodeGateway.createNode(node)
           res.status(200).send(response)
         }

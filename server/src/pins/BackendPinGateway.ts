@@ -122,7 +122,7 @@ export class BackendPinGateway {
   ): Promise<IServiceResponse<IPin>> {
     const properties: any = {}
     for (let i = 0; i < toUpdate.length; i++) {
-      console.log(toUpdate[i])
+      // console.log(toUpdate[i])
       if (!isIPinProperty(toUpdate[i])) {
         return failureServiceResponse('toUpdate parameters invalid')
       }

@@ -93,7 +93,7 @@ export const PinMenu = (props: IPinMenuProps) => {
   // State variable for whether the title is being edited
   const [editingTitle, setEditingTitle] = useState<boolean>(false)
 
-  console.log(`selectedPin.nodeId=${selectedPin?.pinId}`)
+  // console.log(`selectedPin.nodeId=${selectedPin?.pinId}`)
   const handleUpdateTitle = async (title: string) => {
     if (selectedPin) {
       setTitle(title)
@@ -136,7 +136,7 @@ export const PinMenu = (props: IPinMenuProps) => {
   }
 
   const handleOpenConfirmationAlert = () => {
-    console.log(selectedPin)
+    // console.log(selectedPin)
     setConfirmationType('deletePin')
     setConfirmationOpen(true)
   }

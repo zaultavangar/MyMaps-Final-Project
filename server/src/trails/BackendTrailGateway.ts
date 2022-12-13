@@ -132,7 +132,7 @@ export class BackendTrailGateway {
   ): Promise<IServiceResponse<ITrail>> {
     const properties: any = {}
     for (let i = 0; i < toUpdate.length; i++) {
-      console.log(toUpdate[i])
+      // console.log(toUpdate[i])
       if (!isITrailProperty(toUpdate[i])) {
         return failureServiceResponse('toUpdate parameters invalid')
       }

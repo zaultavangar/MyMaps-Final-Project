@@ -31,7 +31,7 @@ export class PinRouter {
       try {
         const pin = req.body.pin
         if (!isIPin(pin)) {
-          console.log('not ipin')
+          // console.log('not ipin')
           res.status(400).send('not IPin!')
         } else {
           const response = await this.BackendPinGateway.createPin(pin)

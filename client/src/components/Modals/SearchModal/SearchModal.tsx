@@ -80,7 +80,7 @@ export const SearchModal = (props: ISearchModalProps) => {
       const pinSearchResponse = await FrontendPinGateway.search(searchValue)
       if (pinSearchResponse.success) {
         responseArr['pinSearch'] = pinSearchResponse?.payload
-        console.log(pinSearchResponse?.payload)
+        // console.log(pinSearchResponse?.payload)
         // return pinSearchResponse?.payload
       }
     }
@@ -170,13 +170,13 @@ export const SearchModal = (props: ISearchModalProps) => {
 
   const checkIfInList = (val: string) => {
     const typeFilterCpy = typeFilter.slice()
-    console.log(typeFilterCpy)
+    // console.log(typeFilterCpy)
     if (!typeFilterCpy.includes(val)) {
       typeFilterCpy.push(val)
     } else {
       typeFilterCpy.splice(typeFilter.indexOf(val), 1)
     }
-    console.log(typeFilterCpy)
+    // console.log(typeFilterCpy)
     setTypeFilter(typeFilterCpy) // update the type filter array
   }
 
