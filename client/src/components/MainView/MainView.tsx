@@ -25,14 +25,12 @@ import {
   CreateNodeModal,
   MoveNodeModal,
   CreateMapModal,
-  AddToRouteModal,
 } from '../Modals'
 import { NodeView } from '../NodeView'
 import { TreeView } from '../TreeView'
 import { SearchModal } from '../Modals/SearchModal'
 import './MainView.scss'
 import { createNodeIdsToNodesMap, emptyNode, makeRootWrapper } from './mainViewUtils'
-import { RouteDrawer } from '../NodeView/RouteDrawer'
 import { FrontendPinGateway } from '../../pins'
 
 export const MainView = React.memo(function MainView() {
