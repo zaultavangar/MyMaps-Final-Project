@@ -115,15 +115,9 @@ export const FrontendPinGateway = {
     }
   },
 
-  search: async (
-    input: string,
-  ): Promise<IServiceResponse<string[]>> => {
+  search: async (input: string): Promise<IServiceResponse<string[]>> => {
     try {
-      const path =
-        baseEndpoint +
-        servicePath +
-        'search/' +
-        `${input}/` 
+      const path = baseEndpoint + servicePath + 'search/' + `${input}/`
       return await get<IServiceResponse<string[]>>(path)
     } catch (exception) {
       return failureServiceResponse('[search] Unable to access backend')

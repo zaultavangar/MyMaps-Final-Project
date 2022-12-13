@@ -63,15 +63,6 @@ export const MainView = React.memo(function MainView() {
   const [routeDrawerOpen, setRouteDrawerOpen] = useRecoilState(routeDrawerOpenState)
   const [pins, setPins] = useState<IPin[]>([])
 
-  /** update our frontend root nodes from the database */
-  // const loadRootsFromDB = useCallback(async () => {
-  //   const rootsFromDB = await FrontendNodeGateway.getRoots()
-  //   if (rootsFromDB.success) {
-  //     rootsFromDB.payload && setRootNodes(rootsFromDB.payload)
-  //     setIsAppLoaded(true)
-  //   }
-  // }, [])
-
   /** update our frontend root nodes and pins from the database */
   const loadRootsFromDB = useCallback(async () => {
     const rootsFromDB = await FrontendNodeGateway.getRoots()
@@ -81,20 +72,33 @@ export const MainView = React.memo(function MainView() {
         let pinsCollection: IPin[] = []
         // put the root nodes in a local recursive node tree
         const rootNodesTemp = rootsFromDB.payload
-        console.log('rootNodes before loop', rootNodesTemp)
         for (let i = 0; i < rootNodesTemp.length; i++) {
-          const pinsFromDB = await FrontendPinGateway.getPinsByNodeId(
-            rootNodesTemp[i].node.nodeId
+          pinsCollection = pinsCollection.concat(
+            await getAllPinsFromNodeTree(rootNodesTemp[i])
           )
-          if (pinsFromDB.success && pinsFromDB.payload) {
-            pinsCollection = pinsCollection.concat(pinsFromDB.payload)
-          }
         }
         setPins(pinsCollection)
       }
       setIsAppLoaded(true)
     }
   }, [])
+
+  // function to get all pins from a given RecursiveNodeTree
+  const getAllPinsFromNodeTree = async (nodeTree: RecursiveNodeTree): Promise<IPin[]> => {
+    let pinsCollection: IPin[] = []
+    // get the pins from the current node
+    const pinsFromDB = await FrontendPinGateway.getPinsByNodeId(nodeTree.node.nodeId)
+    if (pinsFromDB.success && pinsFromDB.payload) {
+      pinsCollection = pinsCollection.concat(pinsFromDB.payload)
+    }
+    // iterate through each of the children and get their pins
+    for (let i = 0; i < nodeTree.children.length; i++) {
+      pinsCollection = pinsCollection.concat(
+        await getAllPinsFromNodeTree(nodeTree.children[i])
+      )
+    }
+    return pinsCollection
+  }
 
   useEffect(() => {
     loadRootsFromDB()

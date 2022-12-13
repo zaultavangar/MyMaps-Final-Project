@@ -37,7 +37,7 @@ export const TreeView = (props: ITreeViewProps) => {
               title={tree.node.title}
               childNodes={tree.children}
               changeUrlOnClick={changeUrlOnClick}
-              relevantPins={pins.filter((pin) => pin.nodeId === tree.node.nodeId) || []}
+              pins={pins}
             />
           )) ||
             ((tree.node.type === 'map' || tree.node.type === 'googleMap') && (

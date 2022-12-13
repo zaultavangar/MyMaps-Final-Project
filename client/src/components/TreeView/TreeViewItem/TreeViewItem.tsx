@@ -17,7 +17,7 @@ interface ITreeViewProps {
   title: string
   type: NodeType | 'pin'
   selectedPin: IPin | null
-  relevantPins?: IPin[]
+  pins?: IPin[] | null
 }
 
 export const TreeViewItem = ({
@@ -29,16 +29,18 @@ export const TreeViewItem = ({
   setParentNode,
   changeUrlOnClick,
   selectedPin,
-  relevantPins,
+  pins,
 }: ITreeViewProps) => {
   console.log('current node', node)
+  console.log('pins', pins)
+  // get the relevant pins for this node
+  const relevantPins = pins?.filter((pin) => pin.nodeId === node.nodeId)
   console.log('relevantPins', relevantPins)
 
   const [selectedMapPin, setSelectedMapPin] = useRecoilState(selectedPinState)
 
   let childrenItems: JSX.Element[] = []
-  // glr: why does this not work?
-  if (childNodes.length) {
+  if (childNodes.length || (relevantPins && relevantPins.length)) {
     if (relevantPins && relevantPins.length) {
       // create a dictionary that maps the pin to the childnode(s)
       // that have said pin as their pinId
@@ -52,7 +54,11 @@ export const TreeViewItem = ({
           }
         }
       })
-      console.log('pinToChildNode', pinToChildNode)
+
+      // define mapChildren as all of the childNodes that are not in relevantPins
+      const mapChildren = childNodes.filter((child: RecursiveNodeTree) => {
+        return !relevantPins.find((pin) => pin.pinId === child.node.pinId)
+      })
 
       // For each pin in the relevantPins array, create a TreeViewItem
       // for the pin, and if it has any childnodes in the pinToChildNode
@@ -75,6 +81,40 @@ export const TreeViewItem = ({
           </div>
         )
       })
+      // Add the mapChildren to the end of the childrenItems array
+      childrenItems = childrenItems.concat(
+        mapChildren.map((child: RecursiveNodeTree) => {
+          return changeUrlOnClick ? (
+            <Link to={`/${pathToString(child.node.filePath)}`} key={child.node.nodeId}>
+              <TreeViewItem
+                node={child.node}
+                parentNode={parentNode}
+                setParentNode={setParentNode}
+                type={child.node.type}
+                title={child.node.title}
+                childNodes={child.children}
+                changeUrlOnClick={changeUrlOnClick}
+                selectedPin={selectedPin}
+                pins={pins}
+              />
+            </Link>
+          ) : (
+            <TreeViewItem
+              node={child.node}
+              parentNode={parentNode}
+              setParentNode={setParentNode}
+              key={child.node.nodeId}
+              type={child.node.type}
+              title={child.node.title}
+              childNodes={child.children}
+              changeUrlOnClick={changeUrlOnClick}
+              selectedPin={selectedPin}
+              pins={pins}
+            />
+          )
+        })
+      )
+      console.log('childrenItems', childrenItems)
     } else {
       childrenItems = childNodes.map((child: RecursiveNodeTree) => {
         return changeUrlOnClick ? (
@@ -142,7 +182,7 @@ export const TreeViewItem = ({
   let icon: JSX.Element | null = null
   if (type === 'pin') icon = <RiMapPinLine />
   else icon = nodeTypeIcon(type)
-  const hasChildren: boolean = childNodes.length > 0
+  const hasChildren: boolean = childrenItems.length > 0
   const isSelected: boolean =
     parentNode != null && parentNode.nodeId === node.nodeId && type !== 'pin'
   if (type === 'folder' && isOpen) icon = <RiFolderOpenLine />

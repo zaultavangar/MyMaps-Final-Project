@@ -442,6 +442,7 @@ export const NodeView = (props: INodeViewProps) => {
   }
 
   const handleRouteMenuButtonClick = useCallback(() => {
+    setIsNavigating(false)
     setRouteDrawerOpen(true)
   }, [])
 

@@ -169,11 +169,13 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
                 onChange={handleSelectedTypeChange}
                 placeholder="Select a type"
               >
-                {nodeTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </option>
-                ))}
+                {nodeTypes
+                  .filter((type) => type !== 'map' && type !== 'googleMap')
+                  .map((type) => (
+                    <option key={type} value={type}>
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </option>
+                  ))}
               </Select>
             </div>
             {selectedType && isText && (

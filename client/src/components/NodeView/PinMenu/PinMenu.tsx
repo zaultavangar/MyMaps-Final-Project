@@ -40,9 +40,13 @@ import {
   routeDrawerOpenState,
   tabIndexState,
   specificTrailState,
+  addToRouteModalOpenState,
+  confirmationOpenState,
+  confirmationTypeState
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
+import { ConfirmationAlert } from '../../ConfirmationAlert'
 
 interface IPinMenuProps {
   setParentNode: (node: INode) => void
@@ -50,6 +54,9 @@ interface IPinMenuProps {
 }
 
 export const PinMenu = (props: IPinMenuProps) => {
+  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
+  const [confirmationType, setConfirmationType] = useState<string>('')
+
   const { setParentNode, onCreateNodeButtonClick } = props
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
@@ -58,6 +65,7 @@ export const PinMenu = (props: IPinMenuProps) => {
 
   const setRouteDrawerOpen = useSetRecoilState(routeDrawerOpenState)
   const setSpecificTrail = useSetRecoilState(specificTrailState)
+  const setAddToRouteModalOpen = useSetRecoilState(addToRouteModalOpenState)
 
   // Formats a date, could be global method ***
   const formatDate = (date: any) => {
@@ -145,8 +153,15 @@ export const PinMenu = (props: IPinMenuProps) => {
       setRefreshTrails(!refreshTrails)
     }
   }
+  
+  const handleOpenConfirmationAlert = () => {
+    console.log(selectedPin)
+    setConfirmationType('deletePin')
+    setConfirmationOpen(true)
+  }
 
   const onDeleteButtonClick = async () => {
+    // update trails
     if (selectedPin) {
       const deleteResp = await FrontendPinGateway.deletePin(selectedPin.pinId)
       if (!deleteResp.success) {
@@ -155,7 +170,14 @@ export const PinMenu = (props: IPinMenuProps) => {
         setAlertMessage(deleteResp.message)
       }
       setRefreshPins(!refreshPins)
+      setRefreshTrails(!refreshTrails)
       setSelectedPin(null)
+    }
+  }
+
+  const onAddToRouteButtonClick = async () => {
+    if (selectedPin) {
+      setAddToRouteModalOpen(true)
     }
   }
 
@@ -197,6 +219,15 @@ export const PinMenu = (props: IPinMenuProps) => {
   const [seeMoreTrails, setSeeMoreTrails] = useState(false)
 
   return (
+    <>
+    {confirmationOpen && 
+      <ConfirmationAlert 
+        isOpen={confirmationOpen}
+        setOpen={setConfirmationOpen}
+        confirmationType={confirmationType}
+        pinToDelete={selectedPin}
+        onDeletePinButtonClick={onDeleteButtonClick}
+      />}
     <div className="pin-menu-container">
       {selectedPin === null ? (
         <div>
@@ -274,7 +305,7 @@ export const PinMenu = (props: IPinMenuProps) => {
                     style={smallCustomButtonStyle}
                     icon={<RiDeleteBin6Fill />}
                     // text="Delete Pin"
-                    onClick={() => onDeleteButtonClick()}
+                    onClick={ handleOpenConfirmationAlert}
                   />
                 </div>
               </div>
@@ -348,7 +379,7 @@ export const PinMenu = (props: IPinMenuProps) => {
               text="Add to Route"
               style={customButtonStyle}
               icon={<ri.RiRouteLine />}
-              onClick={onCreateNodeButtonClick}
+              onClick={onAddToRouteButtonClick}
             />
           </div>
           <h4
@@ -400,5 +431,6 @@ export const PinMenu = (props: IPinMenuProps) => {
         </div>
       )}
     </div>
+    </>
   )
 }

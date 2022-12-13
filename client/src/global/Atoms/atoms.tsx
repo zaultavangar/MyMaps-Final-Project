@@ -34,6 +34,11 @@ export const routeDrawerOpenState = atom<boolean>({
   default: false,
 })
 
+export const addToRouteModalOpenState = atom<boolean>({
+  key: 'addToRouteModalOpenState',
+  default: false,
+})
+
 export const tabIndexState = atom<number>({
   key: 'tabIndexState',
   default: 0,
@@ -122,6 +127,11 @@ export const selectedExtentState = atom<Extent | null | undefined>({
 export const confirmationOpenState = atom<boolean>({
   key: 'confirmationOpenState',
   default: false,
+})
+
+export const confirmationTypeState = atom<string>({
+  key: 'confirmationTypeState',
+  default: '',
 })
 
 // whether alert is open

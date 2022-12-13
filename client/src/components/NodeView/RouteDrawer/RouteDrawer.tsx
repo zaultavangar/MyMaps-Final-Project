@@ -60,11 +60,13 @@ import {
   tabIndexState,
   specificTrailState,
   confirmationOpenState,
+  confirmationTypeState,
   refreshLinkListState,
   trailPinsState,
   refreshTrailsState,
   refreshPinsState
 } from '../../../global/Atoms'
+import { ConfirmationAlert } from '../../ConfirmationAlert'
 import { FrontendTrailGateway } from '../../../trails'
 import TitleIcon from '@mui/icons-material/Title'
 import Snackbar from '@mui/material/Snackbar'
@@ -110,7 +112,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
-  const [confirmationOpen, setConfirmationOpen] = useRecoilState(confirmationOpenState)
+  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
+  const [confirmationType, setConfirmationType] = useState<string>('')
 
   const setAlertIsOpen = useSetRecoilState(alertOpenState)
   const setAlertTitle = useSetRecoilState(alertTitleState)
@@ -251,6 +254,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       }
       const trailsCpy = trails.slice()
       setConfirmationOpen(false)
+      setRefreshTrails(!refreshTrails)
+      setRefreshPins(!refreshPins)
       // setTrails(trailsCpy)
       setTrailPins(trailPinList)
     }
@@ -448,7 +453,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const cancelConfirmationRef = React.useRef(null)
 
-  const [confirmationType, setConfirmationType] = useState('')
+  
   const [pinToDelete, setPinToDelete] = useState<IPin | null>(null)
   const [trailToDelete, setTrailToDelete] = useState<ITrail | null>(null)
 
@@ -461,14 +466,11 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const handleTrailOpenConfirmationAlert = () => {
     setConfirmationType('deleteTrail')
     setConfirmationOpen(true)
-    setTrailToDelete(specificTrail)
-
-    
   }
 
   const onDeleteTrailButtonClick = async () => {
-    if (trailToDelete) {
-      const deleteResp = await FrontendTrailGateway.deleteTrail(trailToDelete.trailId)
+    if (specificTrail) {
+      const deleteResp = await FrontendTrailGateway.deleteTrail(specificTrail.trailId)
       if (!deleteResp.success) {
         setAlertIsOpen(true)
         setAlertTitle('Failed to delete trail')
@@ -476,77 +478,13 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       }
       setConfirmationOpen(false)
       // setRefreshLinkList(!refreshLinkList)
-      setTrailToDelete(null)
       setSpecificTrail(null)
       setRefreshTrails(!refreshTrails)
       setRefreshPins(!refreshPins)
     }
   }
 
-  const ConfirmationAlert = () => {
-    return (
-      <AlertDialog
-        isOpen={confirmationOpen}
-        leastDestructiveRef={cancelConfirmationRef}
-        onClose={() => setConfirmationOpen(false)}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {confirmationType === 'deletePinFromTrail' && <>Delete Pin from Route</>}
-              {confirmationType === 'deleteTrail' && <>Delete Route</>}
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              {specificTrail &&
-                <>
-                  {confirmationType === 'deletePinFromTrail' && (
-                    <>
-                      Are you sure you want to delete <b>{pinToDelete!.title}</b> from{' '}
-                      <b style={{ color: 'green' }}>{specificTrail.title}</b>?
-                    </>
-                  )}
-                  {confirmationType === 'deleteTrail' &&
-                    <>
-                    Are you sure you want to delete <b style={{ color: 'green' }}>{trailToDelete!.title}</b>
-                    </>
-                  }
-                </>
-              }
-              
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button onClick={() => setConfirmationOpen(false)}>Cancel</Button>
-              <div>
-                {confirmationType === 'deletePinFromTrail' &&
-                  <Button
-                    ref={cancelConfirmationRef}
-                    colorScheme="red"
-                    onClick={() => handleRemovePinFromTrail(pinToDelete!)}
-                    ml={3}
-                  >
-                    Delete
-                  </Button>
-                }
-                {confirmationType === 'deleteTrail' &&
-                  <Button
-                  ref={cancelConfirmationRef}
-                  colorScheme="red"
-                  onClick={onDeleteTrailButtonClick}
-                  ml={3}
-                >
-                  Delete
-                </Button>
-                }
-                
-              </div>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    )
-  }
+  
 
   const smallCustomButtonStyle = {
     height: 25,
@@ -572,7 +510,16 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   console.log(confirmationOpen)
   return (
     <>
-      {confirmationOpen && <ConfirmationAlert />}
+      {confirmationOpen && 
+      <ConfirmationAlert 
+        isOpen={confirmationOpen}
+        setOpen={setConfirmationOpen}
+        confirmationType={confirmationType}
+        specificTrail={specificTrail}
+        pinToDelete={pinToDelete}
+        handleRemovePinFromTrail={handleRemovePinFromTrail}
+        onDeleteTrailButtonClick={onDeleteTrailButtonClick}
+      />}
 
       <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
         <DrawerOverlay />
@@ -868,6 +815,76 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             )}
                           </Droppable>
                         </DragDropContext>
+
+                        <div className="add-pin-to-trail-popover-container">
+                          <Popover
+                            placement="right"
+                            isOpen={addPinPopoverOpen}
+                            onClose={() => setAddPinPopoverOpen(false)}
+                          >
+                            <PopoverTrigger>
+                              <Button
+                                className="add-pins-to-trail-button"
+                                variant="outline"
+                                mr={3}
+                                onClick={() => setAddPinPopoverOpen(true)}
+                                style={{
+                                  marginLeft: '5px',
+                                  marginTop: '10px',
+                                  padding: '40px 30px',
+                                }}
+                              >
+                                <div>
+                                  <div style={{ fontWeight: '200' }}>Add Pins</div>
+                                  <div style={{ fontSize: '1.5em', fontWeight: '200' }}>
+                                    +
+                                  </div>
+                                </div>
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <PopoverArrow />
+                              <PopoverHeader>Choose a Pin</PopoverHeader>
+                              <PopoverCloseButton />
+                              <PopoverBody>
+                                <div className="select-add-pin-wrapper">
+                                  <Select
+                                    value={pinIdToAdd}
+                                    id="select-add-pin"
+                                    onChange={handleSelectChange}
+                                  >
+                                    {routeDrawerPins &&
+                                      routeDrawerPins.map((pin) => (
+                                        <option key={pin.pinId} value={pin.pinId}>
+                                          {pin.title}
+                                        </option>
+                                      ))}
+                                  </Select>
+                                  <div>
+                                    <Button
+                                      colorScheme="whatsapp"
+                                      backgroundColor="rgb(0,125,0)"
+                                      onClick={handleAddPinsToTrail}
+                                      style={{ padding: '10px 10px' }}
+                                    >
+                                      Add
+                                    </Button>
+                                  </div>
+                                </div>
+                              </PopoverBody>
+                              <PopoverFooter></PopoverFooter>
+                            </PopoverContent>
+                          </Popover>
+
+                          {error.length > 0 && (
+                            <div
+                              className="modal-error modal-error-create-trail"
+                              style={{ marginLeft: '-5px' }}
+                            >
+                              {error}
+                            </div>
+                          )}
+                        </div>
                         {/* <div className="specific-trail-pins" style={{display: 'flex', flexWrap: 'wrap', gap: '1em',}}>
                             {specificTrail.pinList.map((pin, index) => (
                               <div className="specific-trail-pin-title" key={index}>

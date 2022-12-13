@@ -32,7 +32,7 @@ export const nodeTypeIcon = (type: NodeType): JSX.Element => {
     case 'googleMap':
       return <SiMapbox />
     default:
-      return <RiMapPinLine/>
+      return <RiMapPinLine />
   }
 }
 
