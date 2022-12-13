@@ -80,7 +80,7 @@ import { selectedPinState } from '../../../global/Atoms'
 import { DropResult, DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { EditableText } from '../../EditableText'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
-import { arrayMoveImmutable } from 'array-move';
+import { arrayMoveImmutable } from 'array-move'
 
 interface IRouteDrawerProps {
   isOpen: boolean
@@ -130,7 +130,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [pinIdToAdd, setPinIdToAdd] = useState<string>('')
   const [pinIdToAddExisitingTrail, setPinIdToAddExistingTrail] = useState<string>('')
 
-
   const [trailIdToNavigate, settrailIdToNavigate] = useState<string>('')
 
   const [addPinPopoverOpen, setAddPinPopoverOpen] = useState(false)
@@ -165,10 +164,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const getPinsForMap = async () => {}
 
-
-
-  
-
   useEffect(() => {
     setShowTrailCreatedAlert(true)
   }, [dbTrails])
@@ -198,17 +193,15 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       const getPinIdResponse = await FrontendPinGateway.getPin(pinIdToAddExisitingTrail)
       let pin: IPin
       if (getPinIdResponse.success && getPinIdResponse.payload) {
-
         pin = getPinIdResponse.payload
-        let newPins = pinsAddedExistingTrail.slice()
+        const newPins = pinsAddedExistingTrail.slice()
         newPins.push(pin)
 
         console.log(newPins)
-        const newProperty: ITrailProperty = makeITrailProperty(
-          'pinList', newPins)
-          const updateResp = await FrontendTrailGateway.updateTrail(specificTrail.trailId, [
-            newProperty,
-          ])
+        const newProperty: ITrailProperty = makeITrailProperty('pinList', newPins)
+        const updateResp = await FrontendTrailGateway.updateTrail(specificTrail.trailId, [
+          newProperty,
+        ])
         if (!updateResp.success) {
           return failureServiceResponse('Failed to add pin to trail')
         }
@@ -217,14 +210,13 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAddPinPopoverOpen(false)
         setRefreshPins(!refreshPins)
         setRefreshTrails(!refreshTrails)
-      } 
+      }
     }
     // const currentPinList = specificTrail!.pinList
     // const getTrailResp = await FrontendTrailGateway.getTrail(specificTrail!.trailId)
     // if (getTrailResp.success && getTrailResp.payload) {
     //   let pinList = getTrailResp.payload
     //   let difference = pinList.filter(pin => !mapPins.includes())
-
 
     // }
   }
@@ -243,11 +235,9 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAddPinPopoverOpen(false)
         setRefreshPins(!refreshPins)
         setRefreshTrails(!refreshTrails)
-
-      } 
+      }
     }
   }
-
 
   const handleRemovePinFromTrail = async (pin: IPin) => {
     const trailPinList = specificTrail?.pinList.slice()
@@ -276,7 +266,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       setTrailPins(trailPinList)
     }
   }
-
 
   useEffect(() => {
     if (specificTrail) setExplainer(specificTrail.explainer)
@@ -351,11 +340,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
-
-
   const handleStartNavigationClick = () => {
-
-    if (trailIdToNavigate.length>0) {
+    if (trailIdToNavigate.length > 0) {
       startNavigation(trailIdToNavigate)
       setRouteDrawerOpen(false)
       setIsNavigating(true)
@@ -363,7 +349,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const val: number = pinsAdded.slice().length + 1
-
 
   const onViewDragEnd = (result: DropResult) => {
     // console.log(result)
@@ -401,11 +386,10 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const handleTabsChange = (index: number) => {
     if (index == 2) {
       setSpecificTrail(null)
-      if (trails.length >=0 ) {
+      if (trails.length >= 0) {
         settrailIdToNavigate(trails[0].trailId)
       }
-    }
-    else if (index==0) {
+    } else if (index == 0) {
       setSpecificTrail(null)
     }
     setTabIndex(index)
@@ -414,7 +398,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const handleCreateTabClick = () => {
     setSpecificTrail(null)
     setTabIndex(0)
-
   }
 
   const [editingTitle, setEditingTitle] = useState<boolean>(false)
@@ -496,14 +479,9 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     font: '20',
   }
 
-
-
-
-
   const handleSpecificTrailClick = (trail: ITrail) => {
     setSpecificTrail(trail)
   }
-
 
   const handleAddClick = (e: any) => {
     if (pins.length > 0) setPinIdToAdd(pins[0].pinId)
@@ -514,8 +492,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     if (pins.length > 0) setPinIdToAddExistingTrail(pins[0].pinId)
     setAddPinPopoverOpen(true)
   }
-
-
 
   return (
     <>
@@ -592,20 +568,19 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                               onChange={handleSelectChange}
                             >
                               <>
-                              {pins &&
-                                pins.map((pin) => (
-                                  <option key={pin.pinId} value={pin.pinId}>
-                                    {pin.title}
-                                  </option>
-                                ))}
+                                {pins &&
+                                  pins.map((pin) => (
+                                    <option key={pin.pinId} value={pin.pinId}>
+                                      {pin.title}
+                                    </option>
+                                  ))}
                               </>
-                            
                             </Select>
                             <div>
                               <Button
                                 colorScheme="whatsapp"
                                 backgroundColor="rgb(0,125,0)"
-                                onClick={handleAddPinsToTrail }
+                                onClick={handleAddPinsToTrail}
                                 style={{ padding: '10px 10px' }}
                               >
                                 Add
@@ -639,11 +614,13 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       </div>
                     )}
                   </div>
-                  <div className='pins-added-sortable-wrapper'>
+                  <div className="pins-added-sortable-wrapper">
                     <ul id="sortList" className="moveable">
-                      {pinsAdded.map((pin, index) => 
-                        <li draggable="true">{pin.title}</li>
-                      )}
+                      {pinsAdded.map((pin, index) => (
+                        <li key={index} draggable="true">
+                          {pin.title}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                   <div
@@ -673,7 +650,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                         See all routes
                       </Button>
                       <div className="specific-trail-wrapper">
-                          <div>
+                        <div>
                           <h2
                             className="specific-trail-title"
                             onDoubleClick={(e) => setEditingTitle(true)}
@@ -712,8 +689,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                   flexWrap: 'wrap',
                                   gap: '10px',
                                   marginLeft: '20px',
-                                  maxHeight: '500px'
-
+                                  maxHeight: '500px',
                                 }}
                               >
                                 {trailPins &&
@@ -772,7 +748,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             )}
                           </Droppable>
                         </DragDropContext>
-                       
+
                         {/* <div className="specific-trail-pins" style={{display: 'flex', flexWrap: 'wrap', gap: '1em',}}>
                             {specificTrail.pinList.map((pin, index) => (
                               <div className="specific-trail-pin-title" key={index}>
@@ -781,7 +757,15 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             ))}
                           </div> */}
                       </div>
-                      <div className="trail-card-delete" style={{display: 'flex', gap: '1em', marginTop: '10px', marginLeft: '15px'}}>
+                      <div
+                        className="trail-card-delete"
+                        style={{
+                          display: 'flex',
+                          gap: '1em',
+                          marginTop: '10px',
+                          marginLeft: '15px',
+                        }}
+                      >
                         <Button
                           style={{
                             backgroundColor: 'rgb(241,241,241)',
@@ -792,72 +776,72 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                           <RiDeleteBin6Fill /> Delete Trail
                         </Button>
                         <div className="add-pin-to-existing-trail-popover-container">
-                            <Popover
-                              placement="right"
-                              isOpen={addPinPopoverOpen}
-                              onClose={() => setAddPinPopoverOpen(false)}
-                            >
-                              <PopoverTrigger>
-                                <Button
-                                  className="add-pins-to-existing-trail-button"
-                                  onClick={handleAddExistingClick}
-                                  style={{
-                                    backgroundColor: 'green',
-                                    color: 'white',
-                                    fontSize: '14px',
-                                    padding: '10px 10px',
-                                  }}
-                                >
-                                  <div>
-                                    <div style={{ fontWeight: '200' }}>Add Pins</div>
-                                  </div>
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent>
-                                <PopoverArrow />
-                                <PopoverHeader>Choose a Pin</PopoverHeader>
-                                <PopoverCloseButton />
-                                <PopoverBody>
-                                  <div className="select-add-pin-wrapper">
-                                    <Select
-                                      value={pinIdToAddExisitingTrail}
-                                      id="select-add-pin"
-                                      onChange={handleExistingTrailSelectChange}
-                                    >
-                                     <>
-                                  {pins &&
-                                    pins.map((pin) => (
-                                      <option key={pin.pinId} value={pin.pinId}>
-                                        {pin.title}
-                                      </option>
-                                    ))}
-                                  </>
-                                    </Select>
-                                    <div>
-                                      <Button
-                                        colorScheme="whatsapp"
-                                        backgroundColor="rgb(0,125,0)"
-                                        onClick={handleAddPinsToExistingTrail}
-                                        style={{ padding: '10px 10px' }}
-                                      >
-                                        Add
-                                      </Button>
-                                    </div>
-                                  </div>
-                                </PopoverBody>
-                                <PopoverFooter></PopoverFooter>
-                              </PopoverContent>
-                            </Popover>
-
-                            {error.length > 0 && (
-                              <div
-                                className="modal-error modal-error-create-trail"
-                                style={{ marginLeft: '-5px' }}
+                          <Popover
+                            placement="right"
+                            isOpen={addPinPopoverOpen}
+                            onClose={() => setAddPinPopoverOpen(false)}
+                          >
+                            <PopoverTrigger>
+                              <Button
+                                className="add-pins-to-existing-trail-button"
+                                onClick={handleAddExistingClick}
+                                style={{
+                                  backgroundColor: 'green',
+                                  color: 'white',
+                                  fontSize: '14px',
+                                  padding: '10px 10px',
+                                }}
                               >
-                                {error}
-                              </div>
-                            )}
-                          </div>
+                                <div>
+                                  <div style={{ fontWeight: '200' }}>Add Pins</div>
+                                </div>
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <PopoverArrow />
+                              <PopoverHeader>Choose a Pin</PopoverHeader>
+                              <PopoverCloseButton />
+                              <PopoverBody>
+                                <div className="select-add-pin-wrapper">
+                                  <Select
+                                    value={pinIdToAddExisitingTrail}
+                                    id="select-add-pin"
+                                    onChange={handleExistingTrailSelectChange}
+                                  >
+                                    <>
+                                      {pins &&
+                                        pins.map((pin) => (
+                                          <option key={pin.pinId} value={pin.pinId}>
+                                            {pin.title}
+                                          </option>
+                                        ))}
+                                    </>
+                                  </Select>
+                                  <div>
+                                    <Button
+                                      colorScheme="whatsapp"
+                                      backgroundColor="rgb(0,125,0)"
+                                      onClick={handleAddPinsToExistingTrail}
+                                      style={{ padding: '10px 10px' }}
+                                    >
+                                      Add
+                                    </Button>
+                                  </div>
+                                </div>
+                              </PopoverBody>
+                              <PopoverFooter></PopoverFooter>
+                            </PopoverContent>
+                          </Popover>
+
+                          {error.length > 0 && (
+                            <div
+                              className="modal-error modal-error-create-trail"
+                              style={{ marginLeft: '-5px' }}
+                            >
+                              {error}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ) : (

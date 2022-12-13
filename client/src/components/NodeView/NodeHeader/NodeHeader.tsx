@@ -29,7 +29,7 @@ import {
   makeINodeProperty,
   failureServiceResponse,
   successfulServiceResponse,
-  makeIPinProperty
+  makeIPinProperty,
 } from '../../../types'
 import { Button } from '../../Button'
 import { ContextMenuItems } from '../../ContextMenu'
@@ -93,13 +93,13 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   /* Method to update the node title */
   const handleUpdateTitle = async (title: string) => {
     const getNodeResp = await FrontendNodeGateway.getNode(currentNode.nodeId)
-    let childNodes = []
-    if (!getNodeResp.success){
+    const childNodes = []
+    if (!getNodeResp.success) {
       return failureServiceResponse('Failed to update content')
     }
     const node = getNodeResp.payload
     if (selectedPin && node) {
-      let childNodes = selectedPin.childNodes.slice()
+      const childNodes = selectedPin.childNodes.slice()
       if (childNodes.includes(node)) {
         childNodes.splice(childNodes.indexOf(node), 1)
       }
@@ -120,14 +120,13 @@ export const NodeHeader = (props: INodeHeaderProps) => {
     if (selectedPin) {
       const pinProperty: IPinProperty = makeIPinProperty('childNodes', childNodes)
       const updatePinResp = await FrontendPinGateway.updatePin(selectedPin.pinId, [
-        pinProperty])
-        if (!updatePinResp.success) {
-          return failureServiceResponse('Failed to update content')
-        }
+        pinProperty,
+      ])
+      if (!updatePinResp.success) {
+        return failureServiceResponse('Failed to update content')
+      }
     }
 
-   
-    
     setRefreshPins(!refreshPins)
     if (selectedPin) {
       const selectedPinResp = await FrontendPinGateway.getPin(selectedPin.pinId)

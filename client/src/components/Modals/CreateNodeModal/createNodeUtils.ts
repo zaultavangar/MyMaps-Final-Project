@@ -171,7 +171,7 @@ export async function createNodeFromModal({
 
 export const uploadImage = async (file: any): Promise<string> => {
   // begin file upload
-  //console.log('Uploading file to Imgur..')
+  // console.log('Uploading file to Imgur..')
 
   // using key for imgur API
   const apiUrl = 'https://api.imgur.com/3/image'
