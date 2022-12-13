@@ -514,8 +514,7 @@ export const NodeView = (props: INodeViewProps) => {
           style={{ width: '5px' }}
         />
       )}
-      {hasAnchors ||
-        (hasPins && (
+      {(hasAnchors || hasPins) && (
           <>
             {hasAnchors ? (
               <div
@@ -534,7 +533,7 @@ export const NodeView = (props: INodeViewProps) => {
               </div>
             )}
           </>
-        ))}
+        )}
       {/* {hasAnchors && (
         <div
           className={'resizable-node-properties'}

@@ -22,7 +22,7 @@ import {
 import { Button } from '../../Button'
 import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
-import { AddToRouteModal, CreateNodeModal } from '../../Modals'
+import {  CreateNodeModal } from '../../Modals'
 import * as ai from 'react-icons/ai'
 import * as ri from 'react-icons/ri'
 import { EditableText } from '../../EditableText'
@@ -231,13 +231,13 @@ export const PinMenu = (props: IPinMenuProps) => {
         onDeletePinButtonClick={onDeleteButtonClick}
       />}
     <div className="pin-menu-container">
-      <AddToRouteModal
+      {/* <AddToRouteModal
         isOpen={addToRouteModalOpen}
         onClose={() => setAddToRouteModalOpen(false)}
         onSubmit={() => setAddToRouteModalOpen(false)}
         // setAddToRouteModalOpen={setAddToRouteModalOpen}
         setAddToRouteModalOpen={setAddToRouteModalOpen}
-      />
+      /> */}
       {selectedPin === null ? (
         <div>
           <h2 className="your-pins">Your Pins</h2>

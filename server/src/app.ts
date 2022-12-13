@@ -27,7 +27,10 @@ CORS relaxes the security applied to an API */
 app.use(cors())
 // serve images, CSS files, and Javascript files in a directory called dist
 app.use(express.static('dist'))
-app.use(express.json()) // allows us to parse json
+// app.use(express.json()) // allows us to parse json
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb' }));
 
 const uri = process.env.DB_URI
 const mongoClient = new MongoClient(uri, {

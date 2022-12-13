@@ -10,14 +10,20 @@ import {
   selectedAnchorsState,
   selectedExtentState,
   startAnchorState,
+  selectedPinState,
+  refreshPinsState,
 } from '../../../../global/Atoms'
 import { FrontendLinkGateway } from '../../../../links'
 import { FrontendNodeGateway } from '../../../../nodes'
+import { FrontendPinGateway } from '../../../../pins'
 import {
   Extent,
   failureServiceResponse,
   IAnchor,
   ILink,
+  IPin,
+  IPinProperty,
+  makeIPinProperty,
   INodeProperty,
   IServiceResponse,
   ITextExtent,
@@ -54,6 +60,7 @@ interface ITextContentProps {}
 
 /** The content of an text node, including all its anchors */
 export const CommentContent = (props: ITextContentProps) => {
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
   const currentNode = useRecoilValue(currentNodeState)
   const startAnchor = useRecoilValue(startAnchorState)
   const [refresh, setRefresh] = useRecoilState(refreshState)
@@ -65,6 +72,7 @@ export const CommentContent = (props: ITextContentProps) => {
   const save = () => {
     setOnSave(!onSave)
   }
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
 
   const history = useHistory()
 
@@ -97,11 +105,22 @@ export const CommentContent = (props: ITextContentProps) => {
 
   // Updates the content of a node
   const updateNodeContent = async (): Promise<IServiceResponse<any>> => {
+    const getNodeResp = await FrontendNodeGateway.getNode(currentNode.nodeId)
+    let childNodes = []
+    if (!getNodeResp.success){
+      return failureServiceResponse('Failed to update content')
+    }
+    const node = getNodeResp.payload
+    if (selectedPin && node) {
+      let childNodes = selectedPin.childNodes.slice()
+      if (childNodes.includes(node)) {
+        childNodes.splice(childNodes.indexOf(node), 1)
+      }
+    }
+
     const editorHtml = editor?.getHTML() // get current editor document as HTML
     // assign to content property
     const nodeProperty: INodeProperty = makeINodeProperty('commentContent', editorHtml)
-    console.log('nodeProperty', nodeProperty)
-    console.log('currentNode.nodeId', currentNode.nodeId)
     const updateNodeResp = await FrontendNodeGateway.updateNode(currentNode.nodeId, [
       nodeProperty,
     ]) // update the node with its new content
@@ -109,7 +128,15 @@ export const CommentContent = (props: ITextContentProps) => {
       console.log(updateNodeResp.message)
       return failureServiceResponse('Failed to update node content')
     }
-    console.log('success')
+    childNodes.push(updateNodeResp.payload)
+    if (selectedPin) {
+      const pinProperty: IPinProperty = makeIPinProperty('childNodes', childNodes)
+      const updatePinResp = await FrontendPinGateway.updatePin(selectedPin.pinId, [
+        pinProperty])
+        if (!updatePinResp.success) {
+          return failureServiceResponse('Failed to update content')
+        }
+    }
     return successfulServiceResponse('Node content updated successfully')
   }
 

@@ -185,7 +185,6 @@ export const MainView = React.memo(function MainView() {
             setSelectedNode(parentResp.payload)
             // Get the map that contains this node (first node in the path)
             const mapId: string = path[0]
-            console.log('mapId:', mapId)
             const mapResp = await FrontendNodeGateway.getNode(mapId)
             if (mapResp.success) {
               // get all of the pins on this map

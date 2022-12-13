@@ -14,15 +14,22 @@ import {
   refreshState,
   selectedNodeState,
   trailToNavigateState,
+  selectedPinState,
+  refreshPinsState,
 } from '../../../global/Atoms'
 import { FrontendNodeGateway } from '../../../nodes'
 import { FrontendTrailGateway } from '../../../trails'
+import { FrontendPinGateway } from '../../../pins'
 import {
   IFolderNode,
   INode,
   ITrail,
   INodeProperty,
+  IPinProperty,
   makeINodeProperty,
+  failureServiceResponse,
+  successfulServiceResponse,
+  makeIPinProperty
 } from '../../../types'
 import { Button } from '../../Button'
 import { ContextMenuItems } from '../../ContextMenu'
@@ -57,6 +64,9 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   const setAlertMessage = useSetRecoilState(alertMessageState)
   const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
 
+  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
+
   // State variable for current node title
   const [title, setTitle] = useState(currentNode.title)
   // State variable for whether the title is being edited
@@ -83,6 +93,19 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   // LAB TASK 8
   /* Method to update the node title */
   const handleUpdateTitle = async (title: string) => {
+    const getNodeResp = await FrontendNodeGateway.getNode(currentNode.nodeId)
+    let childNodes = []
+    if (!getNodeResp.success){
+      return failureServiceResponse('Failed to update content')
+    }
+    const node = getNodeResp.payload
+    if (selectedPin && node) {
+      let childNodes = selectedPin.childNodes.slice()
+      if (childNodes.includes(node)) {
+        childNodes.splice(childNodes.indexOf(node), 1)
+      }
+    }
+
     setTitle(title)
     const nodeProperty: INodeProperty = makeINodeProperty('title', title)
     const titleUpdateResp = await FrontendNodeGateway.updateNode(currentNode.nodeId, [
@@ -93,6 +116,27 @@ export const NodeHeader = (props: INodeHeaderProps) => {
       setAlertTitle('Title update failed')
       setAlertMessage(titleUpdateResp.message)
     }
+
+    childNodes.push(titleUpdateResp.payload)
+    if (selectedPin) {
+      const pinProperty: IPinProperty = makeIPinProperty('childNodes', childNodes)
+      const updatePinResp = await FrontendPinGateway.updatePin(selectedPin.pinId, [
+        pinProperty])
+        if (!updatePinResp.success) {
+          return failureServiceResponse('Failed to update content')
+        }
+    }
+
+   
+    
+    setRefreshPins(!refreshPins)
+    if (selectedPin) {
+      const selectedPinResp = await FrontendPinGateway.getPin(selectedPin.pinId)
+      if (selectedPinResp.success && selectedPinResp.payload) {
+        setSelectedPin(selectedPinResp.payload)
+      }
+    }
+
     setRefresh(!refresh)
     setRefreshLinkList(!refreshLinkList)
   }

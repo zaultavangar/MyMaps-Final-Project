@@ -44,6 +44,7 @@ import {
   ITrailProperty,
   makeIPinProperty,
   makeITrailProperty,
+  failureServiceResponse,
 } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
 import { DeleteIcon } from '@chakra-ui/icons'
@@ -64,7 +65,8 @@ import {
   refreshLinkListState,
   trailPinsState,
   refreshTrailsState,
-  refreshPinsState
+  refreshPinsState,
+  mapPinsState,
 } from '../../../global/Atoms'
 import { ConfirmationAlert } from '../../ConfirmationAlert'
 import { FrontendTrailGateway } from '../../../trails'
@@ -78,6 +80,7 @@ import { selectedPinState } from '../../../global/Atoms'
 import { DropResult, DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { EditableText } from '../../EditableText'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
+import { arrayMoveImmutable } from 'array-move';
 
 interface IRouteDrawerProps {
   isOpen: boolean
@@ -107,7 +110,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const setRouteDrawerOpen = useSetRecoilState(routeDrawerOpenState)
 
-  const [routeDrawerPins, setRouteDrawerPins] = useState<IPin[] | null>([])
   const [dbTrails, setDbTrails] = useState<ITrail[] | null>([])
 
   const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
@@ -119,33 +121,16 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const setAlertTitle = useSetRecoilState(alertTitleState)
   const setAlertMessage = useSetRecoilState(alertMessageState)
 
-  useEffect(() => {
-    console.log('hi')
-    setRouteDrawerPins(pins)
-  }, [isOpen])
-
-  useEffect(() => {
-    console.log(routeDrawerPins)
-    if (routeDrawerPins && routeDrawerPins.length > 0) {
-      setPinIdToAdd(routeDrawerPins[0].pinId)
-      if (trails && trails.length > 0) {
-        for (let i=0; i<trails.length; i++) {
-          if (trails[i].pinList.length > 0) {
-            settrailIdToNavigate(trails[0].trailId)
-            break
-          }
-        }
-      }
-    }
-  }, [routeDrawerPins])
-
-  const getPinsForMap = async () => {}
-
   const [pinsAdded, setPinsAdded] = useState<IPin[]>([])
+
+  const [pinsAddedExistingTrail, setPinsAddedExistingTrail] = useState<IPin[]>([])
 
   const [trailPins, setTrailPins] = useRecoilState(trailPinsState)
 
   const [pinIdToAdd, setPinIdToAdd] = useState<string>('')
+  const [pinIdToAddExisitingTrail, setPinIdToAddExistingTrail] = useState<string>('')
+
+
   const [trailIdToNavigate, settrailIdToNavigate] = useState<string>('')
 
   const [addPinPopoverOpen, setAddPinPopoverOpen] = useState(false)
@@ -153,6 +138,36 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [createTrailPopoverOpen, setCreateTrailPopoverOpen] = useState(false)
 
   const [showTrailCreatedAlert, setShowTrailCreatedAlert] = useState(false)
+
+  const [mapPins, setMapPins] = useRecoilState(mapPinsState)
+
+  const [selectedTrail, setSelectedTrail] = useRecoilState(specificTrailState)
+  const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
+  const [refreshTrails, setRefreshTrails] = useRecoilState(refreshTrailsState)
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
+
+  const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
+  const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
+
+  const [error, setError] = useState<string>('')
+  const [explainer, setExplainer] = useState(specificTrail ? specificTrail.explainer : '')
+
+  useEffect(() => {
+    setExplainer('')
+    setTitle('')
+  }, [isOpen, tabIndex])
+
+  useEffect(() => {
+    if (specificTrail) {
+      setPinsAddedExistingTrail(specificTrail.pinList)
+    }
+  }, [specificTrail])
+
+  const getPinsForMap = async () => {}
+
+
+
+  
 
   useEffect(() => {
     console.log('hi')
@@ -172,15 +187,52 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     setPinIdToAdd(event.target.value)
   }
 
+  const handleExistingTrailSelectChange = (event: any) => {
+    setPinIdToAddExistingTrail(event.target.value)
+  }
+
   const handleTrailNavigateSelectChange = (event: any) => {
     settrailIdToNavigate(event.target.value)
   }
+  const handleAddPinsToExistingTrail = async (e: any) => {
+    if (pinIdToAddExisitingTrail && specificTrail) {
+      const getPinIdResponse = await FrontendPinGateway.getPin(pinIdToAddExisitingTrail)
+      let pin: IPin
+      if (getPinIdResponse.success && getPinIdResponse.payload) {
+
+        pin = getPinIdResponse.payload
+        let newPins = pinsAddedExistingTrail.slice()
+        newPins.push(pin)
+
+        console.log(newPins)
+        const newProperty: ITrailProperty = makeITrailProperty(
+          'pinList', newPins)
+          const updateResp = await FrontendTrailGateway.updateTrail(specificTrail.trailId, [
+            newProperty,
+          ])
+        if (!updateResp.success) {
+          return failureServiceResponse('Failed to add pin to trail')
+        }
+        setTrailPins(newPins)
+        setPinsAddedExistingTrail(newPins)
+        setAddPinPopoverOpen(false)
+        setRefreshPins(!refreshPins)
+        setRefreshTrails(!refreshTrails)
+      } 
+    }
+    // const currentPinList = specificTrail!.pinList
+    // const getTrailResp = await FrontendTrailGateway.getTrail(specificTrail!.trailId)
+    // if (getTrailResp.success && getTrailResp.payload) {
+    //   let pinList = getTrailResp.payload
+    //   let difference = pinList.filter(pin => !mapPins.includes())
+
+
+    // }
+  }
 
   const handleAddPinsToTrail = async (e: any) => {
-    console.log(pinIdToAdd)
     if (pinIdToAdd) {
       const getPinIdResponse = await FrontendPinGateway.getPin(pinIdToAdd)
-      console.log(getPinIdResponse)
       let pin: IPin
       if (getPinIdResponse.success && getPinIdResponse.payload) {
         pin = getPinIdResponse.payload
@@ -190,48 +242,13 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         console.log(newPins)
         setPinsAdded(newPins)
         setAddPinPopoverOpen(false)
-        const routePinsCopy = routeDrawerPins?.slice()
-        if (routePinsCopy !== undefined) {
-          for (let i = 0; i < routePinsCopy.length; i++) {
-            console.log(routePinsCopy[i], pin)
-            if (isSamePin(routePinsCopy[i], pin)) {
-              console.log('add: is same pin')
-              routePinsCopy.splice(i, 1)
-            }
-          }
-          setRouteDrawerPins(routePinsCopy)
-        }
-      } else {
-        console.log('fail')
-      }
+        setRefreshPins(!refreshPins)
+        setRefreshTrails(!refreshTrails)
+
+      } 
     }
   }
 
-  const handleRemoveTempPin = async (pinId: string) => {
-    let pin: IPin
-    if (pinId) {
-      const getPinIdResponse = await FrontendPinGateway.getPin(pinId)
-
-      if (getPinIdResponse.success && getPinIdResponse.payload) {
-        pin = getPinIdResponse.payload
-        console.log(pin)
-        const newPins = pinsAdded.slice()
-        for (let i = 0; i < newPins.length; i++) {
-          if (isSamePin(newPins[i], pin)) {
-            console.log('remove: is same pin')
-            newPins.splice(i, 1)
-          }
-        }
-        setPinsAdded(newPins)
-
-        const routePinsCopy = routeDrawerPins?.slice()
-        if (routePinsCopy) {
-          routePinsCopy.push(pin)
-          setRouteDrawerPins(routePinsCopy)
-        }
-      }
-    }
-  }
 
   const handleRemovePinFromTrail = async (pin: IPin) => {
     const trailPinList = specificTrail?.pinList.slice()
@@ -265,11 +282,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   })
 
-  const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
-  const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
-
-  const [error, setError] = useState<string>('')
-  const [explainer, setExplainer] = useState(specificTrail ? specificTrail.explainer : '')
   useEffect(() => {
     if (specificTrail) setExplainer(specificTrail.explainer)
   }, [specificTrail])
@@ -343,10 +355,10 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
-  console.log(trailIdToNavigate)
+
 
   const handleStartNavigationClick = () => {
-    console.log(trailIdToNavigate)
+
     if (trailIdToNavigate.length>0) {
       startNavigation(trailIdToNavigate)
       setRouteDrawerOpen(false)
@@ -357,17 +369,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const val: number = pinsAdded.slice().length + 1
 
 
-  const onCreateDragEnd = (result: DropResult) => {
-    console.log(result)
-    const { source, destination } = result
-    if (!destination) return
-
-    const items = Array.from(pinsAdded)
-    const [newOrder] = items.splice(source.index, 1)
-    items.splice(destination.index, 0, newOrder)
-
-    setPinsAdded(items)
-  }
 
   const onViewDragEnd = (result: DropResult) => {
     console.log(result)
@@ -380,6 +381,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
       items.splice(destination.index, 0, newOrder)
   
       setTrailPins(items)
+      setRefreshPins(!refreshPins)
+      setRefreshTrails(!refreshTrails)
     }
   }
 
@@ -390,22 +393,33 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     background: isDragging ? 'black' : 'white',
     color: isDragging ? 'white' : 'black',
     display: 'flex',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     border: '1px solid grey',
     borderRadius: '5px',
-    padding: '10px 10px',
-    width: '200px',
+    padding: '5px 20px',
+    width: '300px',
 
     ...draggableStyle,
   })
 
   const handleTabsChange = (index: number) => {
+    if (index == 2) {
+      setSpecificTrail(null)
+      if (trails.length >=0 ) {
+        settrailIdToNavigate(trails[0].trailId)
+      }
+    }
+    else if (index==0) {
+      setSpecificTrail(null)
+    }
     setTabIndex(index)
   }
 
   const handleCreateTabClick = () => {
+    setSpecificTrail(null)
     setTabIndex(0)
+
   }
 
   const [editingTitle, setEditingTitle] = useState<boolean>(false)
@@ -441,6 +455,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAlertTitle('Explainer update failed')
         setAlertMessage(updateResp.message)
       }
+
+      // UPDATE PIN
       // setRefresh(!refresh)
       // setRefreshLinkList(!refreshLinkList)
     }
@@ -494,10 +510,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     font: '20',
   }
 
-  const [selectedTrail, setSelectedTrail] = useRecoilState(specificTrailState)
-  const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
-  const [refreshTrails, setRefreshTrails] = useRecoilState(refreshTrailsState)
-  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
+
 
 
 
@@ -506,8 +519,18 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
 
+  const handleAddClick = (e: any) => {
+    if (pins.length > 0) setPinIdToAdd(pins[0].pinId)
+    setAddPinPopoverOpen(true)
+  }
 
-  console.log(confirmationOpen)
+  const handleAddExistingClick = (e: any) => {
+    if (pins.length > 0) setPinIdToAddExistingTrail(pins[0].pinId)
+    setAddPinPopoverOpen(true)
+  }
+
+
+
   return (
     <>
       {confirmationOpen && 
@@ -557,7 +580,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                           className="add-pins-to-trail-button"
                           variant="outline"
                           mr={3}
-                          onClick={() => setAddPinPopoverOpen(true)}
+                          onClick={handleAddClick}
                           style={{
                             marginLeft: '5px',
                             marginTop: '10px',
@@ -581,18 +604,21 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                               id="select-add-pin"
                               onChange={handleSelectChange}
                             >
-                              {routeDrawerPins &&
-                                routeDrawerPins.map((pin) => (
+                              <>
+                              {pins &&
+                                pins.map((pin) => (
                                   <option key={pin.pinId} value={pin.pinId}>
                                     {pin.title}
                                   </option>
                                 ))}
+                              </>
+                            
                             </Select>
                             <div>
                               <Button
                                 colorScheme="whatsapp"
                                 backgroundColor="rgb(0,125,0)"
-                                onClick={handleAddPinsToTrail}
+                                onClick={handleAddPinsToTrail }
                                 style={{ padding: '10px 10px' }}
                               >
                                 Add
@@ -626,73 +652,13 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       </div>
                     )}
                   </div>
-                  <DragDropContext onDragEnd={onCreateDragEnd}>
-                    <Droppable droppableId="pinsAdded" direction="horizontal">
-                      {(provided) => (
-                        <div
-                          className="pinsAdded"
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          style={{
-                            marginTop: '15px',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            gap: '1em',
-                            marginLeft: '20px',
-                          }}
-                        >
-                          {pinsAdded.map((pin, index) => (
-                            <Draggable
-                              draggableId={pin.pinId}
-                              index={index}
-                            >
-                              {(provided, snapshot) => (
-                                <div
-                                  className="pins-list-wrapper"
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  style={getPinItemStyle(
-                                    snapshot.isDragging,
-                                    provided.draggableProps.style
-                                  )}
-                                >
-                                  <div>
-                                    <div>{index + 1}. </div>
-                                    <div
-                                      id="route-drawer-pin-title"
-                                      data-value={pin.pinId}
-                                    >
-                                      <b>{pin.title}</b>
-                                    </div>
-                                  </div>
-
-                                  <div
-                                    style={{
-                                      display: 'flex',
-                                      justifyContent: 'center',
-                                      alignItems: 'center',
-                                    }}
-                                  >
-                                    <IconButton
-                                      onClick={(e) => handleRemoveTempPin(pin.pinId)}
-                                      className="delete-icon"
-                                      style={{ marginLeft: '10px' }}
-                                      size="s"
-                                      aria-label="Search database"
-                                      icon={<DeleteIcon />}
-                                    />
-                                  </div>
-                                </div>
-                              )}
-                            </Draggable>
-                          ))}
-                          {provided.placeholder}
-                        </div>
+                  <div className='pins-added-sortable-wrapper'>
+                    <ul id="sortList" className="moveable">
+                      {pinsAdded.map((pin, index) => 
+                        <li draggable="true">{pin.title}</li>
                       )}
-                    </Droppable>
-                  </DragDropContext>
+                    </ul>
+                  </div>
                   <div
                     style={{
                       marginTop: '15px',
@@ -720,7 +686,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                         See all routes
                       </Button>
                       <div className="specific-trail-wrapper">
-                        <div>
+                          <div>
                           <h2
                             className="specific-trail-title"
                             onDoubleClick={(e) => setEditingTitle(true)}
@@ -746,7 +712,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                           </div>
                         </div>
                         <DragDropContext onDragEnd={onViewDragEnd}>
-                          <Droppable droppableId="trailPins" direction="horizontal">
+                          <Droppable droppableId="trailPins">
                             {(provided) => (
                               <div
                                 className="trailPins"
@@ -755,10 +721,12 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                 style={{
                                   marginTop: '15px',
                                   display: 'flex',
-                                  flexDirection: 'row',
+                                  flexDirection: 'column',
                                   flexWrap: 'wrap',
-                                  gap: '1em',
+                                  gap: '10px',
                                   marginLeft: '20px',
+                                  maxHeight: '500px'
+
                                 }}
                               >
                                 {trailPins && trailPins.map((pin, index) => (
@@ -815,83 +783,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             )}
                           </Droppable>
                         </DragDropContext>
-
-                        <div className="add-pin-to-trail-popover-container">
-                          <Popover
-                            placement="right"
-                            isOpen={addPinPopoverOpen}
-                            onClose={() => setAddPinPopoverOpen(false)}
-                          >
-                            <PopoverTrigger>
-                              <Button
-                                className="add-pins-to-trail-button"
-                                variant="outline"
-                                mr={3}
-                                onClick={() => setAddPinPopoverOpen(true)}
-                                style={{
-                                  marginLeft: '5px',
-                                  marginTop: '10px',
-                                  padding: '40px 30px',
-                                }}
-                              >
-                                <div>
-                                  <div style={{ fontWeight: '200' }}>Add Pins</div>
-                                  <div style={{ fontSize: '1.5em', fontWeight: '200' }}>
-                                    +
-                                  </div>
-                                </div>
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <PopoverArrow />
-                              <PopoverHeader>Choose a Pin</PopoverHeader>
-                              <PopoverCloseButton />
-                              <PopoverBody>
-                                <div className="select-add-pin-wrapper">
-                                  <Select
-                                    value={pinIdToAdd}
-                                    id="select-add-pin"
-                                    onChange={handleSelectChange}
-                                  >
-                                    {routeDrawerPins &&
-                                      routeDrawerPins.map((pin) => (
-                                        <option key={pin.pinId} value={pin.pinId}>
-                                          {pin.title}
-                                        </option>
-                                      ))}
-                                  </Select>
-                                  <div>
-                                    <Button
-                                      colorScheme="whatsapp"
-                                      backgroundColor="rgb(0,125,0)"
-                                      onClick={async () => {
-                                        const pin = (
-                                          await FrontendPinGateway.getPin(pinIdToAdd)
-                                        ).payload
-                                        if (pin) {
-                                          specificTrail.pinList.push(pin)
-                                        }
-                                      }}
-                                      style={{ padding: '10px 10px' }}
-                                    >
-                                      Add
-                                    </Button>
-                                  </div>
-                                </div>
-                              </PopoverBody>
-                              <PopoverFooter></PopoverFooter>
-                            </PopoverContent>
-                          </Popover>
-
-                          {error.length > 0 && (
-                            <div
-                              className="modal-error modal-error-create-trail"
-                              style={{ marginLeft: '-5px' }}
-                            >
-                              {error}
-                            </div>
-                          )}
-                        </div>
+                       
                         {/* <div className="specific-trail-pins" style={{display: 'flex', flexWrap: 'wrap', gap: '1em',}}>
                             {specificTrail.pinList.map((pin, index) => (
                               <div className="specific-trail-pin-title" key={index}>
@@ -900,17 +792,83 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             ))}
                           </div> */}
                       </div>
-                      <div className="trail-card-delete">
+                      <div className="trail-card-delete" style={{display: 'flex', gap: '1em', marginTop: '10px', marginLeft: '15px'}}>
                         <Button
                           style={{
                             backgroundColor: 'rgb(241,241,241)',
                             fontSize: '14px',
-                            marginTop: '15px',
                           }}
                           onClick={handleTrailOpenConfirmationAlert}
                         >
                           <RiDeleteBin6Fill /> Delete Trail
                         </Button>
+                        <div className="add-pin-to-existing-trail-popover-container">
+                            <Popover
+                              placement="right"
+                              isOpen={addPinPopoverOpen}
+                              onClose={() => setAddPinPopoverOpen(false)}
+                            >
+                              <PopoverTrigger>
+                                <Button
+                                  className="add-pins-to-existing-trail-button"
+                                  onClick={handleAddExistingClick}
+                                  style={{
+                                    backgroundColor: 'green',
+                                    color: 'white',
+                                    fontSize: '14px',
+                                    padding: '10px 10px',
+                                  }}
+                                >
+                                  <div>
+                                    <div style={{ fontWeight: '200' }}>Add Pins</div>
+                                  </div>
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <PopoverArrow />
+                                <PopoverHeader>Choose a Pin</PopoverHeader>
+                                <PopoverCloseButton />
+                                <PopoverBody>
+                                  <div className="select-add-pin-wrapper">
+                                    <Select
+                                      value={pinIdToAddExisitingTrail}
+                                      id="select-add-pin"
+                                      onChange={handleExistingTrailSelectChange}
+                                    >
+                                     <>
+                                  {pins &&
+                                    pins.map((pin) => (
+                                      <option key={pin.pinId} value={pin.pinId}>
+                                        {pin.title}
+                                      </option>
+                                    ))}
+                                  </>
+                                    </Select>
+                                    <div>
+                                      <Button
+                                        colorScheme="whatsapp"
+                                        backgroundColor="rgb(0,125,0)"
+                                        onClick={handleAddPinsToExistingTrail}
+                                        style={{ padding: '10px 10px' }}
+                                      >
+                                        Add
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </PopoverBody>
+                                <PopoverFooter></PopoverFooter>
+                              </PopoverContent>
+                            </Popover>
+
+                            {error.length > 0 && (
+                              <div
+                                className="modal-error modal-error-create-trail"
+                                style={{ marginLeft: '-5px' }}
+                              >
+                                {error}
+                              </div>
+                            )}
+                          </div>
                       </div>
                     </div>
                   ) : (
