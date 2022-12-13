@@ -152,7 +152,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [explainer, setExplainer] = useState(specificTrail ? specificTrail.explainer : '')
 
   useEffect(() => {
-    if (tabIndex == 2){
+    if (tabIndex == 2) {
       settrailIdToNavigate(trails[0].trailId)
     }
     setExplainer('')
@@ -167,10 +167,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }, [specificTrail])
 
   const getPinsForMap = async () => {}
-
-
-
- 
 
   const handleAlertClose = (event: any, reason: any) => {
     if (reason === 'clickaway') return
@@ -390,8 +386,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const handleTabsChange = (index: number) => {
     if (index == 2) {
       setSpecificTrail(null)
-    }
-    else if (index==0) {
+    } else if (index == 0) {
       setSpecificTrail(null)
     }
     console.log(index)
@@ -617,11 +612,14 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                       </div>
                     )}
                   </div>
-                  <div className='pins-added-sortable-wrapper' style={{marginTop: '10px'}}>
+                  <div
+                    className="pins-added-sortable-wrapper"
+                    style={{ marginTop: '10px' }}
+                  >
                     <ul id="sortList">
-                      {pinsAdded.map((pin, index) => 
-                        <li>{pin.title}</li>
-                      )}
+                      {pinsAdded.map((pin, index) => (
+                        <li key={pin.pinId}>{pin.title}</li>
+                      ))}
                     </ul>
                   </div>
                   <div

@@ -113,7 +113,6 @@ export const CreateNodeModal = (props: ICreateNodeModalProps) => {
       node && setSelectedNode(node)
     }
 
-
     if (selectedPin) {
       const selectedPinResp = await FrontendPinGateway.getPin(selectedPin.pinId)
       if (selectedPinResp.success && selectedPinResp.payload) {

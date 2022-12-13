@@ -38,8 +38,6 @@ import {
 import { generateObjectId } from '../../../../global'
 import FocusLock from 'react-focus-lock'
 
-
-
 interface IMapContentProps {
   selectedMapViewMode: string
 }
@@ -114,12 +112,10 @@ export const MapContent = (props: IMapContentProps) => {
       return
     }
 
-    let newPin: IPin
     const pinId = generateObjectId('pin')
     const nodeId = currentNode.nodeId
 
-
-    newPin = makeIPin(pinId, nodeId, [], [], title, explainer, yLast, xLast)
+    const newPin: IPin = makeIPin(pinId, nodeId, [], [], title, explainer, yLast, xLast)
 
     const pinResponse = await FrontendPinGateway.createPin(newPin)
     if (!pinResponse.success) {
@@ -246,10 +242,6 @@ export const MapContent = (props: IMapContentProps) => {
     }
   }, [currentNode])
 
-
-  
-
-
   /**
    * onPointerDown initializes the creation of a new pin on the map image
    * @param e
@@ -270,7 +262,7 @@ export const MapContent = (props: IMapContentProps) => {
       // calculate the x and y location of the pointer relative to the image
 
       const xPosLast = x + 10 - imageLeft!
-      let yPosLast = y - 2 - imageTop!
+      const yPosLast = y - 2 - imageTop!
       // Set the initial x and y location of the selection
       const ref = selection.current
       if (ref) {
@@ -329,7 +321,6 @@ export const MapContent = (props: IMapContentProps) => {
     }
   }, [currentNode, startAnchor])
 
-
   /**
    * This method displays the existing anchors. We are fetching them from
    * the data with a call to FrontendAnchorGateway.getAnchorsByNodeId
@@ -337,7 +328,6 @@ export const MapContent = (props: IMapContentProps) => {
    */
 
   const handleCreatePinPopoverClose = (e: any) => {
-
     if (selection.current) {
       selection.current.style.display = 'none'
     }
@@ -355,26 +345,26 @@ export const MapContent = (props: IMapContentProps) => {
         id="map-image-content-wrapper"
         style={{ width: updatedWidth, height: updatedHeight }}
       >
-        {currentNode.type === 'map' &&
+        {currentNode.type === 'map' && (
           <div>
             {startAnchorVisualization}
             {mapPinsElements}
           </div>
-        }
+        )}
         <div>
           <Popover
             returnFocusOnClose={false}
             isOpen={createPinPopoverOpen}
-            onClose={() =>handleCreatePinPopoverClose}
+            onClose={() => handleCreatePinPopoverClose}
             placement={`${currentNode.type === 'map' ? 'right' : 'right-end'}`}
             closeOnBlur={false}
           >
             <PopoverAnchor>
-              {currentNode.type === 'map' && 
+              {currentNode.type === 'map' && (
                 <div className="selection" ref={selection}>
                   <PlaceIcon style={{ color: 'black' }} />
                 </div>
-              }
+              )}
             </PopoverAnchor>
             <PopoverContent>
               <PopoverHeader fontWeight="semibold">Create a Pin</PopoverHeader>
