@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { ITrail, makeITrail, isSameTrail, IPin } from '../../../../types'
 
 describe('Unit Test: Delete Trails', () => {
   let uri: string
@@ -37,10 +37,10 @@ describe('Unit Test: Delete Trails', () => {
     const validTrail2: ITrail = makeITrail('trail2', [], 'node2', '', '')
     const createResponse2 = await backendTrailGateway.createTrail(validTrail2)
     expect(createResponse2.success).toBeTruthy()
-    const validTrail3: ITrail = makeITrail('trail3', ['anchor1', 'anchor2'], 'node1', '', '')
+    const validTrail3: ITrail = makeITrail('trail3', ['anchor1' as unknown as IPin, 'anchor2' as unknown as IPin], 'node1', '', '')
     const createResponse3 = await backendTrailGateway.createTrail(validTrail3)
     expect(createResponse3.success).toBeTruthy()
-    const validTrail4: ITrail = makeITrail('trail4', ['anchor1', 'anchor3'], 'node1', '', '')
+    const validTrail4: ITrail = makeITrail('trail4', ['anchor1' as unknown as IPin, 'anchor3' as unknown as IPin], 'node1', '', '')
     const createResponse4 = await backendTrailGateway.createTrail(validTrail4)
     expect(createResponse4.success).toBeTruthy()
 
