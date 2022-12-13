@@ -34,6 +34,11 @@ export const routeDrawerOpenState = atom<boolean>({
   default: false,
 })
 
+export const addToRouteModalOpenState = atom<boolean>({
+  key: 'addToRouteModalOpenState',
+  default: false,
+})
+
 export const tabIndexState = atom<number>({
   key: 'tabIndexState',
   default: 0,
