@@ -855,11 +855,40 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                       colorScheme="whatsapp"
                                       backgroundColor="rgb(0,125,0)"
                                       onClick={async () => {
-                                        const pin = (
-                                          await FrontendPinGateway.getPin(pinIdToAdd)
-                                        ).payload
-                                        if (pin) {
-                                          specificTrail.pinList.push(pin)
+                                        if (pinIdToAdd) {
+                                          const getPinIdResponse =
+                                            await FrontendPinGateway.getPin(pinIdToAdd)
+                                          console.log(getPinIdResponse)
+                                          let pin: IPin
+                                          if (
+                                            getPinIdResponse.success &&
+                                            getPinIdResponse.payload
+                                          ) {
+                                            pin = getPinIdResponse.payload
+                                            console.log(pin)
+                                            const newPins = pinsAdded.slice()
+                                            newPins.push(pin)
+                                            console.log(newPins)
+                                            setPinsAdded(newPins)
+                                            setAddPinPopoverOpen(false)
+                                            const routePinsCopy = routeDrawerPins?.slice()
+                                            if (routePinsCopy !== undefined) {
+                                              for (
+                                                let i = 0;
+                                                i < routePinsCopy.length;
+                                                i++
+                                              ) {
+                                                console.log(routePinsCopy[i], pin)
+                                                if (isSamePin(routePinsCopy[i], pin)) {
+                                                  console.log('add: is same pin')
+                                                  routePinsCopy.splice(i, 1)
+                                                }
+                                              }
+                                              setRouteDrawerPins(routePinsCopy)
+                                            }
+                                          } else {
+                                            console.log('fail')
+                                          }
                                         }
                                       }}
                                       style={{ padding: '10px 10px' }}
