@@ -77,8 +77,6 @@ export const refreshPinsState = atom<boolean>({
   default: false,
 })
 
-
-
 export const mapPinsState = atom<IPin[]>({
   key: 'mapPinsState',
   default: [],

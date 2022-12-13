@@ -40,7 +40,6 @@ export const NavigationWindow = (props: INavigationWindowProps) => {
 
   const handleBackNavigationClick = () => {
     if (currentNavigationPin) {
-      console.log('pin selected back')
       const index = trailToNavigate.pinList.indexOf(currentNavigationPin)
       if (index <= 0) return
       setSelectedPin(prevNavigationPin)

@@ -31,7 +31,6 @@ import {
   NumberInputStepper,
 } from '@chakra-ui/react'
 import { Button } from '../../../Button'
-import { format } from 'path'
 
 interface IImageContentProps {}
 
@@ -59,9 +58,12 @@ export const ImageContent = () => {
   const [imageAnchors, setImageAnchors] = useState<JSX.Element[]>([])
   const [startAnchorVisualization, setStartAnchorVisualization] = useState<JSX.Element>()
 
-  let dragging: boolean = false // Indicated whether we are currently dragging the image
-  let currentTop: number // To store the top of the currently selected region for onPointerMove
-  let currentLeft: number // To store the left of the currently selected region for onPointerMove
+  // Indicated whether we are currently dragging the image
+  let dragging: boolean = false
+  // To store the top of the currently selected region for onPointerMove
+  let currentTop: number
+  // To store the left of the currently selected region for onPointerMove
+  let currentLeft: number
   let xLast: number
   let yLast: number
 
@@ -299,7 +301,8 @@ export const ImageContent = () => {
   }
 
   useEffect(() => {
-    // this code ensures that an extent selected on one node doesn't display on another node
+    // this code ensures that an extent selected on one node doesn't
+    // display on another node
     setSelectedExtent(null)
     if (selection.current) {
       // Note: This is a rather hacky solution to hide the selected region
@@ -491,11 +494,13 @@ export const ImageContent = () => {
 
 interface INumberInputComponentProps {
   value: number
-  setValue: (value: number) => void // Method to set the value (for setUpdatedWidth and setUpdatedHeight)
+  // Method to set the value (for setUpdatedWidth and setUpdatedHeight)
+  setValue: (value: number) => void
   max: number
 }
 
-/* Component to hold the NumberInput elements; as we have a width an a height, creating this component avoid repetition */
+/* Component to hold the NumberInput elements; as we have a width an a height,
+ creating this component avoid repetition */
 const NumberInputComponent = (props: INumberInputComponentProps): JSX.Element => {
   const { value, setValue, max } = props
   // Method to format the image size with 'px' at the end
@@ -505,7 +510,8 @@ const NumberInputComponent = (props: INumberInputComponentProps): JSX.Element =>
   return (
     <NumberInput
       maxW="150px"
-      // on change, setUpdatedWidth or setUpdatedHeight is called (through setValue) with the value passed in
+      // on change, setUpdatedWidth or setUpdatedHeight is called
+      // (through setValue) with the value passed in
       onChange={(value: any) => setValue(parseInt(value as string))}
       value={pxFormat(value)}
       step={5}

@@ -1,6 +1,5 @@
 import express, { Request, Response, Router } from 'express'
 import { MongoClient } from 'mongodb'
-import { type } from 'os'
 import {
   INode,
   INodeProperty,
@@ -33,7 +32,8 @@ export class NodeRouter {
     this.BackendNodeGateway = new BackendNodeGateway(mongoClient)
 
     /**
-     * Request to create node. Express servers receive data from the client side through the req object in three instances:
+     * Request to create node. Express servers receive data from
+     * the client side through the req object in three instances:
      * the req.params, req.query, and req.body objects
      *
      * @param req request object coming from client
@@ -41,7 +41,8 @@ export class NodeRouter {
      */
     NodeExpressRouter.post('/create', async (req: Request, res: Response) => {
       try {
-        // Req.body allows you to access data in a string or JSON object from the client side
+        // Req.body allows you to access data in a string
+        // or JSON object from the client side
         const node = req.body.node
         if (!isINode(node)) {
           console.log('Not an INode (byeee)')

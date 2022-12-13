@@ -69,8 +69,6 @@ export const SearchModal = (props: ISearchModalProps) => {
 
   // Send the search through FrontendNodeGateway
   const sendSearch = async () => {
-    console.log('HIHIHI')
-    console.log(typeFilter)
     const responseArr: { [searchType: string]: string[] | null } = {}
     setTypeChanged(null)
     const searchResponse = await FrontendNodeGateway.search(

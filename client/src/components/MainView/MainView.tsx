@@ -185,13 +185,11 @@ export const MainView = React.memo(function MainView() {
             setSelectedNode(parentResp.payload)
             // Get the map that contains this node (first node in the path)
             const mapId: string = path[0]
-            console.log('mapId:', mapId)
             const mapResp = await FrontendNodeGateway.getNode(mapId)
             if (mapResp.success) {
               // get all of the pins on this map
               const pinsResp = await FrontendPinGateway.getPinsByNodeId(mapId)
               if (pinsResp.success && pinsResp.payload) {
-                console.log('pinsResp.payload:', pinsResp.payload)
                 for (let i = 0; i < pinsResp.payload.length; i++) {
                   const pin = pinsResp.payload[i]
                   const childNodes = pin.childNodes
@@ -200,13 +198,10 @@ export const MainView = React.memo(function MainView() {
                     (childNode) => childNode.nodeId === node.nodeId
                   )
                   if (index > -1) {
-                    console.log('found node in pin:', pin)
-                    console.log('original childNodes:', childNodes)
                     const newProperty: IPinProperty = makeIPinProperty(
                       'childNodes',
                       childNodes.filter((_, i) => i !== index)
                     )
-                    console.log('new childNodes:', newProperty.value)
                     const updateResp = await FrontendPinGateway.updatePin(pin.pinId, [
                       newProperty,
                     ])

@@ -32,7 +32,7 @@ import {
   refreshPinsState,
   refreshTrailsState,
 } from '../../../global/Atoms'
-import { IPin, IPinProperty, makeIPinProperty } from '../../../types'
+import { IPinProperty, makeIPinProperty } from '../../../types'
 
 export interface ICreateNodeModalProps {
   isOpen: boolean

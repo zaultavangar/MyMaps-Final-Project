@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express'
 import { MongoClient } from 'mongodb'
-import { IServiceResponse, isIPin, IPin, ITrail, INode, IPinProperty } from '../types'
+import { IServiceResponse, isIPin, IPin, IPinProperty } from '../types'
 import { BackendPinGateway } from './BackendPinGateway'
 const bodyJsonParser = require('body-parser').json()
 
@@ -43,23 +43,24 @@ export class PinRouter {
       }
     })
 
-         /**
+    /**
      * Request to search by string
      *
      * @param req request object coming from client
      * @param res response object to send to client
      */
-         PinExpressRouter.get('/search/:input/', async (req: Request, res: Response) => {
-          try {
-            const input = req.params.input // get the search input
-            // set the type filter
-            const response: IServiceResponse<string[]> =
-              await this.BackendPinGateway.search(input)
-            res.status(200).send(response)
-          } catch (e) {
-            res.status(500).send(e.message)
-          }
-        })
+    PinExpressRouter.get('/search/:input/', async (req: Request, res: Response) => {
+      try {
+        const input = req.params.input // get the search input
+        // set the type filter
+        const response: IServiceResponse<string[]> = await this.BackendPinGateway.search(
+          input
+        )
+        res.status(200).send(response)
+      } catch (e) {
+        res.status(500).send(e.message)
+      }
+    })
 
     /**
      * Request to retrieve pin by anchorId

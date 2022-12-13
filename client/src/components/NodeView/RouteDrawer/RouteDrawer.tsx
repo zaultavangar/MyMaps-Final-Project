@@ -64,7 +64,7 @@ import {
   refreshLinkListState,
   trailPinsState,
   refreshTrailsState,
-  refreshPinsState
+  refreshPinsState,
 } from '../../../global/Atoms'
 import { ConfirmationAlert } from '../../ConfirmationAlert'
 import { FrontendTrailGateway } from '../../../trails'
@@ -129,7 +129,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     if (routeDrawerPins && routeDrawerPins.length > 0) {
       setPinIdToAdd(routeDrawerPins[0].pinId)
       if (trails && trails.length > 0) {
-        for (let i=0; i<trails.length; i++) {
+        for (let i = 0; i < trails.length; i++) {
           if (trails[i].pinList.length > 0) {
             settrailIdToNavigate(trails[0].trailId)
             break
@@ -261,9 +261,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
-  useEffect(() => {
-
-  })
+  useEffect(() => {})
 
   const [tabIndex, setTabIndex] = useRecoilState(tabIndexState)
   const [specificTrail, setSpecificTrail] = useRecoilState(specificTrailState)
@@ -347,7 +345,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
 
   const handleStartNavigationClick = () => {
     console.log(trailIdToNavigate)
-    if (trailIdToNavigate.length>0) {
+    if (trailIdToNavigate.length > 0) {
       startNavigation(trailIdToNavigate)
       setRouteDrawerOpen(false)
       setIsNavigating(true)
@@ -355,7 +353,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   const val: number = pinsAdded.slice().length + 1
-
 
   const onCreateDragEnd = (result: DropResult) => {
     console.log(result)
@@ -373,12 +370,12 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     console.log(result)
     const { source, destination } = result
     if (!destination) return
-    
+
     if (trailPins) {
       const items = Array.from(trailPins)
       const [newOrder] = items.splice(source.index, 1)
       items.splice(destination.index, 0, newOrder)
-  
+
       setTrailPins(items)
     }
   }
@@ -447,17 +444,16 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   }
 
   useEffect(() => {
-    let trail = specificTrail
+    const trail = specificTrail
     if (trail) setTrailPins(trail.pinList)
   }, [specificTrail])
 
   const cancelConfirmationRef = React.useRef(null)
 
-  
   const [pinToDelete, setPinToDelete] = useState<IPin | null>(null)
   const [trailToDelete, setTrailToDelete] = useState<ITrail | null>(null)
 
-  const handlePinOpenConfirmationAlert = (pin: IPin ) => {
+  const handlePinOpenConfirmationAlert = (pin: IPin) => {
     setConfirmationType('deletePinFromTrail')
     setConfirmationOpen(true)
     setPinToDelete(pin)
@@ -484,8 +480,6 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
     }
   }
 
-  
-
   const smallCustomButtonStyle = {
     height: 25,
     width: 30,
@@ -499,27 +493,24 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
   const [refreshTrails, setRefreshTrails] = useRecoilState(refreshTrailsState)
   const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
 
-
-
   const handleSpecificTrailClick = (trail: ITrail) => {
-    setSpecificTrail(trail) 
+    setSpecificTrail(trail)
   }
-
-
 
   console.log(confirmationOpen)
   return (
     <>
-      {confirmationOpen && 
-      <ConfirmationAlert 
-        isOpen={confirmationOpen}
-        setOpen={setConfirmationOpen}
-        confirmationType={confirmationType}
-        specificTrail={specificTrail}
-        pinToDelete={pinToDelete}
-        handleRemovePinFromTrail={handleRemovePinFromTrail}
-        onDeleteTrailButtonClick={onDeleteTrailButtonClick}
-      />}
+      {confirmationOpen && (
+        <ConfirmationAlert
+          isOpen={confirmationOpen}
+          setOpen={setConfirmationOpen}
+          confirmationType={confirmationType}
+          specificTrail={specificTrail}
+          pinToDelete={pinToDelete}
+          handleRemovePinFromTrail={handleRemovePinFromTrail}
+          onDeleteTrailButtonClick={onDeleteTrailButtonClick}
+        />
+      )}
 
       <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
         <DrawerOverlay />
@@ -643,10 +634,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                           }}
                         >
                           {pinsAdded.map((pin, index) => (
-                            <Draggable
-                              draggableId={pin.pinId}
-                              index={index}
-                            >
+                            <Draggable draggableId={pin.pinId} index={index} key={index}>
                               {(provided, snapshot) => (
                                 <div
                                   className="pins-list-wrapper"
@@ -761,55 +749,57 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                   marginLeft: '20px',
                                 }}
                               >
-                                {trailPins && trailPins.map((pin, index) => (
-                                  <Draggable
-                                    draggableId={pin.pinId}
-                                    index={index}
-                                  >
-                                    {(provided, snapshot) => (
-                                      <div
-                                        key={pin.pinId}
-                                        className="pins-list-wrapper specific-trail-pins"
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        style={getPinItemStyle(
-                                          snapshot.isDragging,
-                                          provided.draggableProps.style
-                                        )}
-                                      >
-                                        <div>
-                                          <div>{index + 1}. </div>
+                                {trailPins &&
+                                  trailPins.map((pin, index) => (
+                                    <Draggable
+                                      draggableId={pin.pinId}
+                                      index={index}
+                                      key={index}
+                                    >
+                                      {(provided, snapshot) => (
+                                        <div
+                                          key={pin.pinId}
+                                          className="pins-list-wrapper specific-trail-pins"
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}
+                                          style={getPinItemStyle(
+                                            snapshot.isDragging,
+                                            provided.draggableProps.style
+                                          )}
+                                        >
+                                          <div>
+                                            <div>{index + 1}. </div>
+                                            <div
+                                              id="route-drawer-specific-pin-title"
+                                              data-value={pin.pinId}
+                                            >
+                                              <b>{pin.title}</b>
+                                            </div>
+                                          </div>
+
                                           <div
-                                            id="route-drawer-specific-pin-title"
-                                            data-value={pin.pinId}
+                                            style={{
+                                              display: 'flex',
+                                              justifyContent: 'center',
+                                              alignItems: 'center',
+                                            }}
                                           >
-                                            <b>{pin.title}</b>
+                                            <IconButton
+                                              onClick={() =>
+                                                handlePinOpenConfirmationAlert(pin)
+                                              }
+                                              className="delete-icon"
+                                              style={{ marginLeft: '10px' }}
+                                              size="s"
+                                              aria-label="Search database"
+                                              icon={<DeleteIcon />}
+                                            />
                                           </div>
                                         </div>
-
-                                        <div
-                                          style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                          }}
-                                        >
-                                          <IconButton
-                                            onClick={() =>
-                                              handlePinOpenConfirmationAlert(pin)
-                                            }
-                                            className="delete-icon"
-                                            style={{ marginLeft: '10px' }}
-                                            size="s"
-                                            aria-label="Search database"
-                                            icon={<DeleteIcon />}
-                                          />
-                                        </div>
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                ))}
+                                      )}
+                                    </Draggable>
+                                  ))}
                                 {provided.placeholder}
                               </div>
                             )}

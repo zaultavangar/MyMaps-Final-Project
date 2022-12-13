@@ -100,16 +100,12 @@ export const CommentContent = (props: ITextContentProps) => {
     const editorHtml = editor?.getHTML() // get current editor document as HTML
     // assign to content property
     const nodeProperty: INodeProperty = makeINodeProperty('commentContent', editorHtml)
-    console.log('nodeProperty', nodeProperty)
-    console.log('currentNode.nodeId', currentNode.nodeId)
     const updateNodeResp = await FrontendNodeGateway.updateNode(currentNode.nodeId, [
       nodeProperty,
     ]) // update the node with its new content
     if (!updateNodeResp.success) {
-      console.log(updateNodeResp.message)
       return failureServiceResponse('Failed to update node content')
     }
-    console.log('success')
     return successfulServiceResponse('Node content updated successfully')
   }
 
@@ -144,14 +140,13 @@ export const CommentContent = (props: ITextContentProps) => {
             // if anchor in database equal to this anchor
             if (currentNodeDatabaseAnchors[i].anchorId == anchorId) {
               anchorFound = true
-              currentNodeDatabaseAnchors.splice(i, 1) // remove found anchor from list so we only delete the appropriate ones later
+              currentNodeDatabaseAnchors.splice(i, 1)
               break
             }
           }
           if (!anchorFound) {
             return // no need to edit anchor's extent if not found
           }
-          // get anchor text length (note: node.text.length could be null) in which case length=0
           const length = node.text?.length ?? 0
           const newExtent: Extent = {
             endCharacter: pos + length - 1,
@@ -260,7 +255,7 @@ export const CommentContent = (props: ITextContentProps) => {
     if (editor) {
       editor.commands.setContent(currentNode.commentContent) // replace content
       editor.commands.selectAll() // In this way, any toggled buttons reset
-      editor.commands.unsetLink() // Remove link marks before using setLink in addAnchorMarks
+      editor.commands.unsetLink() // Remove link marks before using setLink
       addAnchorMarks().then(() => {
         updateNodeContent()
       })

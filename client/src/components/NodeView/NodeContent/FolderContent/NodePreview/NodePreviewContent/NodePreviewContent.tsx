@@ -22,7 +22,8 @@ export const NodePreviewContent = (props: INodeContentPreviewProps) => {
       return (
         <ImagePreviewContent
           content={
-            'https://assets.website-files.com/5d3ef00c73102c436bc83996/5d3ef00c73102c893bc83a28_logo-regular.png'
+            'https://assets.website-files.com/5d3ef00c73102c436bc83996/' +
+            '5d3ef00c73102c893bc83a28_logo-regular.png'
           }
         />
       )

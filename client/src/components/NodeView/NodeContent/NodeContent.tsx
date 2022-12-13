@@ -61,7 +61,6 @@ export const NodeContent = (props: INodeContentProps) => {
 
   // fix positioing of navigation window
 
-  console.log('currentNode', currentNode)
   switch (currentNode.type) {
     case 'image':
       return <ImageContent />

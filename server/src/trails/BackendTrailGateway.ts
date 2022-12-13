@@ -5,7 +5,6 @@ import {
   ITrail,
   isITrail,
   ITrailProperty,
-  isExtent,
   isITrailProperty,
 } from '../types'
 import { TrailCollectionConnection } from './TrailCollectionConnection'
