@@ -1,5 +1,6 @@
-import { Input, list, Text } from '@chakra-ui/react'
 import {
+  Input,
+  Text,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,20 +11,15 @@ import {
   List,
   ListItem,
   Checkbox,
-  CheckboxGroup,
-  RadioGroup,
-  Radio,
   Stack,
 } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FrontendNodeGateway } from '../../../nodes'
 import { FrontendPinGateway } from '../../../pins'
 import './SearchModal.scss'
 import { INode } from '../../../types'
 import { pathToString, nodeTypeIcon } from '../../../global'
-import { sameValueZeroEqual } from 'fast-equals'
-import { RiContactsBookLine } from 'react-icons/ri'
 
 export interface ISearchModalProps {
   isOpen: boolean

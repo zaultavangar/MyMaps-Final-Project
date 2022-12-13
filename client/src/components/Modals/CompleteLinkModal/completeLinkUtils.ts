@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { generateObjectId } from '../../../global'
-import { FrontendLinkGateway } from '../../../links'
 import { ILink } from '../../../types'
 
 export async function http<T>(request: AxiosRequestConfig): Promise<T> {

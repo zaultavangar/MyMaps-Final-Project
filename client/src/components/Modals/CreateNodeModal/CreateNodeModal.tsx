@@ -20,7 +20,6 @@ import {
 } from '../../../types'
 import { FrontendPinGateway } from '../../../pins'
 import { Button } from '../../Button'
-import { TreeView } from '../../TreeView'
 import './CreateNodeModal.scss'
 import { createNodeFromModal, uploadImage } from './createNodeUtils'
 import { useSetRecoilState, useRecoilState } from 'recoil'
