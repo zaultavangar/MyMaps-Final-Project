@@ -391,8 +391,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAlertTitle('Title update failed')
         setAlertMessage(updateResp.message)
       }
-       //setRefresh(!refresh)
-       setRefreshLinkList(!refreshLinkList)
+      // setRefresh(!refresh)
+      setRefreshLinkList(!refreshLinkList)
     }
   }
 
@@ -791,7 +791,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             )}
                           </Droppable>
                         </DragDropContext>
-                        
+
                         <div className="add-pin-to-trail-popover-container">
                           <Popover
                             placement="right"
@@ -851,7 +851,7 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                               <PopoverFooter></PopoverFooter>
                             </PopoverContent>
                           </Popover>
-                          
+
                           {error.length > 0 && (
                             <div
                               className="modal-error modal-error-create-trail"
