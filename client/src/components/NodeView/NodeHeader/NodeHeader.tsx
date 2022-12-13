@@ -185,7 +185,6 @@ export const NodeHeader = (props: INodeHeaderProps) => {
       <div
         className="nodeHeader-buttonBar-wrapper"
         style={{
-          width: '100%',
           display: 'flex',
           gap: '10px',
           justifyContent: 'space-between',

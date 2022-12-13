@@ -42,7 +42,7 @@ export const NodeBreadcrumb = ({
     <div className="node-breadcrumb">
       {parentNodes.map((node: INode) => (
         <Link to={`/${pathToString(node.filePath)}`} key={node.nodeId}>
-          {node.type !== 'map' && (
+          {/* {node.type !== 'map' && (
             <div className="breadcrumb-item-wrapper">
               <div
                 className={'breadcrumb-item'}
@@ -52,7 +52,7 @@ export const NodeBreadcrumb = ({
               </div>
               <RiArrowRightSLine />
             </div>
-          )}
+          )} */}
           <div className="breadcrumb-item-wrapper">
             <div className={'breadcrumb-item'} onClick={() => setSelectedNode(node)}>
               <div className="item-icon">
