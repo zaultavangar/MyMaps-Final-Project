@@ -31,8 +31,8 @@ describe('Unit Test: findNodesById', () => {
   })
 
   test('gets nodes when given valid ids', async () => {
-    const validNode1: INode = makeINode('1', ['1'])
-    const validNode2: INode = makeINode('2', ['2'])
+    const validNode1: INode = makeINode('1', ['1'], 'pin')
+    const validNode2: INode = makeINode('2', ['2'], 'pin')
     const createResponse1 = await nodeCollectionConnection.insertNode(validNode1)
     const createResponse2 = await nodeCollectionConnection.insertNode(validNode2)
     expect(createResponse1.success).toBeTruthy()
@@ -46,7 +46,7 @@ describe('Unit Test: findNodesById', () => {
   })
 
   test('success when some nodes are not found', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const createResponse = await nodeCollectionConnection.insertNode(validNode)
     expect(createResponse.success).toBeTruthy()
     const findNodesByIdResp = await nodeCollectionConnection.findNodesById(['1', '2'])
@@ -55,7 +55,7 @@ describe('Unit Test: findNodesById', () => {
   })
 
   test('success when nodes are not found', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const createResponse = await nodeCollectionConnection.insertNode(validNode)
     expect(createResponse.success).toBeTruthy()
     const findNodesByIdResp = await nodeCollectionConnection.findNodesById(['2'])

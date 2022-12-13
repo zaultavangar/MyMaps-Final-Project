@@ -32,7 +32,7 @@ describe('Unit Test: deleteNode', () => {
   })
 
   test('successfully deletes node', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const createResponse = await nodeCollectionConnection.insertNode(validNode)
     expect(createResponse.success).toBeTruthy()
     const deleteNodeResp = await nodeCollectionConnection.deleteNode('1')
@@ -40,7 +40,7 @@ describe('Unit Test: deleteNode', () => {
   })
 
   test('gives success if we try to delete node that ' + 'does not exist', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const createResponse = await nodeCollectionConnection.insertNode(validNode)
     expect(createResponse.success).toBeTruthy()
     const deleteNodeResp = await nodeCollectionConnection.deleteNode('2')

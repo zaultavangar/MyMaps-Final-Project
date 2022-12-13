@@ -112,7 +112,13 @@ describe('Unit Test: Delete Trails', () => {
     )
     const createResponse4 = await backendTrailGateway.createTrail(validTrail4)
     expect(createResponse4.success).toBeTruthy()
-    const validTrail5: ITrail = makeITrail('trail5', ['anchor5' as unknown as IPin], 'node2', '', '')
+    const validTrail5: ITrail = makeITrail(
+      'trail5',
+      ['anchor5' as unknown as IPin],
+      'node2',
+      '',
+      ''
+    )
     const createResponse5 = await backendTrailGateway.createTrail(validTrail5)
     expect(createResponse5.success).toBeTruthy()
     const getTrailByIdResp = await backendTrailGateway.getTrailsById([
@@ -153,7 +159,13 @@ describe('Unit Test: Delete Trails', () => {
     )
     const createResponse4 = await backendTrailGateway.createTrail(validTrail4)
     expect(createResponse4.success).toBeTruthy()
-    const validTrail5: ITrail = makeITrail('trail5', ['anchor5' as unknown as IPin], 'node2', '', '')
+    const validTrail5: ITrail = makeITrail(
+      'trail5',
+      ['anchor5' as unknown as IPin],
+      'node2',
+      '',
+      ''
+    )
     const createResponse5 = await backendTrailGateway.createTrail(validTrail5)
     expect(createResponse5.success).toBeTruthy()
     const getTrailByIdResp = await backendTrailGateway.getTrailsById(['invalidId'])

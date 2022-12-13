@@ -23,7 +23,7 @@ describe('Unit Test: Update Node', () => {
   beforeEach(async () => {
     const response = await backendNodeGateway.deleteAll()
     expect(response.success).toBeTruthy()
-    const validNode1: INode = makeINode('1', ['1'])
+    const validNode1: INode = makeINode('1', ['1'], 'pin')
     const response1 = await backendNodeGateway.createNode(validNode1)
     expect(response1.success).toBeTruthy()
   })
@@ -51,7 +51,9 @@ describe('Unit Test: Update Node', () => {
     ])
     expect(updateResp.success).toBeFalsy()
     const findNodeByIdResp = await backendNodeGateway.getNodeById('1')
-    expect(isSameNode(findNodeByIdResp.payload, makeINode('1', ['1']))).toBeTruthy()
+    expect(
+      isSameNode(findNodeByIdResp.payload, makeINode('1', ['1'], 'pin'))
+    ).toBeTruthy()
   })
 
   test('fails to update node when field value ' + 'is incorrect type', async () => {
@@ -60,7 +62,9 @@ describe('Unit Test: Update Node', () => {
     ])
     expect(updateResp.success).toBeFalsy()
     const findNodeByIdResp = await backendNodeGateway.getNodeById('1')
-    expect(isSameNode(findNodeByIdResp.payload, makeINode('1', ['1']))).toBeTruthy()
+    expect(
+      isSameNode(findNodeByIdResp.payload, makeINode('1', ['1'], 'pin'))
+    ).toBeTruthy()
   })
 
   test('fails to update node with impossible filePath', async () => {
@@ -69,6 +73,8 @@ describe('Unit Test: Update Node', () => {
     ])
     expect(updateResp.success).toBeFalsy()
     const findNodeByIdResp = await backendNodeGateway.getNodeById('1')
-    expect(isSameNode(findNodeByIdResp.payload, makeINode('1', ['1']))).toBeTruthy()
+    expect(
+      isSameNode(findNodeByIdResp.payload, makeINode('1', ['1'], 'pin'))
+    ).toBeTruthy()
   })
 })

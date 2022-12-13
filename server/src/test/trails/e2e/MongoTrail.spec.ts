@@ -30,7 +30,9 @@ describe('E2E Test: Trail CRUD', () => {
   const testTrail: ITrail = makeITrail(
     generateTrailId(),
     generateAnchorList(),
-    generateNodeId()
+    generateNodeId(),
+    'test.title',
+    'test.description'
   )
 
   beforeAll(async () => {

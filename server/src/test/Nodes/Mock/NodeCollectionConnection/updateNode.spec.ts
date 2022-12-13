@@ -31,7 +31,7 @@ describe('Unit Test: updateNode', () => {
   })
 
   test('successfully updates node', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const insertResp = await nodeCollectionConnection.insertNode(validNode)
     expect(insertResp.success).toBeTruthy()
     const updateResp = await nodeCollectionConnection.updateNode('1', {
@@ -42,7 +42,7 @@ describe('Unit Test: updateNode', () => {
   })
 
   test('fails to update node if given wrong id', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const insertResp = await nodeCollectionConnection.insertNode(validNode)
     expect(insertResp.success).toBeTruthy()
     const updateResp = await nodeCollectionConnection.updateNode('2', {

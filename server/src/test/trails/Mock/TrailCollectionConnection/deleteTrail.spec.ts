@@ -31,7 +31,13 @@ describe('Unit Test: deleteTrail', () => {
   })
 
   test('successfully deletes trail', async () => {
-    const validTrail = makeITrail('trailId', ['anchor1Id', 'anchor2Id'], 'nodeId')
+    const validTrail = makeITrail(
+      'trailId',
+      [],
+      'nodeId',
+      'test.title',
+      'test.description'
+    )
     const createResponse = await trailCollectionConnection.insertTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const deleteResponse = await trailCollectionConnection.deleteTrail(validTrail.trailId)
@@ -39,7 +45,7 @@ describe('Unit Test: deleteTrail', () => {
   })
 
   test('gives success if we try to delete trail that does not exist', async () => {
-    const validTrail = makeITrail('trail1', ['anchor1', 'anchor2'], 'node1')
+    const validTrail = makeITrail('trail1', [], 'node1', 'test.title', 'test.description')
     const createResponse = await trailCollectionConnection.insertTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const deleteInvalidTrailResp = await trailCollectionConnection.deleteTrail('trail2')

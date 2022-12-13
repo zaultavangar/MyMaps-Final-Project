@@ -28,18 +28,24 @@ describe('Unit Test: ClearTrailCollection', () => {
   test('successfully deletes all trails', async () => {
     const trail1: ITrail = makeITrail(
       'trail.1',
-      ['anchor.1', 'anchor.2', 'anchor.3'],
-      'node.1'
+      [],
+      'node.1',
+      'test.title',
+      'test.description'
     )
     const trail2: ITrail = makeITrail(
       'trail.2',
-      ['anchor.1', 'anchor.3', 'anchor.4', 'anchor.5'],
-      'node.1'
+      [],
+      'node.1',
+      'test.title',
+      'test.description'
     )
     const trail3: ITrail = makeITrail(
       'trail.3',
-      ['anchor.6', 'anchor.7', 'anchor.8', 'anchor.9'],
-      'node.2'
+      [],
+      'node.2',
+      'test.title',
+      'test.description'
     )
 
     const response1 = await trailCollectionConnection.insertTrail(trail1)

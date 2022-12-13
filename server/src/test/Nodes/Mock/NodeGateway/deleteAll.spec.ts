@@ -26,15 +26,15 @@ describe('Unit Test: Delete All', () => {
   })
 
   test('successfully deletes all root nodes', async () => {
-    const validNode1: INode = makeINode('1', ['1'])
+    const validNode1: INode = makeINode('1', ['1'], 'pin')
     const response1 = await backendNodeGateway.createNode(validNode1)
     expect(response1.success).toBeTruthy()
 
-    const validNode2: INode = makeINode('2', ['2'])
+    const validNode2: INode = makeINode('2', ['2'], 'pin')
     const response2 = await backendNodeGateway.createNode(validNode2)
     expect(response2.success).toBeTruthy()
 
-    const validNode3: INode = makeINode('3', ['2', '3'])
+    const validNode3: INode = makeINode('3', ['2', '3'], 'pin')
     const response3 = await backendNodeGateway.createNode(validNode3)
     expect(response3.success).toBeTruthy()
 
@@ -50,15 +50,15 @@ describe('Unit Test: Delete All', () => {
   })
 
   test('successfully deletes all nested nodes', async () => {
-    const validNode1: INode = makeINode('1', ['1'])
+    const validNode1: INode = makeINode('1', ['1'], 'pin')
     const response1 = await backendNodeGateway.createNode(validNode1)
     expect(response1.success).toBeTruthy()
 
-    const validNode2: INode = makeINode('2', ['1', '2'])
+    const validNode2: INode = makeINode('2', ['1', '2'], 'pin')
     const response2 = await backendNodeGateway.createNode(validNode2)
     expect(response2.success).toBeTruthy()
 
-    const validNode3: INode = makeINode('3', ['1', '2', '3'])
+    const validNode3: INode = makeINode('3', ['1', '2', '3'], 'pin')
     const response3 = await backendNodeGateway.createNode(validNode3)
     expect(response3.success).toBeTruthy()
 
@@ -74,15 +74,15 @@ describe('Unit Test: Delete All', () => {
   })
 
   test('successfully deletes nested and root nodes', async () => {
-    const validNode1: INode = makeINode('1', ['1'])
+    const validNode1: INode = makeINode('1', ['1'], 'pin')
     const response1 = await backendNodeGateway.createNode(validNode1)
     expect(response1.success).toBeTruthy()
 
-    const validNode2: INode = makeINode('2', ['2'])
+    const validNode2: INode = makeINode('2', ['2'], 'pin')
     const response2 = await backendNodeGateway.createNode(validNode2)
     expect(response2.success).toBeTruthy()
 
-    const validNode3: INode = makeINode('3', ['2', '3'])
+    const validNode3: INode = makeINode('3', ['2', '3'], 'pin')
     const response3 = await backendNodeGateway.createNode(validNode3)
     expect(response3.success).toBeTruthy()
 

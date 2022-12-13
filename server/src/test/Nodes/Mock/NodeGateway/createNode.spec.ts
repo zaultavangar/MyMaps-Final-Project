@@ -31,29 +31,29 @@ describe('Unit Test: Create Node', () => {
   })
 
   test('inserts valid node', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const response = await backendNodeGateway.createNode(validNode)
     expect(response.success).toBeTruthy()
     expect(response.payload).toStrictEqual(validNode)
   })
 
   test('fails to insert node with duplicate id', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const validResponse = await backendNodeGateway.createNode(validNode)
 
     expect(validResponse.success).toBeTruthy()
-    const invalidNode: INode = makeINode('1', ['1'])
+    const invalidNode: INode = makeINode('1', ['1'], 'pin')
     const invalidResponse = await backendNodeGateway.createNode(invalidNode)
     expect(invalidResponse.success).toBeFalsy()
   })
 
   test('inserts valid nested node', async () => {
-    const parentNode: INode = makeINode('1', ['1'])
+    const parentNode: INode = makeINode('1', ['1'], 'pin')
     const response = await backendNodeGateway.createNode(parentNode)
     expect(response.success).toBeTruthy()
     expect(response.payload).toStrictEqual(parentNode)
 
-    const nestedNode: INode = makeINode('2', ['1', '2'])
+    const nestedNode: INode = makeINode('2', ['1', '2'], 'pin')
     const nestedResponse = await backendNodeGateway.createNode(nestedNode)
     expect(nestedResponse.success).toBeTruthy()
     expect(nestedResponse.payload).toStrictEqual(nestedNode)
@@ -69,7 +69,7 @@ describe('Unit Test: Create Node', () => {
   test(
     'fails to insert node when end of filePath does not equal ' + 'nodeId',
     async () => {
-      const invalidNode: INode = makeINode('1', ['2'])
+      const invalidNode: INode = makeINode('1', ['2'], 'pin')
       const response = await backendNodeGateway.createNode(invalidNode)
       expect(response.success).toBeFalsy()
     }

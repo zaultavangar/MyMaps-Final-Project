@@ -26,15 +26,15 @@ describe('Unit Test: Delete All', () => {
   })
 
   test('successfully deletes all trails', async () => {
-    const validTrail1: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail1: ITrail = makeITrail('trail1', [], 'node1', '', '')
     const response1 = await backendTrailGateway.createTrail(validTrail1)
     expect(response1.success).toBeTruthy()
 
-    const validTrail2: ITrail = makeITrail('trail2', ['anchor2'], 'node2')
+    const validTrail2: ITrail = makeITrail('trail2', [], 'node2', '', '')
     const response2 = await backendTrailGateway.createTrail(validTrail2)
     expect(response2.success).toBeTruthy()
 
-    const validTrail3: ITrail = makeITrail('trail3', ['anchor1', 'anchor2'], 'node2')
+    const validTrail3: ITrail = makeITrail('trail3', [], 'node2', '', '')
     const response3 = await backendTrailGateway.createTrail(validTrail3)
     expect(response3.success).toBeTruthy()
 

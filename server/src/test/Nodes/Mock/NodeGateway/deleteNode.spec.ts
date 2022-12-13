@@ -31,7 +31,7 @@ describe('Unit Test: Delete Node By Id', () => {
   })
 
   test('deletes node with no children and no parent', async () => {
-    const validNode1: INode = makeINode('1', ['1'])
+    const validNode1: INode = makeINode('1', ['1'], 'pin')
     const response1 = await backendNodeGateway.createNode(validNode1)
     expect(response1.success).toBeTruthy()
 
@@ -42,13 +42,13 @@ describe('Unit Test: Delete Node By Id', () => {
   })
 
   test('deletes node with children', async () => {
-    const validNode2: INode = makeINode('2', ['2'])
+    const validNode2: INode = makeINode('2', ['2'], 'pin')
     const response2 = await backendNodeGateway.createNode(validNode2)
     expect(response2.success).toBeTruthy()
-    const validNode3: INode = makeINode('3', ['2', '3'])
+    const validNode3: INode = makeINode('3', ['2', '3'], 'pin')
     const response3 = await backendNodeGateway.createNode(validNode3)
     expect(response3.success).toBeTruthy()
-    const validNode4: INode = makeINode('4', ['2', '4'])
+    const validNode4: INode = makeINode('4', ['2', '4'], 'pin')
     const response4 = await backendNodeGateway.createNode(validNode4)
     expect(response4.success).toBeTruthy()
 
@@ -63,16 +63,16 @@ describe('Unit Test: Delete Node By Id', () => {
   })
 
   test('deletes node with grandchildren', async () => {
-    const validNode2: INode = makeINode('2', ['2'])
+    const validNode2: INode = makeINode('2', ['2'], 'pin')
     const response2 = await backendNodeGateway.createNode(validNode2)
     expect(response2.success).toBeTruthy()
-    const validNode3: INode = makeINode('3', ['2', '3'])
+    const validNode3: INode = makeINode('3', ['2', '3'], 'pin')
     const response3 = await backendNodeGateway.createNode(validNode3)
     expect(response3.success).toBeTruthy()
-    const validNode4: INode = makeINode('4', ['2', '4'])
+    const validNode4: INode = makeINode('4', ['2', '4'], 'pin')
     const response4 = await backendNodeGateway.createNode(validNode4)
     expect(response4.success).toBeTruthy()
-    const validNode5: INode = makeINode('5', ['2', '3', '5'])
+    const validNode5: INode = makeINode('5', ['2', '3', '5'], 'pin')
     const response5 = await backendNodeGateway.createNode(validNode5)
     expect(response5.success).toBeTruthy()
     const deleteResp = await backendNodeGateway.deleteNode('2')
@@ -90,16 +90,16 @@ describe('Unit Test: Delete Node By Id', () => {
 
   test('deletes node with parent and children', async () => {
     // make sure the parent's 'child' field is updated (WORKS!)
-    const validNode2: INode = makeINode('2', ['2'])
+    const validNode2: INode = makeINode('2', ['2'], 'pin')
     const response2 = await backendNodeGateway.createNode(validNode2)
     expect(response2.success).toBeTruthy()
-    const validNode3: INode = makeINode('3', ['2', '3'])
+    const validNode3: INode = makeINode('3', ['2', '3'], 'pin')
     const response3 = await backendNodeGateway.createNode(validNode3)
     expect(response3.success).toBeTruthy()
-    const validNode4: INode = makeINode('4', ['2', '4'])
+    const validNode4: INode = makeINode('4', ['2', '4'], 'pin')
     const response4 = await backendNodeGateway.createNode(validNode4)
     expect(response4.success).toBeTruthy()
-    const validNode5: INode = makeINode('5', ['2', '3', '5'])
+    const validNode5: INode = makeINode('5', ['2', '3', '5'], 'pin')
     const response5 = await backendNodeGateway.createNode(validNode5)
     expect(response5.success).toBeTruthy()
     const deleteResp = await backendNodeGateway.deleteNode('3')
@@ -118,7 +118,7 @@ describe('Unit Test: Delete Node By Id', () => {
   })
 
   test('fails to delete node when node id does not exist', async () => {
-    const validNode2: INode = makeINode('1', ['1'])
+    const validNode2: INode = makeINode('1', ['1'], 'pin')
     const response2 = await backendNodeGateway.createNode(validNode2)
     expect(response2.success).toBeTruthy()
     const deleteResp = await backendNodeGateway.deleteNode('2')
