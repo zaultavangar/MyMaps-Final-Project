@@ -168,7 +168,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   return (
     <div
       className="nodeHeader"
-      style={{ backgroundColor: isNavigating ? 'green' : 'white' }}
+      //style={{ backgroundColor: isNavigating ? 'green' : 'white' }}
     >
       <div
         className="nodeHeader-title"
@@ -248,11 +248,13 @@ export const NodeHeader = (props: INodeHeaderProps) => {
             )}
           </div>
         )}
+        {/*
         {trailToNavigate && (
           <div className="navigating-from" style={{ color: 'white' }}>
             Navigating from <b>{trailToNavigate.title}</b>
           </div>
         )}
+        */}
       </div>
     </div>
   )

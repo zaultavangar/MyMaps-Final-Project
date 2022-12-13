@@ -38,6 +38,7 @@ import {
   routeDrawerOpenState,
   tabIndexState,
   specificTrailState,
+  addToRouteModalOpenState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
@@ -56,6 +57,7 @@ export const PinMenu = (props: IPinMenuProps) => {
 
   const setRouteDrawerOpen = useSetRecoilState(routeDrawerOpenState)
   const setSpecificTrail = useSetRecoilState(specificTrailState)
+  const setAddToRouteModalOpen = useSetRecoilState(addToRouteModalOpenState)
 
   // Formats a date, could be global method ***
   const formatDate = (date: any) => {
@@ -151,6 +153,12 @@ export const PinMenu = (props: IPinMenuProps) => {
       }
       setRefreshLinkList(!refreshLinkList)
       setSelectedPin(null)
+    }
+  }
+
+  const onAddToRouteButtonClick = async () => {
+    if (selectedPin) {
+      setAddToRouteModalOpen(true)
     }
   }
 
@@ -343,7 +351,7 @@ export const PinMenu = (props: IPinMenuProps) => {
               text="Add to Route"
               style={customButtonStyle}
               icon={<ri.RiRouteLine />}
-              onClick={onCreateNodeButtonClick}
+              onClick={onAddToRouteButtonClick}
             />
           </div>
           <h4

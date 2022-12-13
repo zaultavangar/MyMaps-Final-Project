@@ -391,8 +391,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAlertTitle('Title update failed')
         setAlertMessage(updateResp.message)
       }
-      // setRefresh(!refresh)
-      // setRefreshLinkList(!refreshLinkList)
+       //setRefresh(!refresh)
+       setRefreshLinkList(!refreshLinkList)
     }
   }
 
@@ -791,6 +791,76 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                             )}
                           </Droppable>
                         </DragDropContext>
+                        
+                        <div className="add-pin-to-trail-popover-container">
+                          <Popover
+                            placement="right"
+                            isOpen={addPinPopoverOpen}
+                            onClose={() => setAddPinPopoverOpen(false)}
+                          >
+                            <PopoverTrigger>
+                              <Button
+                                className="add-pins-to-trail-button"
+                                variant="outline"
+                                mr={3}
+                                onClick={() => setAddPinPopoverOpen(true)}
+                                style={{
+                                  marginLeft: '5px',
+                                  marginTop: '10px',
+                                  padding: '40px 30px',
+                                }}
+                              >
+                                <div>
+                                  <div style={{ fontWeight: '200' }}>Add Pins</div>
+                                  <div style={{ fontSize: '1.5em', fontWeight: '200' }}>
+                                    +
+                                  </div>
+                                </div>
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <PopoverArrow />
+                              <PopoverHeader>Choose a Pin</PopoverHeader>
+                              <PopoverCloseButton />
+                              <PopoverBody>
+                                <div className="select-add-pin-wrapper">
+                                  <Select
+                                    value={pinIdToAdd}
+                                    id="select-add-pin"
+                                    onChange={handleSelectChange}
+                                  >
+                                    {routeDrawerPins &&
+                                      routeDrawerPins.map((pin) => (
+                                        <option key={pin.pinId} value={pin.pinId}>
+                                          {pin.title}
+                                        </option>
+                                      ))}
+                                  </Select>
+                                  <div>
+                                    <Button
+                                      colorScheme="whatsapp"
+                                      backgroundColor="rgb(0,125,0)"
+                                      onClick={handleAddPinsToTrail}
+                                      style={{ padding: '10px 10px' }}
+                                    >
+                                      Add
+                                    </Button>
+                                  </div>
+                                </div>
+                              </PopoverBody>
+                              <PopoverFooter></PopoverFooter>
+                            </PopoverContent>
+                          </Popover>
+                          
+                          {error.length > 0 && (
+                            <div
+                              className="modal-error modal-error-create-trail"
+                              style={{ marginLeft: '-5px' }}
+                            >
+                              {error}
+                            </div>
+                          )}
+                        </div>
                         {/* <div className="specific-trail-pins" style={{display: 'flex', flexWrap: 'wrap', gap: '1em',}}>
                             {specificTrail.pinList.map((pin, index) => (
                               <div className="specific-trail-pin-title" key={index}>
