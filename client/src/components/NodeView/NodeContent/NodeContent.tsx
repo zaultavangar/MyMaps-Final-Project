@@ -90,17 +90,17 @@ export const NodeContent = (props: INodeContentProps) => {
       return (
         <>
           {isNavigating && trailToNavigate && (
-            <div className="navigation-window" key={trailToNavigate.trailId}>
-              <div className="navigation-window-header">
+            <div className="" key={trailToNavigate.trailId}>
+              <div className="-header">
                 <h3>Route: {trailToNavigate.title}</h3>
                 <div>{trailToNavigate.explainer}</div>
               </div>
-              <div className="navigation-window-subheader">
+              <div className="-subheader">
                 <h5>Pins</h5>
               </div>
               <hr></hr>
               <OrderedList>
-                <div className="navigation-window-pins">
+                <div className="-pins">
                   {trailToNavigate.pinList.map((pin, index) => (
                     <ListItem key={pin.title}>{pin.title}</ListItem>
                   ))}

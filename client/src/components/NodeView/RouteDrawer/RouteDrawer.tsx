@@ -391,8 +391,8 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
         setAlertTitle('Title update failed')
         setAlertMessage(updateResp.message)
       }
-      // setRefresh(!refresh)
-      // setRefreshLinkList(!refreshLinkList)
+       //setRefresh(!refresh)
+       setRefreshLinkList(!refreshLinkList)
     }
   }
 
