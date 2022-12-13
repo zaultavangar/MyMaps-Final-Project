@@ -40,32 +40,38 @@ export interface ISearchModalProps {
 export const SearchModal = (props: ISearchModalProps) => {
   const { isOpen, onClose, setParentNode, setSearchModalOpen } = props
   const [searchValue, setSearchValue] = useState('') // value of the search input
-  const [searchResults, setSearchResults] = useState<{[searchType: string]: string[] | null}>({}) // search results
+  const [searchResults, setSearchResults] = useState<{
+    [searchType: string]: string[] | null
+  }>({}) // search results
 
   const [dateFilter, setDateFilter] = useState(false) // dateFilter status
   // list of chosen types
-  const [typeFilter, setTypeFilter] = useState<string[]>(['text', 'image', 'folder', 'map'])
+  const [typeFilter, setTypeFilter] = useState<string[]>([
+    'text',
+    'image',
+    'folder',
+    'map',
+  ])
 
   // Handles change in the input bar
   const handleSearch = (event: any) => {
     setSearchValue(event.target.value) // update searchValue
   }
 
-    const [checkedItems, setCheckedItems] = useState([true, true, true])
-    const allChecked = checkedItems.every(Boolean)
-    const isIndeterminate = checkedItems.some(Boolean) && !allChecked
+  const [checkedItems, setCheckedItems] = useState([true, true, true])
+  const allChecked = checkedItems.every(Boolean)
+  const isIndeterminate = checkedItems.some(Boolean) && !allChecked
 
-    const [typeChanged, setTypeChanged] = useState<number | null>(null)
+  const [typeChanged, setTypeChanged] = useState<number | null>(null)
 
-    const [mapFilterChecked, setMapFilterChecked] = useState<boolean>(true)
-    const [pinFilterChecked, setPinFilterChecked] = useState<boolean>(true)
-
+  const [mapFilterChecked, setMapFilterChecked] = useState<boolean>(true)
+  const [pinFilterChecked, setPinFilterChecked] = useState<boolean>(true)
 
   // Send the search through FrontendNodeGateway
   const sendSearch = async () => {
     console.log('HIHIHI')
     console.log(typeFilter)
-    let responseArr : {[searchType: string]: string[] | null} = {}
+    const responseArr: { [searchType: string]: string[] | null } = {}
     setTypeChanged(null)
     const searchResponse = await FrontendNodeGateway.search(
       searchValue,
@@ -77,14 +83,12 @@ export const SearchModal = (props: ISearchModalProps) => {
       // return searchResponse?.payload
     }
     if (pinFilterChecked) {
-      const pinSearchResponse = await FrontendPinGateway.search(
-        searchValue,
-      )
+      const pinSearchResponse = await FrontendPinGateway.search(searchValue)
       if (pinSearchResponse.success) {
         responseArr['pinSearch'] = pinSearchResponse?.payload
         console.log(pinSearchResponse?.payload)
         // return pinSearchResponse?.payload
-      } 
+      }
     }
     return responseArr
   }
@@ -96,8 +100,7 @@ export const SearchModal = (props: ISearchModalProps) => {
         setSearchResults(result) // update search results
       }
     })
-  }, [searchValue, typeFilter, dateFilter, pinFilterChecked, ])
-
+  }, [searchValue, typeFilter, dateFilter, pinFilterChecked])
 
   // Handles selecting/deselecting the sort by date created filter
   const handleDateFilterChange = () => {
@@ -171,9 +174,8 @@ export const SearchModal = (props: ISearchModalProps) => {
     )
   }
 
-
   const checkIfInList = (val: string) => {
-    const typeFilterCpy = typeFilter.slice() 
+    const typeFilterCpy = typeFilter.slice()
     console.log(typeFilterCpy)
     if (!typeFilterCpy.includes(val)) {
       typeFilterCpy.push(val)
@@ -184,8 +186,6 @@ export const SearchModal = (props: ISearchModalProps) => {
     setTypeFilter(typeFilterCpy) // update the type filter array
   }
 
-
-
   const onMapFilterChange = (e: any) => {
     setMapFilterChecked(e.target.checked)
     checkIfInList('map')
@@ -195,69 +195,64 @@ export const SearchModal = (props: ISearchModalProps) => {
     setPinFilterChecked(!pinFilterChecked)
   }
 
-
   const onSubFilterChange = (e: any, index: number) => {
-    let val = e.target.checked ? true : false
+    const val = e.target.checked ? true : false
     setTypeChanged(index)
-    switch (index) {     
+    switch (index) {
       case 0:
-        setCheckedItems([val, checkedItems[1], checkedItems[2]])  
-        break;
+        setCheckedItems([val, checkedItems[1], checkedItems[2]])
+        break
       case 1:
-        setCheckedItems([checkedItems[0], val, checkedItems[2]])     
-        break;
+        setCheckedItems([checkedItems[0], val, checkedItems[2]])
+        break
       case 2:
-        setCheckedItems([checkedItems[0], checkedItems[1], val])     
-        break;
-        break;  
-      default: 
-        break;
+        setCheckedItems([checkedItems[0], checkedItems[1], val])
+        break
+        break
+      default:
+        break
     }
     handleTypeFilter(index)
   }
 
   const onDocumentFilterChange = (e: any) => {
-    let val = e.target.checked
-     setCheckedItems([val, val, val, val])
-     handleTypeFilter(null)
+    const val = e.target.checked
+    setCheckedItems([val, val, val, val])
+    handleTypeFilter(null)
   }
 
   const handleTypeFilter = (index: number | null) => {
-      if (index === null) {   
-          const list: string[] = ['text', 'image', 'folder'] 
-          var typeFilterCpy = typeFilter.slice() 
-          for (let i=0; i<list.length; i++) {
-            if (!typeFilterCpy.includes(list[i])) {
-              typeFilterCpy.push(list[i])
-            } else {
-              typeFilterCpy.splice(typeFilterCpy.indexOf(list[i]), 1)
-            }
-          }
-          setTypeFilter(typeFilterCpy) // update the type filter array
-        
-      }
-      else {
-        let type 
-        switch (index) {
-          case 0:
-            type = 'text'
-            break       
-          case 1:
-            type = 'image'
-            break
-          case 2:
-            type = 'folder'
-            break
-          default:
-            break        
-        }
-        if (type) {
-          checkIfInList(type)
+    if (index === null) {
+      const list: string[] = ['text', 'image', 'folder']
+      const typeFilterCpy = typeFilter.slice()
+      for (let i = 0; i < list.length; i++) {
+        if (!typeFilterCpy.includes(list[i])) {
+          typeFilterCpy.push(list[i])
+        } else {
+          typeFilterCpy.splice(typeFilterCpy.indexOf(list[i]), 1)
         }
       }
-      
+      setTypeFilter(typeFilterCpy) // update the type filter array
+    } else {
+      let type
+      switch (index) {
+        case 0:
+          type = 'text'
+          break
+        case 1:
+          type = 'image'
+          break
+        case 2:
+          type = 'folder'
+          break
+        default:
+          break
+      }
+      if (type) {
+        checkIfInList(type)
+      }
+    }
   }
-  
 
   return (
     <div>
@@ -280,8 +275,12 @@ export const SearchModal = (props: ISearchModalProps) => {
               <div className="documents">
                 <Text mb="15px">Documents found({searchResults.length}):</Text>
                 <List spacing={3}>
-                  {searchResults['pinSearch']?.map((element: any) => getSearchLinks(element))}
-                  {searchResults['nodeSearch']?.map((element: any) => getSearchLinks(element))}
+                  {searchResults['pinSearch']?.map((element: any) =>
+                    getSearchLinks(element)
+                  )}
+                  {searchResults['nodeSearch']?.map((element: any) =>
+                    getSearchLinks(element)
+                  )}
                 </List>
               </div>
               <div className="filter-menu">
@@ -295,47 +294,47 @@ export const SearchModal = (props: ISearchModalProps) => {
                 </div>
                 <div className="type">
                   <div className="filter-cat">Type:</div>
-                  <Stack direction='column'>
-                  <Checkbox
-                    isChecked={mapFilterChecked}
-                    onChange={(e) => onMapFilterChange(e)}
-                  >
-                    <span className="checkbox">Map</span>
-                  </Checkbox>
-                  <Checkbox 
-                    isChecked={pinFilterChecked}
-                    onChange={(e) => onPinFilterChange(e)}
-                    defaultChecked
+                  <Stack direction="column">
+                    <Checkbox
+                      isChecked={mapFilterChecked}
+                      onChange={(e) => onMapFilterChange(e)}
                     >
-                    <span className="checkbox">Pin</span>
-                  </Checkbox>
-                  <Checkbox
-                    isChecked={allChecked}
-                    isIndeterminate={isIndeterminate}
-                    onChange={(e) => onDocumentFilterChange(e)}
-                  >
+                      <span className="checkbox">Map</span>
+                    </Checkbox>
+                    <Checkbox
+                      isChecked={pinFilterChecked}
+                      onChange={(e) => onPinFilterChange(e)}
+                      defaultChecked
+                    >
+                      <span className="checkbox">Pin</span>
+                    </Checkbox>
+                    <Checkbox
+                      isChecked={allChecked}
+                      isIndeterminate={isIndeterminate}
+                      onChange={(e) => onDocumentFilterChange(e)}
+                    >
                       <span className="checkbox">Document</span>
-                  </Checkbox>
-                  <Stack pl={6} mt={1} spacing={1}>
-                    <Checkbox
-                      isChecked={checkedItems[0]}
-                      onChange={(e) => onSubFilterChange(e, 0)}
-                    >
-                    <span className="checkbox">Text</span>
                     </Checkbox>
-                    <Checkbox
-                      isChecked={checkedItems[1]}
-                      onChange={(e) => onSubFilterChange(e, 1)}
-                    >
-                      <span className="checkbox">Image</span>
-                    </Checkbox>
-                    <Checkbox
-                      isChecked={checkedItems[2]}
-                      onChange={(e) => onSubFilterChange(e, 2)}
-                    >
-                      <span className="checkbox">Folder</span>
-                    </Checkbox>
-                  </Stack>
+                    <Stack pl={6} mt={1} spacing={1}>
+                      <Checkbox
+                        isChecked={checkedItems[0]}
+                        onChange={(e) => onSubFilterChange(e, 0)}
+                      >
+                        <span className="checkbox">Text</span>
+                      </Checkbox>
+                      <Checkbox
+                        isChecked={checkedItems[1]}
+                        onChange={(e) => onSubFilterChange(e, 1)}
+                      >
+                        <span className="checkbox">Image</span>
+                      </Checkbox>
+                      <Checkbox
+                        isChecked={checkedItems[2]}
+                        onChange={(e) => onSubFilterChange(e, 2)}
+                      >
+                        <span className="checkbox">Folder</span>
+                      </Checkbox>
+                    </Stack>
                   </Stack>
                 </div>
               </div>

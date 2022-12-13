@@ -93,6 +93,7 @@ export const NodeBreadcrumb = ({
           {currentNode.type === 'text' && <RiStickyNoteLine />}
           {currentNode.type === 'image' && <RiImageLine />}
           {currentNode.type === 'folder' && <RiFolderLine />}
+          {currentNode.type === 'map' && <RiMap2Line />}
         </div>
         {currentNode.title}
       </div>
