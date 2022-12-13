@@ -107,18 +107,18 @@ export const TextContent = (props: ITextContentProps) => {
   // Updates the content of a node
   const updateNodeContent = async (): Promise<IServiceResponse<any>> => {
     const getNodeResp = await FrontendNodeGateway.getNode(currentNode.nodeId)
-    let childNodes = []
-    if (!getNodeResp.success){
+    const childNodes = []
+    if (!getNodeResp.success) {
       return failureServiceResponse('Failed to update content')
     }
     const node = getNodeResp.payload
     if (selectedPin && node) {
-      let childNodes = selectedPin.childNodes.slice()
+      const childNodes = selectedPin.childNodes.slice()
       if (childNodes.includes(node)) {
         childNodes.splice(childNodes.indexOf(node), 1)
       }
     }
-    
+
     const editorHtml = editor?.getHTML() // get current editor document as HTML
     const nodeProperty: INodeProperty = makeINodeProperty('content', editorHtml)
     const updateNodeResp = await FrontendNodeGateway.updateNode(currentNode.nodeId, [
@@ -132,10 +132,11 @@ export const TextContent = (props: ITextContentProps) => {
     if (selectedPin) {
       const pinProperty: IPinProperty = makeIPinProperty('childNodes', childNodes)
       const updatePinResp = await FrontendPinGateway.updatePin(selectedPin.pinId, [
-        pinProperty])
-        if (!updatePinResp.success) {
-          return failureServiceResponse('Failed to update content')
-        }
+        pinProperty,
+      ])
+      if (!updatePinResp.success) {
+        return failureServiceResponse('Failed to update content')
+      }
     }
     return successfulServiceResponse('Node content updated successfully')
   }

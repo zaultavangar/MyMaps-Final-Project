@@ -510,25 +510,25 @@ export const NodeView = (props: INodeViewProps) => {
         />
       )}
       {(hasAnchors || hasPins) && (
-          <>
-            {hasAnchors ? (
-              <div
-                className={'resizable-node-properties'}
-                ref={resizableAnchorMenu}
-                style={{ width: resizableWidth }}
-              >
-                <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
-              </div>
-            ) : (
-              <div style={{ width: resizableWidth }} ref={resizablePinMenu}>
-                <PinMenu
-                  setParentNode={setParentNode}
-                  onCreateNodeButtonClick={onCreateNodeButtonClick}
-                />
-              </div>
-            )}
-          </>
-        )}
+        <>
+          {hasAnchors ? (
+            <div
+              className={'resizable-node-properties'}
+              ref={resizableAnchorMenu}
+              style={{ width: resizableWidth }}
+            >
+              <NodeLinkMenu nodeIdsToNodesMap={nodeIdsToNodesMap} />
+            </div>
+          ) : (
+            <div style={{ width: resizableWidth }} ref={resizablePinMenu}>
+              <PinMenu
+                setParentNode={setParentNode}
+                onCreateNodeButtonClick={onCreateNodeButtonClick}
+              />
+            </div>
+          )}
+        </>
+      )}
       {/* {hasAnchors && (
         <div
           className={'resizable-node-properties'}
