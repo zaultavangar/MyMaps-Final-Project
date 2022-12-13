@@ -45,6 +45,10 @@ export const MoveNodeModal = (props: IMoveNodeModalProps) => {
       setError('Error: Cannot move into children')
       return
     }
+    if (node.type === 'map' && selectedParentNode && selectedParentNode.type !== 'map') {
+      setError('Error: Map must be child of a map')
+      return
+    }
     const moveNodeResp = await FrontendNodeGateway.moveNode({
       newParentId: newParentId,
       nodeId: node.nodeId,
@@ -68,7 +72,7 @@ export const MoveNodeModal = (props: IMoveNodeModalProps) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose}>
+    <Modal isOpen={isOpen} onClose={handleClose} size="md">
       <div className="modal-font">
         <ModalOverlay />
         <ModalContent>

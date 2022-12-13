@@ -864,7 +864,14 @@ export const RouteDrawer = (props: IRouteDrawerProps) => {
                                     <Button
                                       colorScheme="whatsapp"
                                       backgroundColor="rgb(0,125,0)"
-                                      onClick={handleAddPinsToTrail}
+                                      onClick={async () => {
+                                        const pin = (
+                                          await FrontendPinGateway.getPin(pinIdToAdd)
+                                        ).payload
+                                        if (pin) {
+                                          specificTrail.pinList.push(pin)
+                                        }
+                                      }}
                                       style={{ padding: '10px 10px' }}
                                     >
                                       Add
