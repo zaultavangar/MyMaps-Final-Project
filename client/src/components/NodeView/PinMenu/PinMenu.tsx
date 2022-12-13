@@ -230,6 +230,7 @@ export const PinMenu = (props: IPinMenuProps) => {
         />
       )}
       <div className="pin-menu-container">
+        {/*
         <AddToRouteModal
           isOpen={addToRouteModalOpen}
           onClose={() => setAddToRouteModalOpen(false)}
@@ -237,6 +238,7 @@ export const PinMenu = (props: IPinMenuProps) => {
           // setAddToRouteModalOpen={setAddToRouteModalOpen}
           setAddToRouteModalOpen={setAddToRouteModalOpen}
         />
+      */}
         {selectedPin === null ? (
           <div>
             <h2 className="your-pins">Your Pins</h2>
@@ -386,14 +388,8 @@ export const PinMenu = (props: IPinMenuProps) => {
                 flexWrap: 'wrap',
                 alignItems: 'center',
               }}
-            >
-              <Button
-                text="Add to Route"
-                style={customButtonStyle}
-                icon={<ri.RiRouteLine />}
-                onClick={onAddToRouteButtonClick}
-              />
-            </div>
+            ></div>
+            <hr></hr>
             <h4
               className="pin-menu-routes-containing-header"
               style={{ marginTop: '10px', fontWeight: '500' }}
