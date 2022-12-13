@@ -87,11 +87,9 @@ export const MainView = React.memo(function MainView() {
             rootNodesTemp[i].node.nodeId
           )
           if (pinsFromDB.success && pinsFromDB.payload) {
-            console.log('pinsFromDB.payload', pinsFromDB.payload)
             pinsCollection = pinsCollection.concat(pinsFromDB.payload)
           }
         }
-        console.log('pinsCollection', pinsCollection)
         setPins(pinsCollection)
       }
       setIsAppLoaded(true)

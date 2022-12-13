@@ -7,7 +7,9 @@ import {
   RiFilePdfLine,
   RiQuestionLine,
   RiMap2Line,
+  RiMapPinLine,
 } from 'react-icons/ri'
+import PlaceIcon from '@mui/icons-material/Place'
 import { SiMapbox } from 'react-icons/si'
 import uniqid from 'uniqid'
 import { NodeType } from '../types'
@@ -30,7 +32,7 @@ export const nodeTypeIcon = (type: NodeType): JSX.Element => {
     case 'googleMap':
       return <SiMapbox />
     default:
-      return <RiQuestionLine />
+      return <RiMapPinLine/>
   }
 }
 

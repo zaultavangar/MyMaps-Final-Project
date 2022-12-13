@@ -117,27 +117,13 @@ export const FrontendPinGateway = {
 
   search: async (
     input: string,
-    typeFilter: string[],
   ): Promise<IServiceResponse<string[]>> => {
     try {
-      let query: any
-      if (typeFilter.length < 1) {
-        query = new URLSearchParams('types[]') // empty array for types
-      } else {
-        query = new URLSearchParams()
-        // formats the query for the URL
-        typeFilter.forEach((element) => {
-          if (element === 'pin') query.append('types[]', element)
-        })
-      }
-      const queryString = decodeURIComponent(query.toString()) // the query string
       const path =
         baseEndpoint +
         servicePath +
         'search/' +
-        `${input}/` +
-        `&${queryString}`
-
+        `${input}/` 
       return await get<IServiceResponse<string[]>>(path)
     } catch (exception) {
       return failureServiceResponse('[search] Unable to access backend')

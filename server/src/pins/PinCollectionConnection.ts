@@ -195,14 +195,13 @@ export class PinCollectionConnection {
     )
   }
 
-  async search(input: string, typeFilter: string[] | undefined): Promise<IServiceResponse<string[]>> {
+  async search(input: string): Promise<IServiceResponse<string[]>> {
     const modInput = "\\" + "'" + input + "\\" + "'"
     const foundPins: string[] = []
     let query: any = { $text: { $search: modInput }} // default query
     let sort: any = { score: { $meta: 'textScore' }} // default sort
 
     // Modify query and sort variables based on type and date filter status, respectively
-    if (typeFilter !== undefined) query = { $text: { $search: modInput}, 'type': {$in: typeFilter} }
     
     // get relevant properties from the projection
     const projection = {

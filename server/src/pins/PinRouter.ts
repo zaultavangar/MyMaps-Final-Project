@@ -52,11 +52,9 @@ export class PinRouter {
          PinExpressRouter.get('/search/:input/', async (req: Request, res: Response) => {
           try {
             const input = req.params.input // get the search input
-            let typeFilter: any
             // set the type filter
-            typeFilter = (req.query && req.query.types[0]==='' ? undefined : req.query.types)
             const response: IServiceResponse<string[]> =
-              await this.BackendPinGateway.search(input, typeFilter)
+              await this.BackendPinGateway.search(input)
             res.status(200).send(response)
           } catch (e) {
             res.status(500).send(e.message)

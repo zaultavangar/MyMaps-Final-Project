@@ -149,12 +149,8 @@ export class BackendPinGateway {
    */
     async search(
       input: string,
-      typeFilter: string[] | undefined,
     ): Promise<IServiceResponse<string[]>> {
-      const queryResponse = await this.pinCollectionConnection.search(
-        input,
-        typeFilter,
-      )
+      const queryResponse = await this.pinCollectionConnection.search(input)
       if (queryResponse.success) {
         return queryResponse
       } else {
