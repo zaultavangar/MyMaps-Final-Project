@@ -29,8 +29,10 @@ export function isIAnchor(object: any): object is IAnchor {
   return (
     typeof (object as IAnchor).anchorId === 'string' &&
     typeof (object as IAnchor).nodeId === 'string' &&
-    // Array.isArray((object as IAnchor).childNodeIds) && // may cause problems check with tests
-    // Array.isArray((object as IAnchor).trailIds) && // may cause problems check with tests
+    // Array.isArray((object as IAnchor).childNodeIds) &&
+    // may cause problems check with tests
+    // Array.isArray((object as IAnchor).trailIds)
+    // may cause problems check with tests
     isExtent(object)
   )
 }

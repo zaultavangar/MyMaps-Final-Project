@@ -29,8 +29,9 @@ app.use(cors())
 app.use(express.static('dist'))
 // app.use(express.json()) // allows us to parse json
 
+
+app.use(express.urlencoded({ extended: true}));
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb' }));
 
 const uri = process.env.DB_URI
 const mongoClient = new MongoClient(uri, {

@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { ITrail, makeITrail } from '../../../../types'
 
 describe('Unit Test: Delete Trails', () => {
   let uri: string
@@ -31,7 +31,13 @@ describe('Unit Test: Delete Trails', () => {
   })
 
   test('gets trail when given valid id', async () => {
-    const validTrail: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail: ITrail = makeITrail(
+      'trail1',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const createResponse = await backendTrailGateway.createTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const getTrailByIdResp = await backendTrailGateway.getTrailById('trail1')
@@ -39,7 +45,13 @@ describe('Unit Test: Delete Trails', () => {
   })
 
   test('fails to get trail when given invalid id', async () => {
-    const validTrail: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail: ITrail = makeITrail(
+      'trail1',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const createResponse = await backendTrailGateway.createTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const getTrailByIdResp = await backendTrailGateway.getTrailById('trail2')

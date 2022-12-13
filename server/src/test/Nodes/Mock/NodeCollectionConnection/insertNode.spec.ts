@@ -26,7 +26,7 @@ describe('Unit Test: InsertNode', () => {
   })
 
   test('inserts node', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const response = await nodeCollectionConnection.insertNode(validNode)
     expect(response.success).toBeTruthy()
   })
@@ -38,7 +38,7 @@ describe('Unit Test: InsertNode', () => {
   })
 
   test('fails to insert invalid document with correct shape', async () => {
-    const doc: INode = makeINode('2', ['1'])
+    const doc: INode = makeINode('2', ['1'], 'pin')
     const response = await nodeCollectionConnection.insertNode(doc)
     expect(response.success).toBeFalsy()
   })

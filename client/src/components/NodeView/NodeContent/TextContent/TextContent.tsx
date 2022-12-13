@@ -95,7 +95,8 @@ export const TextContent = (props: ITextContentProps) => {
         lowlight,
         HTMLAttributes: {
           style:
-            'background: #0d0d0d; border-radius: 0.5 rem; color: #fff; font-family: \'JetBrainsMono\', monospace; padding: 0.75rem 1rem;',
+            // eslint-disable-next-line quotes
+            "background: #0d0d0d; border-radius: 0.5 rem; color: #fff; font-family: 'JetBrainsMono', monospace; padding: 0.75rem 1rem;",
         },
       }),
     ],
@@ -119,7 +120,7 @@ export const TextContent = (props: ITextContentProps) => {
     }
     
     const editorHtml = editor?.getHTML() // get current editor document as HTML
-    const nodeProperty: INodeProperty = makeINodeProperty('content', editorHtml) // assign to content property
+    const nodeProperty: INodeProperty = makeINodeProperty('content', editorHtml)
     const updateNodeResp = await FrontendNodeGateway.updateNode(currentNode.nodeId, [
       nodeProperty,
     ]) // update the node with it's new content
@@ -156,7 +157,8 @@ export const TextContent = (props: ITextContentProps) => {
     }
 
     // Loop through link marks in the text editor, by iterating through Prosemirror nodes
-    editor.state.doc.descendants(function(node, pos, parent, index) {
+    // eslint-disable-next-line space-before-function-paren
+    editor.state.doc.descendants(function (node, pos, parent, index) {
       const linkMarks = node.marks.filter((mark) => mark.type.name == 'link')
       // if anchor found
       if (linkMarks && linkMarks.length > 0) {
@@ -169,14 +171,16 @@ export const TextContent = (props: ITextContentProps) => {
             // if anchor in database equal to this anchor
             if (currentNodeDatabaseAnchors[i].anchorId == anchorId) {
               anchorFound = true
-              currentNodeDatabaseAnchors.splice(i, 1) // remove found anchor from list so we only delete the appropriate ones later
+              // remove found anchor from list
+              currentNodeDatabaseAnchors.splice(i, 1)
               break
             }
           }
           if (!anchorFound) {
             return // no need to edit anchor's extent if not found
           }
-          // get anchor text length (note: node.text.length could be null) in which case length=0
+          // get anchor text length (note: node.text.length could be null)
+          // in which case length=0
           const length = node.text?.length ?? 0
           const newExtent: Extent = {
             endCharacter: pos + length - 1,

@@ -32,7 +32,7 @@ describe('Unit Test: findNodeById', () => {
   })
 
   test('gets node when given valid id', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const createResponse = await nodeCollectionConnection.insertNode(validNode)
     expect(createResponse.success).toBeTruthy()
     const findNodeByIdResp = await nodeCollectionConnection.findNodeById(validNode.nodeId)
@@ -40,7 +40,7 @@ describe('Unit Test: findNodeById', () => {
   })
 
   test('fails to get node when given invalid id', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const createResponse = await nodeCollectionConnection.insertNode(validNode)
     expect(createResponse.success).toBeTruthy()
     const findNodeByIdResp = await nodeCollectionConnection.findNodeById('2')

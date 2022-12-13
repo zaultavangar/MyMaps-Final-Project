@@ -37,6 +37,7 @@ describe('Unit Test: Get Node By Id', () => {
       type: 'text',
       content: 'example text content',
       filePath: makeINodePath(['1']),
+      pinId: '1',
     }
     const createResponse = await backendNodeGateway.createNode(validNode)
     expect(createResponse.success).toBeTruthy()
@@ -51,6 +52,7 @@ describe('Unit Test: Get Node By Id', () => {
       type: 'text',
       content: 'example text content',
       filePath: makeINodePath(['1']),
+      pinId: '1',
     }
     const createResponse = await backendNodeGateway.createNode(validNode)
     expect(createResponse.success).toBeTruthy()

@@ -4,7 +4,6 @@ import {
   successfulServiceResponse,
   ITrail,
   isITrail,
-  Extent,
 } from '../types'
 import { MongoClient } from 'mongodb'
 

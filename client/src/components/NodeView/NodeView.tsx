@@ -9,7 +9,6 @@ import {
   NodeIdsToNodesMap,
   NodeType,
   ITrail,
-  RecursiveNodeTree,
 } from '../../types'
 import { NodeBreadcrumb } from './NodeBreadcrumb'
 import { NodeContent } from './NodeContent'
@@ -36,7 +35,7 @@ import {
   routeDrawerOpenState,
   trailPinsState,
   refreshTrailsState,
-  refreshPinsState
+  refreshPinsState,
 } from '../../global/Atoms'
 import './NodeView.scss'
 import NodeInfo from '../Modals/GraphViewModal/Flow/NodeInfo'
@@ -149,7 +148,6 @@ export const NodeView = (props: INodeViewProps) => {
 
   // New Method
   const loadPinsFromNodeId = useCallback(async () => {
-    console.log('loadPinsFromNodeId')
     if (!currentNode) {
       return
     }
@@ -166,10 +164,8 @@ export const NodeView = (props: INodeViewProps) => {
       }
     }
 
-    console.log('mapNode: ', mapNode)
-
     if (!mapNode || mapNode.type !== 'map') {
-      console.log('No map node found')
+      // console.log('No map node found')
       const pinsFromNode = await FrontendPinGateway.getPinsByNodeId(currentNode.nodeId)
       if (pinsFromNode.success && pinsFromNode.payload) {
         setPins(pinsFromNode.payload)
@@ -184,7 +180,6 @@ export const NodeView = (props: INodeViewProps) => {
   }, [currentNode])
 
   const loadTrailsFromNodeId = useCallback(async () => {
-    console.log('loadTrailsFromNodeId')
     const trailsFromNode = await FrontendTrailGateway.getTrailsByNodeId(
       currentNode.nodeId
     )
@@ -416,18 +411,16 @@ export const NodeView = (props: INodeViewProps) => {
     }
     if (divider.current) divider.current.style.width = '10px'
     if (resizable && resizable.current && dragging) {
-      console.log('moving')
       const resizableElement = resizable.current
       let width = parseFloat(resizableElement.style.width)
       const deltaX = e.screenX - xLast // The change in the x location
       const newWidth = (width -= deltaX)
       if (!(newWidth < 245 || newWidth > 420)) {
-        console.log('hi')
         resizableElement.style.width = String(width) + 'px'
         // resizableWidth = width
         xLast = e.screenX
       } else {
-        console.log('bye')
+        // console.log('bye')
       }
     }
   }
@@ -453,13 +446,11 @@ export const NodeView = (props: INodeViewProps) => {
       const getTrailResp = await FrontendTrailGateway.getTrail(trailId)
       if (getTrailResp.success && getTrailResp.payload) {
         const navTrail = getTrailResp.payload
-        console.log(navTrail)
+        // console.log(navTrail)
         setTrailToNavigate(navTrail)
       }
     }
   }
-  // console.log(hasPins)
-  // console.log('pinIdsToPinsMap', pinIdsToPinsMap)
   // width: `calc(100% - ${resizableWidth}px)`
   //  width: `calc(100% - ${resizableWidth}px)`
   return (

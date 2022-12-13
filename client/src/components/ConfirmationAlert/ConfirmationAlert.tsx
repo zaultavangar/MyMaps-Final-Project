@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { IPin, ITrail } from '../../types'
 import {
   AlertDialog,
@@ -7,7 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  Button
+  Button,
 } from '@chakra-ui/react'
 
 interface IConfirmationAlertProps {
@@ -15,15 +15,23 @@ interface IConfirmationAlertProps {
   setOpen: (b: boolean) => void
   confirmationType: string
   specificTrail?: ITrail | null
-  pinToDelete: IPin  | null
+  pinToDelete: IPin | null
   handleRemovePinFromTrail?: (pin: IPin) => void
   onDeleteTrailButtonClick?: () => void
   onDeletePinButtonClick?: () => void
 }
 
 export const ConfirmationAlert = (props: IConfirmationAlertProps) => {
-  const {isOpen, setOpen, confirmationType, specificTrail, pinToDelete, 
-      handleRemovePinFromTrail, onDeleteTrailButtonClick, onDeletePinButtonClick} = props
+  const {
+    isOpen,
+    setOpen,
+    confirmationType,
+    specificTrail,
+    pinToDelete,
+    handleRemovePinFromTrail,
+    onDeleteTrailButtonClick,
+    onDeletePinButtonClick,
+  } = props
 
   const cancelConfirmationRef = React.useRef(null)
 
@@ -36,7 +44,6 @@ export const ConfirmationAlert = (props: IConfirmationAlertProps) => {
       isOpen={isOpen}
       leastDestructiveRef={cancelConfirmationRef}
       onClose={() => setOpen(false)}
-
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
@@ -47,36 +54,39 @@ export const ConfirmationAlert = (props: IConfirmationAlertProps) => {
           </AlertDialogHeader>
           <AlertDialogBody>
             <>
-            {specificTrail ?
-              <>
-                {confirmationType === 'deletePinFromTrail' && (
-                  <>
-                    Are you sure you want to delete <b>{pinToDelete!.title}</b> from{' '}
-                    <b style={{ color: 'green' }}>{specificTrail.title}</b>?
-                  </>
-                )}
-                {confirmationType === 'deleteTrail' &&
-                  <>
-                  Are you sure you want to delete <b style={{ color: 'green' }}>{specificTrail!.title}</b>
-                  </>
-                }
-              </>
-              :
-              <>
-              {confirmationType === 'deletePin' && pinToDelete &&
-              <>
-              Are you sure you want to delete <b style={{ color: 'green' }}>{pinToDelete!.title}</b>? Deleting this pin will delete ALL of its child nodes as well!
-              </>
-              }
-              </>
-              }
-              </>
+              {specificTrail ? (
+                <>
+                  {confirmationType === 'deletePinFromTrail' && (
+                    <>
+                      Are you sure you want to delete <b>{pinToDelete!.title}</b> from{' '}
+                      <b style={{ color: 'green' }}>{specificTrail.title}</b>?
+                    </>
+                  )}
+                  {confirmationType === 'deleteTrail' && (
+                    <>
+                      Are you sure you want to delete{' '}
+                      <b style={{ color: 'green' }}>{specificTrail!.title}</b>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  {confirmationType === 'deletePin' && pinToDelete && (
+                    <>
+                      Are you sure you want to delete{' '}
+                      <b style={{ color: 'green' }}>{pinToDelete!.title}</b>? Deleting
+                      this pin will delete ALL of its child nodes as well!
+                    </>
+                  )}
+                </>
+              )}
+            </>
           </AlertDialogBody>
 
           <AlertDialogFooter>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             <div>
-              {confirmationType === 'deletePinFromTrail' && handleRemovePinFromTrail &&
+              {confirmationType === 'deletePinFromTrail' && handleRemovePinFromTrail && (
                 <Button
                   ref={cancelConfirmationRef}
                   colorScheme="red"
@@ -85,28 +95,27 @@ export const ConfirmationAlert = (props: IConfirmationAlertProps) => {
                 >
                   Delete
                 </Button>
-              }
-              {confirmationType === 'deleteTrail' &&
+              )}
+              {confirmationType === 'deleteTrail' && (
                 <Button
-                ref={cancelConfirmationRef}
-                colorScheme="red"
-                onClick={onDeleteTrailButtonClick}
-                ml={3}
-              >
-                Delete
-              </Button>
-              }
-              {confirmationType === 'deletePin' &&
-                 <Button
-                 ref={cancelConfirmationRef}
-                 colorScheme="red"
-                 onClick={handleDeletePinButtonClick}
-                 ml={3}
-               >
-                 Delete
-               </Button>
-              }
-              
+                  ref={cancelConfirmationRef}
+                  colorScheme="red"
+                  onClick={onDeleteTrailButtonClick}
+                  ml={3}
+                >
+                  Delete
+                </Button>
+              )}
+              {confirmationType === 'deletePin' && (
+                <Button
+                  ref={cancelConfirmationRef}
+                  colorScheme="red"
+                  onClick={handleDeletePinButtonClick}
+                  ml={3}
+                >
+                  Delete
+                </Button>
+              )}
             </div>
           </AlertDialogFooter>
         </AlertDialogContent>

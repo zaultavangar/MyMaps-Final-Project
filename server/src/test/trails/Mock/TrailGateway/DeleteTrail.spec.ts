@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { ITrail, makeITrail } from '../../../../types'
 
 describe('Unit Test: Delete Trail', () => {
   let uri: string
@@ -31,7 +31,7 @@ describe('Unit Test: Delete Trail', () => {
   })
 
   test('deletes trail', async () => {
-    const validTrail1: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail1: ITrail = makeITrail('trail1', [], 'node1', '', '')
     const createResp = await backendTrailGateway.createTrail(validTrail1)
     expect(createResp.success).toBeTruthy()
     const deleteResp = await backendTrailGateway.deleteTrail('trail1')
@@ -40,8 +40,9 @@ describe('Unit Test: Delete Trail', () => {
     expect(getResp.success).toBeFalsy()
   })
 
+  // eslint-disable-next-line max-len
   test('gives success when attempting to delete trail id that does not exist', async () => {
-    const validTrail: ITrail = makeITrail('trail1', ['anchor1'], 'node1')
+    const validTrail: ITrail = makeITrail('trail1', [], 'node1', '', '')
     const createResp = await backendTrailGateway.createTrail(validTrail)
     expect(createResp.success).toBeTruthy()
     const deleteResp = await backendTrailGateway.deleteTrail('trail2')

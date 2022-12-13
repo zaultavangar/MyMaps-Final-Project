@@ -32,7 +32,7 @@ describe('Unit Test: deleteNodes', () => {
   })
 
   test('successfully deletes single node', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const createResponse = await nodeCollectionConnection.insertNode(validNode)
     expect(createResponse.success).toBeTruthy()
     const deleteNodeResp = await nodeCollectionConnection.deleteNodes(['1'])
@@ -40,10 +40,10 @@ describe('Unit Test: deleteNodes', () => {
   })
 
   test('successfully deletes multiple nodes', async () => {
-    const validNode1: INode = makeINode('1', ['1'])
+    const validNode1: INode = makeINode('1', ['1'], 'pin')
     const createResponse1 = await nodeCollectionConnection.insertNode(validNode1)
     expect(createResponse1.success).toBeTruthy()
-    const validNode2: INode = makeINode('2', ['1', '2'])
+    const validNode2: INode = makeINode('2', ['1', '2'], 'pin')
     const createResponse2 = await nodeCollectionConnection.insertNode(validNode2)
     expect(createResponse2.success).toBeTruthy()
     const deleteNodeResp = await nodeCollectionConnection.deleteNodes(['1', '2'])
@@ -55,7 +55,7 @@ describe('Unit Test: deleteNodes', () => {
   })
 
   test('gives success if we try to delete nodes that ' + 'don\'t exist', async () => {
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const createResponse = await nodeCollectionConnection.insertNode(validNode)
     expect(createResponse.success).toBeTruthy()
     const deleteNodeResp = await nodeCollectionConnection.deleteNodes(['1', '2'])

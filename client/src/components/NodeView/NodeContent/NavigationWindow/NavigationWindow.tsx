@@ -1,4 +1,4 @@
-import { IPin, isSamePin, ITrail } from '../../../../types'
+import { isSamePin, ITrail } from '../../../../types'
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline'
 import { useRecoilState } from 'recoil'
 import {
@@ -6,7 +6,6 @@ import {
   currentNavigationPinState,
   selectedPinState,
 } from '../../../../global/Atoms'
-import { IconButton } from '@mui/material'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'
@@ -40,7 +39,6 @@ export const NavigationWindow = (props: INavigationWindowProps) => {
 
   const handleBackNavigationClick = () => {
     if (currentNavigationPin) {
-      console.log('pin selected back')
       const index = trailToNavigate.pinList.indexOf(currentNavigationPin)
       if (index <= 0) return
       setSelectedPin(prevNavigationPin)

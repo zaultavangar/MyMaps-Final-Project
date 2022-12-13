@@ -1,5 +1,5 @@
+import React from 'react'
 import './GoogleMapContent.scss'
-
 
 // @ts-ignore
 import mapboxgl, { Marker } from '!mapbox-gl'

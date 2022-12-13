@@ -31,8 +31,20 @@ describe('Unit Test: findTrailsById', () => {
   })
 
   test('gets trails when given valid ids', async () => {
-    const validTrail1: ITrail = makeITrail('trail1', ['anchor1', 'anchor2'], 'node1')
-    const validTrail2: ITrail = makeITrail('trail2', ['anchor1', 'anchor3'], 'node1')
+    const validTrail1: ITrail = makeITrail(
+      'trail1',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
+    const validTrail2: ITrail = makeITrail(
+      'trail2',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const createResponse1 = await trailCollectionConnection.insertTrail(validTrail1)
     const createResponse2 = await trailCollectionConnection.insertTrail(validTrail2)
     expect(createResponse1.success).toBeTruthy()
@@ -46,7 +58,13 @@ describe('Unit Test: findTrailsById', () => {
   })
 
   test('success when some trails are not found', async () => {
-    const validTrail: ITrail = makeITrail('trail1', ['anchor1', 'anchor2'], 'node1')
+    const validTrail: ITrail = makeITrail(
+      'trail1',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const createResponse = await trailCollectionConnection.insertTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const findTrailsByIdResp = await trailCollectionConnection.findTrailsById([
@@ -58,7 +76,13 @@ describe('Unit Test: findTrailsById', () => {
   })
 
   test('success when trails are not found', async () => {
-    const validTrail: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail: ITrail = makeITrail(
+      'trail1',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const createResponse = await trailCollectionConnection.insertTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const findTrailsByIdResp = await trailCollectionConnection.findTrailsById(['trail2'])

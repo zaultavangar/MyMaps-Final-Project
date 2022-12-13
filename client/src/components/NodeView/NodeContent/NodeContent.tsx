@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { useRecoilValue, useRecoilState } from 'recoil'
-import { currentNodeState, selectedPinState } from '../../../global/Atoms'
-import { IFolderNode, INode } from '../../../types'
+import React, { useState } from 'react'
+import { useRecoilValue } from 'recoil'
+import { currentNodeState } from '../../../global/Atoms'
+import { IFolderNode, INode, ITrail } from '../../../types'
 import { FolderContent } from './FolderContent'
 import { ImageContent } from './ImageContent'
 import { MapContent } from './MapContent'
-import { MapSidebar } from './MapSidebar'
 import './NodeContent.scss'
 import { TextContent } from './TextContent'
 import { CommentContent } from './CommentContent'
-import { IPin, isSamePin, ITrail } from '../../../types'
 import { Select, OrderedList, ListItem } from '@chakra-ui/react'
-import { Button } from '@mui/material'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 import { NavigationWindow } from './NavigationWindow'
 
@@ -50,18 +46,17 @@ export const NodeContent = (props: INodeContentProps) => {
     trailToNavigate,
   } = props
   const currentNode = useRecoilValue(currentNodeState)
-  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
+  // const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
 
   const [selectedMapViewMode, setSelectedMapViewMode] = useState<string>('streets-v12')
 
   const handleSelectedMapViewMode = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(event.target.value)
+    // console.log(event.target.value)
     setSelectedMapViewMode(event.target.value)
   }
 
   // fix positioing of navigation window
 
-  console.log('currentNode', currentNode)
   switch (currentNode.type) {
     case 'image':
       return <ImageContent />

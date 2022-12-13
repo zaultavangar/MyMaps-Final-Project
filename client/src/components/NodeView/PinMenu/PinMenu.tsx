@@ -1,30 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import './PinMenu.scss'
 import { FrontendPinGateway } from '../../../pins'
-import {
-  IPin,
-  INode,
-  NodeIdsToNodesMap,
-  RecursiveNodeTree,
-  IPinProperty,
-  makeIPinProperty,
-  ITrail,
-} from '../../../types'
+import { INode, IPinProperty, makeIPinProperty, ITrail } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
-import {
-  List,
-  ListItem,
-  ListIcon,
-  OrderedList,
-  UnorderedList,
-  Divider,
-} from '@chakra-ui/react'
+import { List, ListItem, ListIcon } from '@chakra-ui/react'
 import { Button } from '../../Button'
 import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
 import {  CreateNodeModal } from '../../Modals'
 import * as ai from 'react-icons/ai'
-import * as ri from 'react-icons/ri'
 import { EditableText } from '../../EditableText'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import {
@@ -40,9 +24,6 @@ import {
   routeDrawerOpenState,
   tabIndexState,
   specificTrailState,
-  addToRouteModalOpenState,
-  confirmationOpenState,
-  confirmationTypeState
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
@@ -112,7 +93,7 @@ export const PinMenu = (props: IPinMenuProps) => {
   // State variable for whether the title is being edited
   const [editingTitle, setEditingTitle] = useState<boolean>(false)
 
-  console.log(`selectedPin.nodeId=${selectedPin?.pinId}`)
+  // console.log(`selectedPin.nodeId=${selectedPin?.pinId}`)
   const handleUpdateTitle = async (title: string) => {
     if (selectedPin) {
       setTitle(title)
@@ -153,9 +134,9 @@ export const PinMenu = (props: IPinMenuProps) => {
       setRefreshTrails(!refreshTrails)
     }
   }
-  
+
   const handleOpenConfirmationAlert = () => {
-    console.log(selectedPin)
+    // console.log(selectedPin)
     setConfirmationType('deletePin')
     setConfirmationOpen(true)
   }
@@ -177,7 +158,6 @@ export const PinMenu = (props: IPinMenuProps) => {
 
   const onAddToRouteButtonClick = async () => {
     if (selectedPin) {
-      console.log('you hit me')
       setAddToRouteModalOpen(true)
     }
   }
@@ -195,7 +175,6 @@ export const PinMenu = (props: IPinMenuProps) => {
   const getPinTrails = async (): Promise<void> => {
     if (selectedPin) {
       const resp = await FrontendTrailGateway.getTrailsByPinId(selectedPin.pinId)
-      console.log(resp)
       if (resp.success) {
         setTrails(resp.payload ?? [])
       } else {
@@ -231,13 +210,6 @@ export const PinMenu = (props: IPinMenuProps) => {
         onDeletePinButtonClick={onDeleteButtonClick}
       />}
     <div className="pin-menu-container">
-      {/* <AddToRouteModal
-        isOpen={addToRouteModalOpen}
-        onClose={() => setAddToRouteModalOpen(false)}
-        onSubmit={() => setAddToRouteModalOpen(false)}
-        // setAddToRouteModalOpen={setAddToRouteModalOpen}
-        setAddToRouteModalOpen={setAddToRouteModalOpen}
-      /> */}
       {selectedPin === null ? (
         <div>
           <h2 className="your-pins">Your Pins</h2>
@@ -278,168 +250,173 @@ export const PinMenu = (props: IPinMenuProps) => {
           </div>
           <div
             style={{
-              backgroundColor: 'rgb(121, 185, 121)',
               color: 'black',
               padding: '5px 5px',
             }}
           >
             <div
               style={{
+                backgroundColor: 'rgb(121, 185, 121)',
+                color: 'black',
+                padding: '5px 5px',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <PlaceIcon />
+                  <h2
+                    className="pin-title pin-selected"
+                    onDoubleClick={(e) => setEditingTitle(true)}
+                  >
+                    <EditableText
+                      text={title ?? ''}
+                      editing={editingTitle}
+                      setEditing={setEditingTitle}
+                      onEdit={handleUpdateTitle}
+                    />
+                  </h2>
+                </div>
+
+                <div>
+                  <div
+                    className="pin-menu-delete-pin-wrapper"
+                    style={{ marginRight: '20px', fontSize: '0.8em' }}
+                  >
+                    <Button
+                      style={smallCustomButtonStyle}
+                      icon={<RiDeleteBin6Fill />}
+                      // text="Delete Pin"
+                      onClick={handleOpenConfirmationAlert}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="pin-explainer pin-selected"
+                onDoubleClick={(e) => setEditingExplainer(true)}
+              >
+                <EditableText
+                  text={explainer ?? ''}
+                  editing={editingExplainer}
+                  setEditing={setEditingExplainer}
+                  onEdit={handleUpdateExplainer}
+                />
+              </div>
+            </div>
+
+            <div
+              style={{
                 display: 'flex',
                 justifyContent: 'space-between',
+                margin: '10px 0px',
+              }}
+            >
+              <div
+                className="pin-documents"
+                style={{ fontWeight: '500', marginLeft: '10px' }}
+              >
+                Pin Documents
+              </div>
+              <div style={{ marginRight: '20px' }}>
+                <Button
+                  style={smallCustomButtonStyle}
+                  icon={<ai.AiOutlineFileAdd />}
+                  onClick={onCreateNodeButtonClick}
+                />
+              </div>
+            </div>
+            <List>
+              {selectedPin &&
+                selectedPin.childNodes.map((node) => (
+                  <div
+                    className={'pin-documents-item-wrapper'}
+                    onClick={() => handleLinkClick(node)}
+                    key={node.nodeId}
+                  >
+                    <Link to={pathToString(node.filePath)}>
+                      <ListItem>
+                        <div className="icon-date-wrapper">
+                          <div className="search-list-icon">
+                            {nodeTypeIcon(node.type)}
+                          </div>
+                          <div className="date-created">
+                            {formatDate(node.dateCreated)}
+                          </div>
+                        </div>
+                        {node.title}
+                      </ListItem>
+                    </Link>
+                  </div>
+                ))}
+            </List>
+            <div
+              className="pin-menu-buttons-wrapper"
+              style={{
+                margin: '10px 0px',
+                display: 'flex',
+                justifyContent: 'space-evenly',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+              }}
+            ></div>
+            <hr></hr>
+            <h4
+              className="pin-menu-routes-containing-header"
+              style={{ marginTop: '10px', fontWeight: '500' }}
+            >
+              Routes containing &quot;{selectedPin.title}&quot;
+            </h4>
+            <div className="routes-containing-wrapper">
+              {trails.map((trail, index) => (
+                <>
+                  {(index < 5 || seeMoreTrails) && (
+                    <>
+                      <div
+                        key={index}
+                        className="pin-menu-trail-card-wrapper"
+                        onClick={(e) => handleGoToTrail(e, trail)}
+                      >
+                        <div className="pin-menu-trail-card-title">{trail.title}</div>
+                        <div
+                          className="pin-menu-trail-card-explainer"
+                          style={{ marginLeft: '10px' }}
+                        >
+                          {trail.explainer}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </>
+              ))}
+            </div>
+            <div
+              className="see-more-routes-wrapper"
+              style={{
+                display: 'flex',
+                marginTop: '15px',
+                justifyContent: 'center',
                 alignItems: 'center',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <PlaceIcon />
-                <h2
-                  className="pin-title pin-selected"
-                  onDoubleClick={(e) => setEditingTitle(true)}
-                >
-                  <EditableText
-                    text={title ?? ''}
-                    editing={editingTitle}
-                    setEditing={setEditingTitle}
-                    onEdit={handleUpdateTitle}
-                  />
-                </h2>
-              </div>
-
-              <div>
-                <div
-                  className="pin-menu-delete-pin-wrapper"
-                  style={{ marginRight: '20px', fontSize: '0.8em' }}
-                >
-                  <Button
-                    style={smallCustomButtonStyle}
-                    icon={<RiDeleteBin6Fill />}
-                    // text="Delete Pin"
-                    onClick={ handleOpenConfirmationAlert}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="pin-explainer pin-selected"
-              onDoubleClick={(e) => setEditingExplainer(true)}
-            >
-              <EditableText
-                text={explainer ?? ''}
-                editing={editingExplainer}
-                setEditing={setEditingExplainer}
-                onEdit={handleUpdateExplainer}
-              />
+              {trails.length > 5 && (
+                <Button
+                  text={seeMoreTrails ? 'See Less' : 'See More'}
+                  icon={seeMoreTrails ? <ai.AiFillCaretUp /> : <ai.AiFillCaretDown />}
+                  onClick={() => setSeeMoreTrails(!seeMoreTrails)}
+                />
+              )}
             </div>
           </div>
-
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              margin: '10px 0px',
-            }}
-          >
-            <div
-              className="pin-documents"
-              style={{ fontWeight: '500', marginLeft: '10px' }}
-            >
-              Pin Documents
-            </div>
-            <div style={{ marginRight: '20px' }}>
-              <Button
-                style={smallCustomButtonStyle}
-                icon={<ai.AiOutlineFileAdd />}
-                onClick={onCreateNodeButtonClick}
-              />
-            </div>
-          </div>
-          <List>
-            {selectedPin &&
-              selectedPin.childNodes.map((node) => (
-                <div
-                  className={'pin-documents-item-wrapper'}
-                  onClick={() => handleLinkClick(node)}
-                  key={node.nodeId}
-                >
-                  <Link to={pathToString(node.filePath)}>
-                    <ListItem>
-                      <div className="icon-date-wrapper">
-                        <div className="search-list-icon">{nodeTypeIcon(node.type)}</div>
-                        <div className="date-created">{formatDate(node.dateCreated)}</div>
-                      </div>
-                      {node.title}
-                    </ListItem>
-                  </Link>
-                </div>
-              ))}
-          </List>
-          <div
-            className="pin-menu-buttons-wrapper"
-            style={{
-              margin: '10px 0px',
-              display: 'flex',
-              justifyContent: 'space-evenly',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-            }}
-          >
-            <Button
-              text="Add to Route"
-              style={customButtonStyle}
-              icon={<ri.RiRouteLine />}
-              onClick={onAddToRouteButtonClick}
-            />
-          </div>
-          <h4
-            className="pin-menu-routes-containing-header"
-            style={{ marginTop: '10px', fontWeight: '500' }}
-          >
-            Routes containing &quot;{selectedPin.title}&quot;
-          </h4>
-          <div className="routes-containing-wrapper">
-            {trails.map((trail, index) => (
-              <>
-                {(index < 5 || seeMoreTrails) && (
-                  <>
-                    <div
-                      key={index}
-                      className="pin-menu-trail-card-wrapper"
-                      onClick={(e) => handleGoToTrail(e, trail)}
-                    >
-                      <div className="pin-menu-trail-card-title">{trail.title}</div>
-                      <div
-                        className="pin-menu-trail-card-explainer"
-                        style={{ marginLeft: '10px' }}
-                      >
-                        {trail.explainer}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </>
-            ))}
-          </div>
-          <div
-            className="see-more-routes-wrapper"
-            style={{
-              display: 'flex',
-              marginTop: '15px',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {trails.length > 5 && (
-              <Button
-                text={seeMoreTrails ? 'See Less' : 'See More'}
-                icon={seeMoreTrails ? <ai.AiFillCaretUp /> : <ai.AiFillCaretDown />}
-                onClick={() => setSeeMoreTrails(!seeMoreTrails)}
-              />
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+        
+      </div>)}
+      </div>
     </>
   )
 }

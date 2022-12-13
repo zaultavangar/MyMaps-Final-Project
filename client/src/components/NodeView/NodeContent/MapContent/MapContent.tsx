@@ -1,8 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react'
-import ReactDOMServer from 'react-dom/server'
+import React, { useEffect, useRef, useState } from 'react'
 import PlaceIcon from '@mui/icons-material/Place'
 import TitleIcon from '@mui/icons-material/Title'
-import { fetchLinks } from '..'
 import { useHistory } from 'react-router-dom'
 import './MapContent.scss'
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
@@ -17,22 +15,10 @@ import {
   refreshTrailsState,
   mapPinsState,
   refreshState,
-  refreshPinsState
+  refreshPinsState,
 } from '../../../../global/Atoms'
-import { FrontendAnchorGateway } from '../../../../anchors'
 import { FrontendPinGateway } from '../../../../pins'
-import { FrontendNodeGateway } from '../../../../nodes'
-import {
-  IAnchor,
-  IImageExtent,
-  IPin,
-  NodeFields,
-  INodeProperty,
-  makeINodeProperty,
-  makeIMapboxPin,
-  makeIPin,
-} from '../../../../types'
-import './MapContent.scss'
+import { IPin, makeIMapboxPin, makeIPin } from '../../../../types'
 import {
   Popover,
   PopoverBody,
@@ -41,7 +27,6 @@ import {
   PopoverHeader,
   PopoverArrow,
   PopoverFooter,
-  PopoverTrigger,
   PopoverAnchor,
   ButtonGroup,
   Button,
@@ -52,11 +37,7 @@ import {
 } from '@chakra-ui/react'
 import { generateObjectId } from '../../../../global'
 
-import { format } from 'path'
-import { createNodeIdsToNodesMap } from '../../../MainView'
-import { setUncaughtExceptionCaptureCallback } from 'process'
 import FocusLock from 'react-focus-lock'
-import { RiNurseFill } from 'react-icons/ri'
 import { GoogleMapContent } from './GoogleMapContent'
 // @ts-ignore
 import mapboxgl, { Marker, Popup } from '!mapbox-gl'
@@ -81,7 +62,7 @@ export const MapContent = (props: IMapContentProps) => {
   const currentNode = useRecoilValue(currentNodeState)
   const refreshLinkList = useRecoilValue(refreshLinkListState)
   const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
-  
+
   const refreshTrails = useRecoilValue(refreshTrailsState)
   const [selectedAnchors, setSelectedAnchors] = useRecoilState(selectedAnchorsState)
   const [selectedExtent, setSelectedExtent] = useRecoilState(selectedExtentState)
@@ -149,7 +130,6 @@ export const MapContent = (props: IMapContentProps) => {
 
     const pinResponse = await FrontendPinGateway.createPin(newPin)
     if (!pinResponse.success) {
-      console.log('hi')
       setError('Error: Failed to create pin')
       return
     } else {
@@ -184,7 +164,6 @@ export const MapContent = (props: IMapContentProps) => {
   }
 
   const displaySelectedPin = () => {
-    console.log('displayselectedPin')
     if (selectedPinId) {
       const prevSelectedPin = document.getElementById(selectedPinId)
       if (prevSelectedPin) {
@@ -197,10 +176,8 @@ export const MapContent = (props: IMapContentProps) => {
     }
     let newSelectedPinId: string | null = null
     if (selectedPin) {
-      console.log('SIUUUU')
       const pinElement = document.getElementById(selectedPin.pinId)
       if (pinElement) {
-        console.log('NOOO')
         pinElement.style.color = 'rgb(0,125,0)'
         pinElement.style.transform = 'scale(1.3)'
         newSelectedPinId = pinElement.id
@@ -259,12 +236,10 @@ export const MapContent = (props: IMapContentProps) => {
   }
 
   useEffect(() => {
-    console.log('bye')
     displaySelectedPin()
   }, [mapPinsElements]) // eventually add refreshPinMenu dependency
 
   useEffect(() => {
-    console.log('hi')
     displayMapPins()
   }, [selectedPin, currentNode, mapPins]) // startAmcjpr
 
@@ -283,7 +258,6 @@ export const MapContent = (props: IMapContentProps) => {
   const onMapClick = (e: mapboxgl.MapMouseEvent) => {
     e.preventDefault()
 
-    console.log(e)
     const lngLat = { lng: e.lngLat.lng, lat: e.lngLat.lat }
     if (!createPinPopoverOpen) {
       const marker = new mapboxgl.Marker({ color: 'black' }).setLngLat(lngLat).addTo(map)
@@ -291,8 +265,7 @@ export const MapContent = (props: IMapContentProps) => {
       const markerEl = marker.getElement()
       markerRef.current = markerEl
 
-      console.log(markerRef)
-      console.log(markerRef.current)
+      // (markerRef.current)
 
       // setCreatePinPopoverOpen(true)
       setLngLast(lngLat.lng)
@@ -304,9 +277,9 @@ export const MapContent = (props: IMapContentProps) => {
   const mapStyle = 'mapbox://styles/mapbox/' + selectedMapViewMode
 
   useEffect(() => {
-    console.log('hi')
     if (currentNode.type == 'googleMap') {
       mapboxgl.accessToken =
+        // eslint-disable-next-line max-len
         'pk.eyJ1IjoiemF1bHQiLCJhIjoiY2xiZjkwcHM5MDN2bzNybWUxbjViZGg5MyJ9.TNLPyVnYb7KKHUfm_XGw5A'
       map = new mapboxgl.Map({
         container: 'map', // container ID
@@ -326,10 +299,7 @@ export const MapContent = (props: IMapContentProps) => {
    * @param e
    */
   const onPointerDown = (e: any) => {
-    console.log(e)
-    console.log(!createPinPopoverOpen)
     if (!createPinPopoverOpen) {
-      console.log('hi')
       e.preventDefault()
       e.stopPropagation()
       // dragging = true
@@ -367,7 +337,8 @@ export const MapContent = (props: IMapContentProps) => {
   }
 
   useEffect(() => {
-    // this code ensures that an extent selected on one node doesn't display on another node
+    // this code ensures that an extent selected on one node doesn't
+    // display on another node
     setSelectedExtent(null)
     if (selection.current) {
       // Note: This is a rather hacky solution to hide the selected region
@@ -412,7 +383,6 @@ export const MapContent = (props: IMapContentProps) => {
    */
 
   const handleCreatePinPopoverClose = () => {
-    console.log('test')
     if (currentNode.type === 'googleMap') {
       newMarker.remove()
       setNewMarker(null)
@@ -426,7 +396,6 @@ export const MapContent = (props: IMapContentProps) => {
     setCreatePinPopoverOpen(false)
   }
 
-  // console.log(createPinPopoverOpen)
   return (
     <div className="mapImageWrapper" id="mapImageWrapper">
       <div

@@ -23,7 +23,7 @@ describe('Unit Test: updatePath', () => {
   beforeEach(async () => {
     const response = await nodeCollectionConnection.clearNodeCollection()
     expect(response.success).toBeTruthy()
-    const validNode: INode = makeINode('1', ['1'])
+    const validNode: INode = makeINode('1', ['1'], 'pin')
     const insertResp = await nodeCollectionConnection.insertNode(validNode)
     expect(insertResp.success).toBeTruthy()
   })

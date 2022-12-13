@@ -5,8 +5,6 @@ import {
   IPin,
   isIPin,
   IPinProperty,
-  ITrail,
-  INode,
   isIPinProperty,
 } from '../types'
 import { PinCollectionConnection } from './PinCollectionConnection'
@@ -124,7 +122,7 @@ export class BackendPinGateway {
   ): Promise<IServiceResponse<IPin>> {
     const properties: any = {}
     for (let i = 0; i < toUpdate.length; i++) {
-      console.log(toUpdate[i])
+      // console.log(toUpdate[i])
       if (!isIPinProperty(toUpdate[i])) {
         return failureServiceResponse('toUpdate parameters invalid')
       }
@@ -139,7 +137,7 @@ export class BackendPinGateway {
     return pinResponse
   }
 
-    /**
+  /**
    * Method to search the database by string.
    *
    * @param input the search input
@@ -147,16 +145,14 @@ export class BackendPinGateway {
    * @param dateFilter  // boolean represented whether the date created filter is on
    * @returns
    */
-    async search(
-      input: string,
-    ): Promise<IServiceResponse<string[]>> {
-      const queryResponse = await this.pinCollectionConnection.search(input)
-      if (queryResponse.success) {
-        return queryResponse
-      } else {
-        return failureServiceResponse('Failed to search.')
-      }
+  async search(input: string): Promise<IServiceResponse<string[]>> {
+    const queryResponse = await this.pinCollectionConnection.search(input)
+    if (queryResponse.success) {
+      return queryResponse
+    } else {
+      return failureServiceResponse('Failed to search.')
     }
+  }
 
   // async getTrailsByPinId(pinId: string): Promise<IServiceResponse<ITrail[]>> {
   //   return this.pinCollectionConnection.getTrailsById(pinId)

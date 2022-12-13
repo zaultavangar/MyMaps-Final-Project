@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { TrailCollectionConnection } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { ITrail, makeITrail } from '../../../../types'
 
 describe('Unit Test: InsertTrail', () => {
   let uri
@@ -26,7 +26,13 @@ describe('Unit Test: InsertTrail', () => {
   })
 
   test('inserts valid trail', async () => {
-    const validTrail: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail: ITrail = makeITrail(
+      'trail1',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const response = await trailCollectionConnection.insertTrail(validTrail)
     expect(response.success).toBeTruthy()
   })
@@ -38,7 +44,13 @@ describe('Unit Test: InsertTrail', () => {
   })
 
   test('fails to insert invalid document with correct shape', async () => {
-    const invalidTrail: ITrail = makeITrail(undefined, undefined, undefined)
+    const invalidTrail: ITrail = makeITrail(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    )
     const response = await trailCollectionConnection.insertTrail(invalidTrail)
     expect(response.success).toBeFalsy()
   })

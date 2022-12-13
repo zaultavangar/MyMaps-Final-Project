@@ -7,11 +7,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   RadioGroup,
   Radio,
   Stack,
-  Textarea,
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import {
@@ -27,7 +25,6 @@ import './CreateMapModal.scss'
 import { createNodeFromModal, uploadImage } from '../CreateNodeModal/createNodeUtils'
 import { useSetRecoilState, useRecoilState } from 'recoil'
 import { selectedNodeState, selectedPinState } from '../../../global/Atoms'
-import { IPin } from '../../../types'
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded'
 
 export interface ICreateMapModalProps {
@@ -53,12 +50,11 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
   const [content, setContent] = useState('')
   const [selectedType, setSelectedType] = useState<NodeType>('googleMap' as NodeType)
   const [error, setError] = useState<string>('')
-  const [selectedPin, setSelectedPin] = useRecoilState(selectedPinState)
+  const [selectedPin] = useRecoilState(selectedPinState)
 
   // event handlers for the modal inputs and dropdown selects
   const handleSelectedTypeChange = (nextVal: string) => {
     setSelectedType(nextVal as NodeType)
-    console.log(nextVal)
     // setSelectedType('map' as NodeType)
     setContent('')
   }
@@ -67,17 +63,12 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
     setTitle(event.target.value)
   }
 
-  const handleTextContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(event.target.value)
-  }
-
   const handleImageContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContent(event.target.value)
   }
 
   // called when the "Create" button is clicked
   const handleSubmit = async () => {
-    console.log(selectedType)
     if (!nodeTypes.includes(selectedType)) {
       setError('Error: No type selected')
       return
@@ -91,10 +82,9 @@ export const CreateMapModal = (props: ICreateMapModalProps) => {
       nodeIdsToNodesMap,
       parentNodeId: selectedParentNode ? selectedParentNode.nodeId : null,
       title,
-      type: selectedType as NodeType,
+      type: 'map' as NodeType,
       selectedPin: selectedPin,
     }
-    console.log(attributes)
     const node = await createNodeFromModal(attributes)
     node && setSelectedNode(node)
     onSubmit()

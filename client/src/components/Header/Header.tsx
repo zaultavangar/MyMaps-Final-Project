@@ -24,12 +24,8 @@ interface IHeaderProps {
 }
 
 export const Header = (props: IHeaderProps) => {
-  const {
-    onCreateMapButtonClick,
-    onHomeClick,
-    nodeIdsToNodesMap,
-    setSearchModalOpen,
-  } = props
+  const { onCreateMapButtonClick, onHomeClick, nodeIdsToNodesMap, setSearchModalOpen } =
+    props
   const customButtonStyle = { height: 30, marginLeft: 10, width: 30 }
   const [isLinking, setIsLinking] = useRecoilState(isLinkingState)
   const [isNavigating, setIsNavigating] = useRecoilState(isNavigatingState)

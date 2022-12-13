@@ -31,12 +31,8 @@ export const TreeViewItem = ({
   selectedPin,
   pins,
 }: ITreeViewProps) => {
-  console.log('current node', node)
-  console.log('pins', pins)
   // get the relevant pins for this node
   const relevantPins = pins?.filter((pin) => pin.nodeId === node.nodeId)
-  console.log('relevantPins', relevantPins)
-
   const [selectedMapPin, setSelectedMapPin] = useRecoilState(selectedPinState)
 
   let childrenItems: JSX.Element[] = []
@@ -114,7 +110,6 @@ export const TreeViewItem = ({
           )
         })
       )
-      console.log('childrenItems', childrenItems)
     } else {
       childrenItems = childNodes.map((child: RecursiveNodeTree) => {
         return changeUrlOnClick ? (

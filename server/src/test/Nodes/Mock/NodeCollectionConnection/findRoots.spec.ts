@@ -32,11 +32,11 @@ describe('Unit Test: findRoots', () => {
   })
 
   test('finds valid roots', async () => {
-    const validNode1: INode = makeINode('1', ['1'])
-    const validNode2: INode = makeINode('2', ['2'], ['3', '4'])
-    const validNode3: INode = makeINode('3', ['2', '3'], ['5'])
-    const validNode4: INode = makeINode('4', ['2', '4'])
-    const validNode5: INode = makeINode('5', ['2', '3', '5'])
+    const validNode1: INode = makeINode('1', ['1'], 'pin')
+    const validNode2: INode = makeINode('2', ['2'], 'pin')
+    const validNode3: INode = makeINode('3', ['2', '3'], 'pin')
+    const validNode4: INode = makeINode('4', ['2', '4'], 'pin')
+    const validNode5: INode = makeINode('5', ['2', '3', '5'], 'pin')
     const createResponse1 = await nodeCollectionConnection.insertNode(validNode1)
     expect(createResponse1.success).toBeTruthy()
     const createResponse2 = await nodeCollectionConnection.insertNode(validNode2)

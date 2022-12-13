@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { TrailCollectionConnection } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { makeITrail, isSameTrail } from '../../../../types'
 
 describe('Unit Test: findTrailByNodeId', () => {
   let uri
@@ -31,10 +31,22 @@ describe('Unit Test: findTrailByNodeId', () => {
   })
 
   test('gets trails when given valid nodeId', async () => {
-    const validTrail1 = makeITrail('trail1', ['anchor1'], 'node1')
+    const validTrail1 = makeITrail(
+      'trail1',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const createResponse1 = await trailCollectionConnection.insertTrail(validTrail1)
     expect(createResponse1.success).toBeTruthy()
-    const validTrail2 = makeITrail('trail2', [], 'node1')
+    const validTrail2 = makeITrail(
+      'trail2',
+      [],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const createResponse2 = await trailCollectionConnection.insertTrail(validTrail2)
     expect(createResponse2.success).toBeTruthy()
     const findTrailsByNodeIdResp = await trailCollectionConnection.findTrailsByNodeId(

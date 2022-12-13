@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { ITrail, makeITrail, isSameTrail, IPin } from '../../../../types'
 
 describe('Unit Test: Delete Trails', () => {
   let uri: string
@@ -31,19 +31,37 @@ describe('Unit Test: Delete Trails', () => {
   })
 
   test('gets trails when given valid trailIds', async () => {
-    const validTrail1: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail1: ITrail = makeITrail('trail1', [], 'node1', '', '')
     const createResponse1 = await backendTrailGateway.createTrail(validTrail1)
     expect(createResponse1.success).toBeTruthy()
-    const validTrail2: ITrail = makeITrail('trail2', [], 'node2')
+    const validTrail2: ITrail = makeITrail('trail2', [], 'node2', '', '')
     const createResponse2 = await backendTrailGateway.createTrail(validTrail2)
     expect(createResponse2.success).toBeTruthy()
-    const validTrail3: ITrail = makeITrail('trail3', ['anchor1', 'anchor2'], 'node1')
+    const validTrail3: ITrail = makeITrail(
+      'trail3',
+      ['anchor1' as unknown as IPin, 'anchor2' as unknown as IPin],
+      'node1',
+      '',
+      ''
+    )
     const createResponse3 = await backendTrailGateway.createTrail(validTrail3)
     expect(createResponse3.success).toBeTruthy()
-    const validTrail4: ITrail = makeITrail('trail4', ['anchor1', 'anchor3'], 'node1')
+    const validTrail4: ITrail = makeITrail(
+      'trail4',
+      ['anchor1' as unknown as IPin, 'anchor3' as unknown as IPin],
+      'node1',
+      '',
+      ''
+    )
     const createResponse4 = await backendTrailGateway.createTrail(validTrail4)
     expect(createResponse4.success).toBeTruthy()
-    const validTrail5: ITrail = makeITrail('trail5', ['anchor5'], 'node2')
+    const validTrail5: ITrail = makeITrail(
+      'trail5',
+      ['anchor5' as unknown as IPin],
+      'node2',
+      '',
+      ''
+    )
     const createResponse5 = await backendTrailGateway.createTrail(validTrail5)
     expect(createResponse5.success).toBeTruthy()
     const getTrailByIdResp = await backendTrailGateway.getTrailsById([
@@ -56,8 +74,8 @@ describe('Unit Test: Delete Trails', () => {
     expect(getTrailByIdResp.success).toBeTruthy()
     expect(getTrailByIdResp.payload.length).toBe(5)
     const trail1 = getTrailByIdResp.payload.find((trail) => trail.trailId === 'trail1')
-    console.log('trail1: ', trail1)
-    console.log('validtrail1: ', validTrail1)
+    // console.log('trail1: ', trail1)
+    // console.log('validtrail1: ', validTrail1)
     expect(isSameTrail(trail1, validTrail1)).toBeTruthy()
     const trail2 = getTrailByIdResp.payload.find((trail) => trail.trailId === 'trail2')
     expect(isSameTrail(trail2, validTrail2)).toBeTruthy()
@@ -70,19 +88,37 @@ describe('Unit Test: Delete Trails', () => {
   })
 
   test('gets trails when given some valid trailIds', async () => {
-    const validTrail1: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail1: ITrail = makeITrail('trail1', [], 'node1', '', '')
     const createResponse1 = await backendTrailGateway.createTrail(validTrail1)
     expect(createResponse1.success).toBeTruthy()
-    const validTrail2: ITrail = makeITrail('trail2', [], 'node2')
+    const validTrail2: ITrail = makeITrail('trail2', [], 'node2', '', '')
     const createResponse2 = await backendTrailGateway.createTrail(validTrail2)
     expect(createResponse2.success).toBeTruthy()
-    const validTrail3: ITrail = makeITrail('trail3', ['anchor1', 'anchor2'], 'node1')
+    const validTrail3: ITrail = makeITrail(
+      'trail3',
+      ['anchor1' as unknown as IPin, 'anchor2' as unknown as IPin],
+      'node1',
+      '',
+      ''
+    )
     const createResponse3 = await backendTrailGateway.createTrail(validTrail3)
     expect(createResponse3.success).toBeTruthy()
-    const validTrail4: ITrail = makeITrail('trail4', ['anchor1', 'anchor3'], 'node1')
+    const validTrail4: ITrail = makeITrail(
+      'trail4',
+      ['anchor1' as unknown as IPin, 'anchor3' as unknown as IPin],
+      'node1',
+      '',
+      ''
+    )
     const createResponse4 = await backendTrailGateway.createTrail(validTrail4)
     expect(createResponse4.success).toBeTruthy()
-    const validTrail5: ITrail = makeITrail('trail5', ['anchor5'], 'node2')
+    const validTrail5: ITrail = makeITrail(
+      'trail5',
+      ['anchor5' as unknown as IPin],
+      'node2',
+      '',
+      ''
+    )
     const createResponse5 = await backendTrailGateway.createTrail(validTrail5)
     expect(createResponse5.success).toBeTruthy()
     const getTrailByIdResp = await backendTrailGateway.getTrailsById([
@@ -99,19 +135,37 @@ describe('Unit Test: Delete Trails', () => {
   })
 
   test('fails to get trail and returns empty array when given invalid id', async () => {
-    const validTrail1: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail1: ITrail = makeITrail('trail1', [], 'node1', '', '')
     const createResponse1 = await backendTrailGateway.createTrail(validTrail1)
     expect(createResponse1.success).toBeTruthy()
-    const validTrail2: ITrail = makeITrail('trail2', [], 'node2')
+    const validTrail2: ITrail = makeITrail('trail2', [], 'node2', '', '')
     const createResponse2 = await backendTrailGateway.createTrail(validTrail2)
     expect(createResponse2.success).toBeTruthy()
-    const validTrail3: ITrail = makeITrail('trail3', ['anchor1', 'anchor2'], 'node1')
+    const validTrail3: ITrail = makeITrail(
+      'trail3',
+      ['anchor1' as unknown as IPin, 'anchor2' as unknown as IPin],
+      'node1',
+      '',
+      ''
+    )
     const createResponse3 = await backendTrailGateway.createTrail(validTrail3)
     expect(createResponse3.success).toBeTruthy()
-    const validTrail4: ITrail = makeITrail('trail4', ['anchor1', 'anchor3'], 'node1')
+    const validTrail4: ITrail = makeITrail(
+      'trail4',
+      ['anchor1' as unknown as IPin, 'anchor3' as unknown as IPin],
+      'node1',
+      '',
+      ''
+    )
     const createResponse4 = await backendTrailGateway.createTrail(validTrail4)
     expect(createResponse4.success).toBeTruthy()
-    const validTrail5: ITrail = makeITrail('trail5', ['anchor5'], 'node2')
+    const validTrail5: ITrail = makeITrail(
+      'trail5',
+      ['anchor5' as unknown as IPin],
+      'node2',
+      '',
+      ''
+    )
     const createResponse5 = await backendTrailGateway.createTrail(validTrail5)
     expect(createResponse5.success).toBeTruthy()
     const getTrailByIdResp = await backendTrailGateway.getTrailsById(['invalidId'])

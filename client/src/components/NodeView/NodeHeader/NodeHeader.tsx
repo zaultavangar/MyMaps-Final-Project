@@ -35,7 +35,6 @@ import { Button } from '../../Button'
 import { ContextMenuItems } from '../../ContextMenu'
 import { EditableText } from '../../EditableText'
 import './NodeHeader.scss'
-import { RouteDrawer } from '../RouteDrawer'
 
 interface INodeHeaderProps {
   onHandleCompleteLinkClick: () => void
@@ -171,13 +170,13 @@ export const NodeHeader = (props: INodeHeaderProps) => {
   const nodeKeyHandlers = (e: KeyboardEvent) => {
     switch (e.key) {
       case 'Enter':
-        if (editingTitle == true) {
+        if (editingTitle) {
           e.preventDefault()
           setEditingTitle(false)
         }
         break
       case 'Escape':
-        if (editingTitle == true) {
+        if (editingTitle) {
           e.preventDefault()
           setEditingTitle(false)
         }

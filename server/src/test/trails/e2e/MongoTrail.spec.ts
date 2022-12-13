@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb'
 import { BackendTrailGateway } from '../../../trails'
-import { ITrail, makeITrail, NodeType } from '../../../types'
+import { ITrail, makeITrail } from '../../../types'
 import uniqid from 'uniqid'
 
 jest.setTimeout(50000)
@@ -30,7 +30,9 @@ describe('E2E Test: Trail CRUD', () => {
   const testTrail: ITrail = makeITrail(
     generateTrailId(),
     generateAnchorList(),
-    generateNodeId()
+    generateNodeId(),
+    'test.title',
+    'test.description'
   )
 
   beforeAll(async () => {

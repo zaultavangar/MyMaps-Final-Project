@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { ITrail, makeITrail } from '../../../../types'
 
 describe('Unit Test: Create Trail', () => {
   let uri: string
@@ -31,18 +31,42 @@ describe('Unit Test: Create Trail', () => {
   })
 
   test('inserts valid trail', async () => {
-    const validTrail: ITrail = makeITrail('trail1', ['anchor1', 'anchor2'], 'node1')
+    const validTrail: ITrail = makeITrail(
+      'trail1',
+      [], // ['anchor1', 'anchor2'],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const response = await backendTrailGateway.createTrail(validTrail)
     expect(response.success).toBeTruthy()
     expect(response.payload).toStrictEqual(validTrail)
   })
 
   test('fails to insert trail with duplicate id', async () => {
-    const validTrail: ITrail = makeITrail('trail1', ['anchor1'], 'node1')
+    const validTrail: ITrail = makeITrail(
+      'trail1',
+      [], // ['anchor1'],
+      'node1',
+      'test.title',
+      'test.description'
+    )
     const validResp = await backendTrailGateway.createTrail(validTrail)
     expect(validResp.success).toBeTruthy()
-    const invalidTrail1: ITrail = makeITrail('trail1', ['anchor1', 'anchor2'], 'node1')
-    const invalidTrail2: ITrail = makeITrail('trail1', ['anchor1', 'anchor2'], 'node2')
+    const invalidTrail1: ITrail = makeITrail(
+      'trail1',
+      [], // ['anchor1', 'anchor2'],
+      'node1',
+      'test.title',
+      'test.description'
+    )
+    const invalidTrail2: ITrail = makeITrail(
+      'trail1',
+      [], // ['anchor1', 'anchor2'],
+      'node2',
+      'test.title',
+      'test.description'
+    )
     const invalidResp1 = await backendTrailGateway.createTrail(invalidTrail1)
     const invalidResp2 = await backendTrailGateway.createTrail(invalidTrail2)
     expect(invalidResp1.success).toBeFalsy()

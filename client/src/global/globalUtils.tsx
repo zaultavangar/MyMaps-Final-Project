@@ -5,11 +5,9 @@ import {
   RiStickyNoteLine,
   RiVideoLine,
   RiFilePdfLine,
-  RiQuestionLine,
   RiMap2Line,
   RiMapPinLine,
 } from 'react-icons/ri'
-import PlaceIcon from '@mui/icons-material/Place'
 import { SiMapbox } from 'react-icons/si'
 import uniqid from 'uniqid'
 import { NodeType } from '../types'

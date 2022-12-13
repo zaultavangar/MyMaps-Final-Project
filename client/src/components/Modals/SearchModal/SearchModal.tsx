@@ -1,5 +1,6 @@
-import { Input, list, Text } from '@chakra-ui/react'
 import {
+  Input,
+  Text,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,20 +11,15 @@ import {
   List,
   ListItem,
   Checkbox,
-  CheckboxGroup,
-  RadioGroup,
-  Radio,
   Stack,
 } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FrontendNodeGateway } from '../../../nodes'
 import { FrontendPinGateway } from '../../../pins'
 import './SearchModal.scss'
 import { INode } from '../../../types'
 import { pathToString, nodeTypeIcon } from '../../../global'
-import { sameValueZeroEqual } from 'fast-equals'
-import { RiContactsBookLine } from 'react-icons/ri'
 
 export interface ISearchModalProps {
   isOpen: boolean
@@ -69,8 +65,6 @@ export const SearchModal = (props: ISearchModalProps) => {
 
   // Send the search through FrontendNodeGateway
   const sendSearch = async () => {
-    console.log('HIHIHI')
-    console.log(typeFilter)
     const responseArr: { [searchType: string]: string[] | null } = {}
     setTypeChanged(null)
     const searchResponse = await FrontendNodeGateway.search(
@@ -86,7 +80,7 @@ export const SearchModal = (props: ISearchModalProps) => {
       const pinSearchResponse = await FrontendPinGateway.search(searchValue)
       if (pinSearchResponse.success) {
         responseArr['pinSearch'] = pinSearchResponse?.payload
-        console.log(pinSearchResponse?.payload)
+        // console.log(pinSearchResponse?.payload)
         // return pinSearchResponse?.payload
       }
     }
@@ -176,13 +170,13 @@ export const SearchModal = (props: ISearchModalProps) => {
 
   const checkIfInList = (val: string) => {
     const typeFilterCpy = typeFilter.slice()
-    console.log(typeFilterCpy)
+    // console.log(typeFilterCpy)
     if (!typeFilterCpy.includes(val)) {
       typeFilterCpy.push(val)
     } else {
       typeFilterCpy.splice(typeFilter.indexOf(val), 1)
     }
-    console.log(typeFilterCpy)
+    // console.log(typeFilterCpy)
     setTypeFilter(typeFilterCpy) // update the type filter array
   }
 
