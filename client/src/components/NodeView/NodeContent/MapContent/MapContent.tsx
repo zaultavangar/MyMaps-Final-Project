@@ -1,8 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react'
-import ReactDOMServer from 'react-dom/server'
+import React, { useEffect, useRef, useState } from 'react'
 import PlaceIcon from '@mui/icons-material/Place'
 import TitleIcon from '@mui/icons-material/Title'
-import { fetchLinks } from '..'
 import { useHistory } from 'react-router-dom'
 import './MapContent.scss'
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
@@ -19,20 +17,8 @@ import {
   refreshState,
   refreshPinsState,
 } from '../../../../global/Atoms'
-import { FrontendAnchorGateway } from '../../../../anchors'
 import { FrontendPinGateway } from '../../../../pins'
-import { FrontendNodeGateway } from '../../../../nodes'
-import {
-  IAnchor,
-  IImageExtent,
-  IPin,
-  NodeFields,
-  INodeProperty,
-  makeINodeProperty,
-  makeIMapboxPin,
-  makeIPin,
-} from '../../../../types'
-import './MapContent.scss'
+import { IPin, makeIMapboxPin, makeIPin } from '../../../../types'
 import {
   Popover,
   PopoverBody,
@@ -41,7 +27,6 @@ import {
   PopoverHeader,
   PopoverArrow,
   PopoverFooter,
-  PopoverTrigger,
   PopoverAnchor,
   ButtonGroup,
   Button,
@@ -52,11 +37,7 @@ import {
 } from '@chakra-ui/react'
 import { generateObjectId } from '../../../../global'
 
-import { format } from 'path'
-import { createNodeIdsToNodesMap } from '../../../MainView'
-import { setUncaughtExceptionCaptureCallback } from 'process'
 import FocusLock from 'react-focus-lock'
-import { RiNurseFill } from 'react-icons/ri'
 import { GoogleMapContent } from './GoogleMapContent'
 // @ts-ignore
 import mapboxgl, { Marker, Popup } from '!mapbox-gl'

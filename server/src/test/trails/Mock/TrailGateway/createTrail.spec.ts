@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { BackendTrailGateway } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { ITrail, makeITrail } from '../../../../types'
 
 describe('Unit Test: Create Trail', () => {
   let uri: string

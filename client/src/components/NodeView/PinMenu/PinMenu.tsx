@@ -1,30 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import './PinMenu.scss'
 import { FrontendPinGateway } from '../../../pins'
-import {
-  IPin,
-  INode,
-  NodeIdsToNodesMap,
-  RecursiveNodeTree,
-  IPinProperty,
-  makeIPinProperty,
-  ITrail,
-} from '../../../types'
+import { INode, IPinProperty, makeIPinProperty, ITrail } from '../../../types'
 import PlaceIcon from '@mui/icons-material/Place'
-import {
-  List,
-  ListItem,
-  ListIcon,
-  OrderedList,
-  UnorderedList,
-  Divider,
-} from '@chakra-ui/react'
+import { List, ListItem, ListIcon } from '@chakra-ui/react'
 import { Button } from '../../Button'
 import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
-import { CreateNodeModal } from '../../Modals'
-import * as ai from 'react-icons/ai'
 import * as ri from 'react-icons/ri'
+import * as ai from 'react-icons/ai'
 import { EditableText } from '../../EditableText'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import {
@@ -40,9 +24,6 @@ import {
   routeDrawerOpenState,
   tabIndexState,
   specificTrailState,
-  addToRouteModalOpenState,
-  confirmationOpenState,
-  confirmationTypeState,
 } from '../../../global/Atoms'
 import { FrontendTrailGateway } from '../../../trails'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
@@ -230,13 +211,13 @@ export const PinMenu = (props: IPinMenuProps) => {
         />
       )}
       <div className="pin-menu-container">
-        <AddToRouteModal
+        {/* <AddToRouteModal
           isOpen={addToRouteModalOpen}
           onClose={() => setAddToRouteModalOpen(false)}
           onSubmit={() => setAddToRouteModalOpen(false)}
           // setAddToRouteModalOpen={setAddToRouteModalOpen}
           setAddToRouteModalOpen={setAddToRouteModalOpen}
-        />
+        /> */}
         {selectedPin === null ? (
           <div>
             <h2 className="your-pins">Your Pins</h2>

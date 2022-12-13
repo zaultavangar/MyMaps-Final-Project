@@ -9,7 +9,6 @@ import {
   NodeIdsToNodesMap,
   NodeType,
   ITrail,
-  RecursiveNodeTree,
 } from '../../types'
 import { NodeBreadcrumb } from './NodeBreadcrumb'
 import { NodeContent } from './NodeContent'

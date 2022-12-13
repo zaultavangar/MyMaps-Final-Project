@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { TrailCollectionConnection } from '../../../../trails'
-import { ITrail, makeITrail, isSameTrail } from '../../../../types'
+import { makeITrail, isSameTrail } from '../../../../types'
 
 describe('Unit Test: findTrailByNodeId', () => {
   let uri

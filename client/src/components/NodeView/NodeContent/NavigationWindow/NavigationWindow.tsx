@@ -1,4 +1,4 @@
-import { IPin, isSamePin, ITrail } from '../../../../types'
+import { isSamePin, ITrail } from '../../../../types'
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline'
 import { useRecoilState } from 'recoil'
 import {
@@ -6,7 +6,6 @@ import {
   currentNavigationPinState,
   selectedPinState,
 } from '../../../../global/Atoms'
-import { IconButton } from '@mui/material'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import RestartAltIcon from '@mui/icons-material/RestartAlt'

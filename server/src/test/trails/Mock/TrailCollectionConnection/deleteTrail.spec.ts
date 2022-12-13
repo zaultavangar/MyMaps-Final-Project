@@ -1,6 +1,5 @@
-import { ITrail, makeITrail } from '../../../../types'
+import { makeITrail } from '../../../../types'
 import { TrailCollectionConnection } from '../../../../trails'
-
 import { MongoClient } from 'mongodb'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 
