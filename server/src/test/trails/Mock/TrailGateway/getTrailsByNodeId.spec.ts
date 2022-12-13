@@ -31,16 +31,16 @@ describe('Unit Test: Delete Trails', () => {
   })
 
   test('gets trails when given valid nodeId', async () => {
-    const validTrail1: ITrail = makeITrail('trail1', [], 'node1')
+    const validTrail1: ITrail = makeITrail('trail1', [], 'node1', '', '')
     const createResponse1 = await backendTrailGateway.createTrail(validTrail1)
     expect(createResponse1.success).toBeTruthy()
-    const validTrail2: ITrail = makeITrail('trail2', [], 'node2')
+    const validTrail2: ITrail = makeITrail('trail2', [], 'node2', '', '')
     const createResponse2 = await backendTrailGateway.createTrail(validTrail2)
     expect(createResponse2.success).toBeTruthy()
-    const validTrail3: ITrail = makeITrail('trail3', ['anchor1', 'anchor2'], 'node1')
+    const validTrail3: ITrail = makeITrail('trail3', ['anchor1', 'anchor2'], 'node1', '', '')
     const createResponse3 = await backendTrailGateway.createTrail(validTrail3)
     expect(createResponse3.success).toBeTruthy()
-    const validTrail4: ITrail = makeITrail('trail4', ['anchor1', 'anchor3'], 'node1')
+    const validTrail4: ITrail = makeITrail('trail4', ['anchor1', 'anchor3'], 'node1', '', '')
     const createResponse4 = await backendTrailGateway.createTrail(validTrail4)
     expect(createResponse4.success).toBeTruthy()
 
@@ -67,7 +67,7 @@ describe('Unit Test: Delete Trails', () => {
   })
 
   test('success with empty payload array when given invalid nodeId', async () => {
-    const validTrail = makeITrail('trail1', [], 'node1')
+    const validTrail = makeITrail('trail1', [], 'node1', '', '')
     const createResponse = await backendTrailGateway.createTrail(validTrail)
     expect(createResponse.success).toBeTruthy()
     const getTrailsByNodeIdResp = await backendTrailGateway.getTrailsByNodeId(
