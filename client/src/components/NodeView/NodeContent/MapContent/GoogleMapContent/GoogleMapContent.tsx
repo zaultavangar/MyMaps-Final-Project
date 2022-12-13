@@ -1,12 +1,5 @@
 import './GoogleMapContent.scss'
-import { Wrapper, Status } from '@googlemaps/react-wrapper'
-import { GoogleMap, useJsApiLoader, useLoadScript } from '@react-google-maps/api'
-import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
-import { createCustomEqual } from 'fast-equals'
-import { isLatLngLiteral } from '@googlemaps/typescript-guards'
-import { Loader } from '@googlemaps/js-api-loader'
-import Map from 'react-map-gl'
+
 
 // @ts-ignore
 import mapboxgl, { Marker } from '!mapbox-gl'

@@ -38,7 +38,6 @@ import { TreeView } from '../TreeView'
 import { SearchModal } from '../Modals/SearchModal'
 import './MainView.scss'
 import { createNodeIdsToNodesMap, emptyNode, makeRootWrapper } from './mainViewUtils'
-import { RouteDrawer } from '../NodeView/RouteDrawer'
 import { FrontendPinGateway } from '../../pins'
 
 export const MainView = React.memo(function MainView() {
@@ -53,6 +52,7 @@ export const MainView = React.memo(function MainView() {
   const [completeLinkModalOpen, setCompleteLinkModalOpen] = useState(false)
   const [moveNodeModalOpen, setMoveNodeModalOpen] = useState(false)
   const [searchModalOpen, setSearchModalOpen] = useState(false)
+
   // node states
   const [selectedNode, setSelectedNode] = useRecoilState(selectedNodeState)
   const [rootNodes, setRootNodes] = useState<RecursiveNodeTree[]>([

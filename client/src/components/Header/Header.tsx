@@ -5,7 +5,7 @@ import * as ai from 'react-icons/ai'
 
 import { NodeIdsToNodesMap } from '../../types'
 import { Link } from 'react-router-dom'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import {
   isLinkingState,
   isNavigatingState,
@@ -14,7 +14,6 @@ import {
   trailToNavigateState,
 } from '../../global/Atoms'
 import './Header.scss'
-import { TriangleDownIcon } from '@chakra-ui/icons'
 
 interface IHeaderProps {
   nodeIdsToNodesMap: NodeIdsToNodesMap
@@ -26,7 +25,6 @@ interface IHeaderProps {
 
 export const Header = (props: IHeaderProps) => {
   const {
-    onCreateNodeButtonClick,
     onCreateMapButtonClick,
     onHomeClick,
     nodeIdsToNodesMap,
