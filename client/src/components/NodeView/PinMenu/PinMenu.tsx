@@ -22,7 +22,7 @@ import {
 import { Button } from '../../Button'
 import { Link } from 'react-router-dom'
 import { pathToString, nodeTypeIcon } from '../../../global'
-import { CreateNodeModal } from '../../Modals'
+import { AddToRouteModal, CreateNodeModal } from '../../Modals'
 import * as ai from 'react-icons/ai'
 import * as ri from 'react-icons/ri'
 import { EditableText } from '../../EditableText'
@@ -57,7 +57,7 @@ export const PinMenu = (props: IPinMenuProps) => {
 
   const setRouteDrawerOpen = useSetRecoilState(routeDrawerOpenState)
   const setSpecificTrail = useSetRecoilState(specificTrailState)
-  const setAddToRouteModalOpen = useSetRecoilState(addToRouteModalOpenState)
+  // const setAddToRouteModalOpen = useSetRecoilState(addToRouteModalOpenState)
 
   // Formats a date, could be global method ***
   const formatDate = (date: any) => {
@@ -158,6 +158,7 @@ export const PinMenu = (props: IPinMenuProps) => {
 
   const onAddToRouteButtonClick = async () => {
     if (selectedPin) {
+      console.log('you hit me')
       setAddToRouteModalOpen(true)
     }
   }
@@ -198,9 +199,17 @@ export const PinMenu = (props: IPinMenuProps) => {
   }
 
   const [seeMoreTrails, setSeeMoreTrails] = useState(false)
+  const [addToRouteModalOpen, setAddToRouteModalOpen] = useState(false)
 
   return (
     <div className="pin-menu-container">
+      <AddToRouteModal
+        isOpen={addToRouteModalOpen}
+        onClose={() => setAddToRouteModalOpen(false)}
+        onSubmit={() => setAddToRouteModalOpen(false)}
+        // setAddToRouteModalOpen={setAddToRouteModalOpen}
+        setAddToRouteModalOpen={setAddToRouteModalOpen}
+      />
       {selectedPin === null ? (
         <div>
           <h2 className="your-pins">Your Pins</h2>
