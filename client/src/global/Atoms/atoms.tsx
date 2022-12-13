@@ -62,6 +62,18 @@ export const refreshLinkListState = atom<boolean>({
   default: false,
 })
 
+export const refreshTrailsState = atom<boolean>({
+  key: 'refreshTrailsState',
+  default: false,
+})
+
+export const refreshPinsState = atom<boolean>({
+  key: 'refreshPinsState',
+  default: false,
+})
+
+
+
 export const mapPinsState = atom<IPin[]>({
   key: 'mapPinsState',
   default: [],
@@ -128,4 +140,9 @@ export const alertTitleState = atom<string>({
 export const alertMessageState = atom<string>({
   key: 'alertMessageState',
   default: '',
+})
+
+export const trailPinsState = atom<IPin[] | null>({
+  key: 'trailPinsState',
+  default: null,
 })

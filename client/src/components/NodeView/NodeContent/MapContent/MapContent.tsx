@@ -14,8 +14,10 @@ import {
   currentNodeState,
   startAnchorState,
   refreshLinkListState,
+  refreshTrailsState,
   mapPinsState,
   refreshState,
+  refreshPinsState
 } from '../../../../global/Atoms'
 import { FrontendAnchorGateway } from '../../../../anchors'
 import { FrontendPinGateway } from '../../../../pins'
@@ -78,6 +80,9 @@ export const MapContent = (props: IMapContentProps) => {
   // recoil state management
   const currentNode = useRecoilValue(currentNodeState)
   const refreshLinkList = useRecoilValue(refreshLinkListState)
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
+  
+  const refreshTrails = useRecoilValue(refreshTrailsState)
   const [selectedAnchors, setSelectedAnchors] = useRecoilState(selectedAnchorsState)
   const [selectedExtent, setSelectedExtent] = useRecoilState(selectedExtentState)
   const setSelectedNode = useSetRecoilState(selectedNodeState)
@@ -153,7 +158,7 @@ export const MapContent = (props: IMapContentProps) => {
       const pins = mapPins.slice()
       pins.push(newPin)
       setMapPins(pins)
-      setRefresh(!refresh)
+      setRefreshPins(!refreshPins)
     }
 
     // add state fxn calls to refresh pin menu and other things that need to be refreshed

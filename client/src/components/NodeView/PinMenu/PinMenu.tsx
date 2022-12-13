@@ -32,6 +32,8 @@ import {
   alertOpenState,
   alertTitleState,
   refreshLinkListState,
+  refreshTrailsState,
+  refreshPinsState,
   refreshState,
   mapPinsState,
   selectedPinState,
@@ -91,6 +93,8 @@ export const PinMenu = (props: IPinMenuProps) => {
   const setAlertMessage = useSetRecoilState(alertMessageState)
   const [refresh, setRefresh] = useRecoilState(refreshState)
   const [refreshLinkList, setRefreshLinkList] = useRecoilState(refreshLinkListState)
+  const [refreshTrails, setRefreshTrails] = useRecoilState(refreshTrailsState)
+  const [refreshPins, setRefreshPins] = useRecoilState(refreshPinsState)
   const setTabIndex = useSetRecoilState(tabIndexState)
 
   // State variable for current pin title
@@ -113,8 +117,7 @@ export const PinMenu = (props: IPinMenuProps) => {
         setAlertTitle('Title update failed')
         setAlertMessage(updateResp.message)
       }
-      setRefresh(!refresh)
-      setRefreshLinkList(!refreshLinkList)
+      setRefreshPins(!refreshPins)
     }
   }
 
@@ -138,6 +141,8 @@ export const PinMenu = (props: IPinMenuProps) => {
       }
       setRefresh(!refresh)
       setRefreshLinkList(!refreshLinkList)
+      setRefreshPins(!refreshPins)
+      setRefreshTrails(!refreshTrails)
     }
   }
 
@@ -149,7 +154,7 @@ export const PinMenu = (props: IPinMenuProps) => {
         setAlertTitle('Failed to delete pin')
         setAlertMessage(deleteResp.message)
       }
-      setRefreshLinkList(!refreshLinkList)
+      setRefreshPins(!refreshPins)
       setSelectedPin(null)
     }
   }
